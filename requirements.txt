@@ -1,0 +1,15 @@
+# Install torch separately for your platform before this file.
+# CPU: pip install torch
+# CUDA cluster: use the wheel matching the cluster CUDA runtime.
+numpy
+gymnasium
+stable-baselines3
+sb3-contrib
+zuko
+jax
+jaxlib
+equinox
+jaxopt
+pandas
+scipy
+matplotlib
