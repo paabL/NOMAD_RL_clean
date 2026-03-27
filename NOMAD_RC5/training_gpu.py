@@ -26,6 +26,7 @@ else:
 ROOT = Path(__file__).resolve().parent
 DEFAULT_DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 DEFAULT_DEVICE = "mps" if torch.backends.mps.is_available() else DEFAULT_DEVICE
+env_gpu_paralel = 64
 
 DEFAULT_CFG = merge_dict(
     CPU_DEFAULT_CFG,
@@ -57,7 +58,7 @@ def run_training(cfg=None):
         data=backend.data,
         sampling_dist=train_dist,
         device=device,
-        n_envs=int(cfg["n_envs"]),
+        n_envs=env_gpu_paralel,
         step_period=cfg["env"]["step_period"],
         future_steps=cfg["env"]["future_steps"],
         max_episode_length=cfg["env"]["max_episode_length"],
