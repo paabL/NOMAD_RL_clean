@@ -28,7 +28,7 @@ ROOT = Path(__file__).resolve().parent
 DEFAULT_DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 DEFAULT_DEVICE = "mps" if torch.backends.mps.is_available() else DEFAULT_DEVICE
 DEFAULT_N_ENVS = 64
-DEFAULT_N_SAMPLE = 128
+DEFAULT_N_SAMPLE = 512
 
 DEFAULT_CFG = merge_dict(
     CPU_DEFAULT_CFG,

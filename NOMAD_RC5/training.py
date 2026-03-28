@@ -9,7 +9,6 @@ if __package__ in (None, ""):
     ROOT = Path(__file__).resolve().parents[1]
     if str(ROOT) not in sys.path:
         sys.path.insert(0, str(ROOT))
-    from NOMAD.core.training import DEFAULT_CFG as CORE_DEFAULT_CFG
     from NOMAD.core.training import merge_dict, run_training as run_core_training, vecnorm_stats
     from NOMAD_RC5.backend import (
         ConvForecastTemporalFuseExtractor,
@@ -20,7 +19,6 @@ if __package__ in (None, ""):
         ValueCtxLstmPolicy,
     )
 else:
-    from NOMAD.core.training import DEFAULT_CFG as CORE_DEFAULT_CFG
     from NOMAD.core.training import merge_dict, run_training as run_core_training, vecnorm_stats
     from .backend import (
         ConvForecastTemporalFuseExtractor,
@@ -43,26 +41,57 @@ __all__ = [
     "vecnorm_stats",
 ]
 
-DEFAULT_CFG = merge_dict(
-    CORE_DEFAULT_CFG,
-    {
-        "device": "cpu",
-        "adr_device": "cpu",
-        "init_flow_path": str(LEGACY_FLOW_PATH),
-        "save_dir": str(ROOT / "runs" / "default"),
-        "ppo": {"tensorboard_log": str(ROOT / "tensorboard_logs" / "tb")},
-        "env": DEFAULT_ENV_CFG,
-        "policy": DEFAULT_POLICY_CFG,
-        "adr": DEFAULT_ADR_CFG,
+DEFAULT_CFG = {
+    "seed": 0,
+    "device": "cpu",
+    "adr_device": "cpu",
+    "n_envs": 8,
+    "total_timesteps": 6_000_000,
+    "save_every_steps": 100_000,
+    "init_flow_path": str(LEGACY_FLOW_PATH),
+    "save_dir": str(ROOT / "runs" / "default"),
+    "plot_every_episodes": 100,
+    "ppo": {
+        "learning_rate_start": 5e-4,
+        "learning_rate_end": 1e-4,
+        "n_steps": 512,
+        "batch_size": 256,
+        "n_epochs": 5,
+        "verbose": 1,
+        "tensorboard_log": str(ROOT / "tensorboard_logs" / "tb"),
     },
-)
+    "vecnorm": {
+        "norm_obs": True,
+        "norm_reward": True,
+        "clip_obs": 10.0,
+    },
+    "env": DEFAULT_ENV_CFG,
+    "policy": DEFAULT_POLICY_CFG,
+    "adr": {
+        "transforms": 3,
+        "bins": 8,
+        "hidden": (64, 64),
+        "iters": 50,
+        "lr": 1e-3,
+        "n_sample": 500,
+        "refine_steps": 5,
+        "refine_lr": 5e-3,
+        "temp_init": 1.0,
+        "ret_coef": 2.0,
+        "bonus_coef": 1.0,
+        "surprise_coef": 5.0,
+        "kl_beta": 500,
+        "kl_M": 1000,
+        "update_every_episodes": 100,
+        **DEFAULT_ADR_CFG,
+    },
+}
 
 
 def run_training(cfg=None):
     cfg = merge_dict(DEFAULT_CFG, cfg or {})
     backend = RC5Backend(env_cfg=cfg["env"], policy_cfg=cfg["policy"], adr_cfg=cfg["adr"])
     core_cfg = {k: v for k, v in cfg.items() if k not in ("env", "policy")}
-    core_cfg["adr"] = {k: cfg["adr"][k] for k in CORE_DEFAULT_CFG["adr"]}
     return run_core_training(backend, core_cfg)
 
 

@@ -10,7 +10,7 @@ import numpy as np
 import torch
 from sb3_contrib import RecurrentPPO
 from stable_baselines3.common.callbacks import BaseCallback
-from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize
+from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize, SubprocVecEnv
 
 from .adr import ADRFlows, NormFlowDist
 
@@ -305,7 +305,8 @@ def run_training(backend, cfg=None):
         )
         for i in range(int(cfg["n_envs"]))
     ]
-    venv = DummyVecEnv(factories)
+    #venv = DummyVecEnv(factories)
+    venv = SubprocVecEnv(factories, start_method="spawn")
     venv = VecNormalize(venv, **cfg["vecnorm"])
 
     policy_spec = backend.policy_spec()
