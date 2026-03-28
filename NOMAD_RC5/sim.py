@@ -9,9 +9,10 @@ import torch
 
 from NOMAD.simax import Controller_constSeq, Model_JAX, SimulationDataset, Simulation_JAX
 
-DT = 30.0
-STEP_N = 120
-FUTURE_STEPS = 12
+RAW_DT = 30.0
+DT = 120.0
+STEP_N = 30
+FUTURE_STEPS = 24 #24H de forecast
 
 Q_INTERNAL_CON_W = 146.0
 Q_INTERNAL_RAD_W = 219.0
@@ -182,6 +183,11 @@ def load_rc5_data(path: str | Path | None = None) -> RC5Data:
     with np.load(path) as data:
         time_np = np.asarray(data["time_s"], dtype=np.float32)
         dist_matrix = np.asarray(data["dist_30s"], dtype=np.float32)
+
+    downsample = max(1, int(round(DT / RAW_DT)))
+    usable = (dist_matrix.shape[0] // downsample) * downsample
+    dist_matrix = dist_matrix[:usable].reshape(-1, downsample, dist_matrix.shape[1]).mean(axis=1).astype(np.float32)
+    time_np = time_np[:usable].reshape(-1, downsample)[:, 0].astype(np.float32)
 
     usable = (dist_matrix.shape[0] // STEP_N) * STEP_N
     dist_matrix = dist_matrix[:usable]

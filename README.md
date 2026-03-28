@@ -138,12 +138,14 @@ Two details matter:
 
 For one candidate context, the objective used to rank samples is:
 
-`objective = return + bcs + surprise`
+`objective = ret_coef * return + bonus_coef * bcs + surprise`
 
 with:
 
 - `return`: cumulative normalized RL reward of the current policy;
 - `bcs`: baseline shaping term computed from the baseline rollout;
+- `ret_coef`: weight applied to the RL return inside the ADR score;
+- `bonus_coef`: weight applied to the baseline shaping term inside the ADR score;
 - `surprise`: novelty bonus `surprise_coef * (-log q(c))`.
 
 In the current code, `bcs` is built from baseline comfort and saturation costs, with an optional COP penalty:
@@ -224,6 +226,8 @@ The tables below report the effective default values of the current RC5 entry po
 | `n_sample` | `1000` | Number of candidate contexts evaluated per ADR update. | Increase when you need broader context-space coverage and can afford the cost. |
 | `refine_steps` | `5` | Number of gradient-ascent steps in context space before fitting the flow. | Increase to search for harder contexts; reduce if ADR becomes too adversarial or costly. |
 | `refine_lr` | `5e-3` | Step size for context refinement. | Lower it if refinement is erratic; raise it if refinement barely moves candidates. |
+| `ret_coef` | `1.0` | Weight of the RL return in the ADR objective. | Increase it if ADR should rank contexts more by policy return than by shaping terms. |
+| `bonus_coef` | `1.0` | Weight of the baseline shaping term in the ADR objective. | Increase it if ADR should care more about comfort, saturation, and COP shaping. |
 | <span style="color: red;">`temp_init`</span> | <span style="color: red;">`1.0`</span> | <span style="color: red;">Softmax temperature used to convert candidate objectives into weights.</span> | <span style="color: red;">Lower it to focus on the best contexts; raise it to spread weight more broadly.</span> |
 | `surprise_coef` | `10.0` | Coefficient of the novelty bonus `-log q(c)`. | Increase it if ADR collapses too quickly onto familiar contexts. |
 | <span style="color: red;">`kl_beta`</span> | <span style="color: red;">`20.0`</span> | <span style="color: red;">Weight of the trust-region KL penalty between successive flows.</span> | <span style="color: red;">Increase it if the flow moves too abruptly; decrease it if adaptation is too conservative.</span> |
@@ -320,6 +324,8 @@ The tables below give a first-order tuning intuition only. They summarize the us
 | `n_sample` | Evaluates more candidate contexts, improving coverage, but increasing ADR cost. | Cheaper ADR updates, but weaker coverage of the context space. |
 | `refine_steps` | More adversarial candidate refinement, usually producing harder contexts, but at higher cost. | Less refinement; contexts stay closer to the initial uniform draw. |
 | `refine_lr` | Larger refinement jumps, which can find harder contexts faster but be unstable. | Smaller refinement steps, which are safer but less aggressive. |
+| `ret_coef` | ADR ranking depends more on policy return. | ADR ranking depends less on policy return. |
+| `bonus_coef` | ADR ranking depends more on baseline shaping terms. | ADR ranking depends less on baseline shaping terms. |
 | <span style="color: red;">`temp_init`</span> | <span style="color: red;">Flatter softmax weights, so ADR spreads mass over more candidates.</span> | <span style="color: red;">Sharper weights, so ADR concentrates on the best candidates more aggressively.</span> |
 | `surprise_coef` | Stronger novelty pressure toward low-density contexts and exploration. | Less novelty pressure; ADR stays closer to already visited high-value regions. |
 | <span style="color: red;">`kl_beta`</span> | <span style="color: red;">More conservative flow updates; the distribution moves less each ADR step.</span> | <span style="color: red;">More aggressive flow drift toward current weighted candidates.</span> |
@@ -388,7 +394,7 @@ run_training(
         "total_timesteps": 1_000_000,
         "init_flow_path": None,
         "env": {"future_steps": 12, "max_episode_length": 24 * 5},
-        "adr": {"update_every_episodes": 100, "n_sample": 1000},
+        "adr": {"update_every_episodes": 100, "n_sample": 1000, "ret_coef": 2.0, "bonus_coef": 1.0},
     }
 )
 ```

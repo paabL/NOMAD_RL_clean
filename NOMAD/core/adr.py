@@ -76,13 +76,18 @@ class NormFlowDist:
             "bins": self.bins,
         }
 
-    @staticmethod
-    def _compat_flow_state_dict(state):
+    def _compat_flow_state_dict(self, state):
         flow_state = dict(state["flow"])
-        if "base.loc" not in flow_state and "base._0" in flow_state:
-            flow_state["base.loc"] = flow_state.pop("base._0")
-        if "base.scale" not in flow_state and "base._1" in flow_state:
-            flow_state["base.scale"] = flow_state.pop("base._1")
+        expected = set(self.flow.state_dict())
+        for old, new in (("base._0", "base.loc"), ("base._1", "base.scale")):
+            if new in expected and new not in flow_state and old in flow_state:
+                flow_state[new] = flow_state[old]
+            if old in expected and old not in flow_state and new in flow_state:
+                flow_state[old] = flow_state[new]
+            if old not in expected:
+                flow_state.pop(old, None)
+            if new not in expected:
+                flow_state.pop(new, None)
         return flow_state
 
     def load_state_dict(self, state):
@@ -147,6 +152,8 @@ class ADRFlows:
         temp_init=1.0,
         kl_beta=0.1,
         kl_M=1024,
+        ret_coef=1.0,
+        bonus_coef=1.0,
         surprise_coef=1.0,
     ):
         self.backend = backend
@@ -162,6 +169,8 @@ class ADRFlows:
         self.temp = float(temp_init)
         self.kl_beta = float(kl_beta)
         self.kl_M = int(kl_M)
+        self.ret_coef = float(ret_coef)
+        self.bonus_coef = float(bonus_coef)
         self.surprise_coef = float(surprise_coef)
 
     def set_policy(self, model, obs_norm=None):
@@ -236,7 +245,7 @@ class ADRFlows:
                 obs, reward, done, info = env.step(self.ev.act(obs))
                 ret += reward
                 bonus += info["adr_bonus"]
-            return ret + bonus, ret, bonus
+            return self.ret_coef * ret + self.bonus_coef * bonus, ret, bonus
 
         for _ in range(self.refine_steps):
             obj, ret, bonus = rollout_objective()

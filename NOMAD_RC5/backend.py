@@ -19,7 +19,7 @@ DEFAULT_ENV_CFG = {
     "warmup_steps": 2 * 24,
     "base_setpoint": BASE_SETPOINT,
     "max_dev": 5.0,
-    "max_episode_length": 24 * 5,
+    "max_episode_length": 24 * 21, #3 semaines, relativement long : pour le LSTM
     "tz_min": TZ_MIN_K,
     "tz_max": TZ_MAX_K,
     "w_energy": 1.0,
@@ -37,6 +37,7 @@ DEFAULT_POLICY_CFG = {
 DEFAULT_ADR_CFG = {
     "baseline_cs_coef": 50.0,
     "baseline_cop_coef": 5.0,
+    "max_episode_length": 24*5, #5 jours, pour accélérer les itérations d'ADR, les episodes de training sont longs mais pas besoin d'autant pour avoir une idée des perfs de la policy
     "cop_bounds": (1.0, 5.0),
     "php_min_w": 100.0,
     "cop_beta": 1.0,
@@ -141,13 +142,14 @@ class RC5Backend:
         return Monitor(env)
 
     def make_adr_env(self, *, device, n_envs):
+        max_episode_length = self.env_cfg["max_episode_length"] if self.adr_cfg["max_episode_length"] is None else self.adr_cfg["max_episode_length"]
         return RC5TorchBatch(
             data=self.data,
             device=device,
             n_envs=n_envs,
             step_period=self.env_cfg["step_period"],
             future_steps=self.env_cfg["future_steps"],
-            max_episode_length=self.env_cfg["max_episode_length"],
+            max_episode_length=max_episode_length,
             base_setpoint=self.env_cfg["base_setpoint"],
             max_dev=self.env_cfg["max_dev"],
             tz_min=self.env_cfg["tz_min"],

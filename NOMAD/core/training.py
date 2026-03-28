@@ -19,8 +19,8 @@ ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CFG = {
     "seed": 0,
     "device": "cpu",
-    "adr_device": None,
-    "n_envs": 4,
+    "adr_device": "mps",
+    "n_envs": 8,
     "total_timesteps": 6_000_000,
     "save_every_steps": 100_000,
     "save_dir": str(ROOT / "runs" / "default"),
@@ -29,7 +29,7 @@ DEFAULT_CFG = {
     "ppo": {
         "learning_rate_start": 5e-4, #default 1e-4
         "learning_rate_end": 1e-4, #default 5e-5
-        "n_steps": 128,
+        "n_steps": 512, #default 128
         "batch_size": 256,
         "n_epochs": 5,
         "verbose": 1,
@@ -44,14 +44,16 @@ DEFAULT_CFG = {
         "transforms": 3,
         "bins": 8,
         "hidden": (64, 64),
-        "iters": 30,
+        "iters": 50,
         "lr": 1e-3,
-        "n_sample": 1000,
+        "n_sample": 500,
         "refine_steps": 5,
         "refine_lr": 5e-3,
         "temp_init": 1.0,
-        "surprise_coef": 10.0,
-        "kl_beta": 1000.0, #defualt 20
+        "ret_coef": 2.0,
+        "bonus_coef": 1.0,
+        "surprise_coef": 5.0, #default 10.0
+        "kl_beta": 500, #defualt 20
         "kl_M": 1000, #nb de samples to estimate kl, default 1000
         "update_every_episodes": 100,
     },
@@ -314,11 +316,12 @@ def run_training(backend, cfg=None):
         device=device,
         **build_ppo_kwargs(cfg),
     )
-    with torch.no_grad():
-        model.policy.action_net.weight.fill_(0.0)
-        model.policy.action_net.bias.fill_(0.0)
-        if hasattr(model.policy, "log_std"):
-            model.policy.log_std.data.fill_(0.0)
+    # Initialize policy to have near-deterministic actions at the start of training, centered around zero
+    # with torch.no_grad():
+    #     model.policy.action_net.weight.fill_(0.0)
+    #     model.policy.action_net.bias.fill_(0.0)
+    #     if hasattr(model.policy, "log_std"):
+    #         model.policy.log_std.data.fill_(0.0)
 
     adr = ADRFlows(
         backend,
@@ -330,6 +333,8 @@ def run_training(backend, cfg=None):
         refine_steps=cfg["adr"]["refine_steps"],
         refine_lr=cfg["adr"]["refine_lr"],
         temp_init=cfg["adr"]["temp_init"],
+        ret_coef=cfg["adr"]["ret_coef"],
+        bonus_coef=cfg["adr"]["bonus_coef"],
         kl_beta=cfg["adr"]["kl_beta"],
         kl_M=cfg["adr"]["kl_M"],
         surprise_coef=cfg["adr"]["surprise_coef"],

@@ -178,15 +178,29 @@ def test_core_training_smoke_and_flow_load(tmp_path):
     assert Path(out["flow_path"]).exists()
 
 
-def test_core_flow_load_legacy_base_keys():
-    backend = ToyBackend()
-    low, high = backend.flow_bounds("cpu")
-    dist = NormFlowDist(low, high, device="cpu")
-    state = dist.state_dict()
-    flow = dict(state["flow"])
-    flow["base._0"] = flow.pop("base.loc")
-    flow["base._1"] = flow.pop("base.scale")
-    dist.load_state_dict({**state, "flow": flow})
+def test_core_flow_load_base_key_compatibility():
+    def make_flow(*names):
+        class Base(torch.nn.Module):
+            def __init__(self):
+                super().__init__()
+                for name in names:
+                    self.register_parameter(name, torch.nn.Parameter(torch.ones(1)))
+
+        class Flow(torch.nn.Module):
+            def __init__(self):
+                super().__init__()
+                self.base = Base()
+
+        return Flow()
+
+    low = torch.zeros(1)
+    high = torch.ones(1)
+    modern_state = {"flow": make_flow("loc", "scale").state_dict()}
+    legacy_state = {"flow": make_flow("_0", "_1").state_dict()}
+    NormFlowDist(low, high, flow=make_flow("loc", "scale"), device="cpu").load_state_dict(modern_state)
+    NormFlowDist(low, high, flow=make_flow("loc", "scale"), device="cpu").load_state_dict(legacy_state)
+    NormFlowDist(low, high, flow=make_flow("_0", "_1"), device="cpu").load_state_dict(modern_state)
+    NormFlowDist(low, high, flow=make_flow("_0", "_1"), device="cpu").load_state_dict(legacy_state)
 
 
 def test_core_has_no_backend_imports():

@@ -39,6 +39,7 @@ from .sim import (
 )
 
 ROOT = Path(__file__).resolve().parent
+BAD_SCORE = -1e6
 
 
 def interval_reward_and_terms(
@@ -451,7 +452,7 @@ class NomadEnv(gym.Env):
         )
         if not (np.isfinite(y_seq).all() and np.isfinite(states).all()):
             obs = self._build_observation()
-            return obs, -1e6, False, True, {"idx": int(self.idx), "setpoint": float(self.sp_last), "context": self.ctx.copy(), "nan": 1}
+            return obs, BAD_SCORE, False, True, {"idx": int(self.idx), "setpoint": float(self.sp_last), "context": self.ctx.copy(), "nan": 1}
 
         y = np.asarray(y_seq, dtype=np.float32)
         tz, qc, qe = y[:, 0], y[:, 1], y[:, 2]
@@ -504,7 +505,7 @@ class NomadEnv(gym.Env):
         ref_n = float(self.reward_ref_N[self.ep_steps - 1])
         reward_norm = (reward - ref) / max(-ref_n, 1e-3)
         if not np.isfinite(reward_norm):
-            reward_norm = -1e6
+            reward_norm = BAD_SCORE
 
         self.ep_time.append(float(self._time_np[idx_start]))
         self.ep_setpoint.append(float(self.sp_last))
@@ -1113,9 +1114,19 @@ class RC5TorchBatch:
             cop_bonus = total - self._cop_bonus_prev
             self._cop_bonus_prev = total
         adr_bonus = self.baseline_cs_coef * (comfort_bonus + sat_bonus + cop_bonus)
+        bad = ~(torch.isfinite(state2).all(dim=(0, 2)) & torch.isfinite(rew2).all(dim=0) & torch.isfinite(rew_n2).all(dim=0) & torch.isfinite(adr_bonus))
+        if bad.any():
+            bad_idx = torch.nonzero(bad, as_tuple=False).reshape(-1)
+            self.reset_indices(bad_idx, start_hour=self.h_idx[bad_idx], ctx=self.ctx[bad_idx])
+            rew[bad_idx] = BAD_SCORE
+            adr_bonus[bad_idx] = BAD_SCORE
+            reward_raw[bad_idx] = BAD_SCORE
+            reward_ref[bad_idx] = 0.0
+            reward_ref_n[bad_idx] = 1.0
         self.h_idx += 1
         self.steps += 1
         done = (self.steps >= self.max_episode_length) | (self.h_idx >= self.idx_max_h)
+        done = done | bad
         return self._build_obs(), rew, done, {
             "adr_bonus": adr_bonus,
             "context": self.ctx,

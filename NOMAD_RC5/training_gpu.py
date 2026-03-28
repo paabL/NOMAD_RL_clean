@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 import sys
 
@@ -26,20 +27,26 @@ else:
 ROOT = Path(__file__).resolve().parent
 DEFAULT_DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 DEFAULT_DEVICE = "mps" if torch.backends.mps.is_available() else DEFAULT_DEVICE
-env_gpu_paralel = 64
+DEFAULT_N_ENVS = 64
+DEFAULT_N_SAMPLE = 128
 
 DEFAULT_CFG = merge_dict(
     CPU_DEFAULT_CFG,
     {
         "device": DEFAULT_DEVICE,
         "adr_device": DEFAULT_DEVICE,
+        "n_envs": DEFAULT_N_ENVS,
         "save_dir": str(ROOT / "runs" / "gpu_default"),
         "plot_every_episodes": 0,
         "env": DEFAULT_ENV_CFG,
         "policy": DEFAULT_POLICY_CFG,
-        "adr": DEFAULT_ADR_CFG,
+        "adr": {"n_sample": DEFAULT_N_SAMPLE, **DEFAULT_ADR_CFG},
     },
 )
+
+
+def _load_cfg(path):
+    return json.loads(Path(path).read_text())
 
 
 def run_training(cfg=None):
@@ -58,7 +65,7 @@ def run_training(cfg=None):
         data=backend.data,
         sampling_dist=train_dist,
         device=device,
-        n_envs=env_gpu_paralel,
+        n_envs=int(cfg["n_envs"]),
         step_period=cfg["env"]["step_period"],
         future_steps=cfg["env"]["future_steps"],
         max_episode_length=cfg["env"]["max_episode_length"],
@@ -94,10 +101,12 @@ def run_training(cfg=None):
         device=adr_device,
         iters=cfg["adr"]["iters"],
         lr=cfg["adr"]["lr"],
-        n_sample=128,
+        n_sample=cfg["adr"]["n_sample"],
         refine_steps=cfg["adr"]["refine_steps"],
         refine_lr=cfg["adr"]["refine_lr"],
         temp_init=cfg["adr"]["temp_init"],
+        ret_coef=cfg["adr"]["ret_coef"],
+        bonus_coef=cfg["adr"]["bonus_coef"],
         kl_beta=cfg["adr"]["kl_beta"],
         kl_M=cfg["adr"]["kl_M"],
         surprise_coef=cfg["adr"]["surprise_coef"],
@@ -123,9 +132,11 @@ def run_training(cfg=None):
     }
 
 
-
-def main():
-    run_training()
+def main(argv=None):
+    argv = sys.argv[1:] if argv is None else list(argv)
+    if len(argv) > 1:
+        raise SystemExit("usage: python -m NOMAD_RC5.training_gpu [config.json]")
+    return run_training(_load_cfg(argv[0]) if argv else None)
 
 
 if __name__ == "__main__":

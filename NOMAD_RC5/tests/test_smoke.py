@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 import pickle
 
@@ -8,7 +9,7 @@ from stable_baselines3.common.vec_env import DummyVecEnv
 
 from NOMAD_RC5.backend import DEFAULT_POLICY_CFG, RC5Backend
 from NOMAD_RC5.env import NomadEnv, NormalizeAction, RC5TorchBatch, RC5TorchVecEnv, ResidualActionWrapper
-from NOMAD_RC5.sim import BASE_SETPOINT, build_rc5_simulation, context_low_high, load_rc5_data
+from NOMAD_RC5.sim import BASE_SETPOINT, DT, STEP_N, build_rc5_simulation, context_low_high, load_rc5_data
 from NOMAD_RC5.training import DEFAULT_CFG, run_training
 from NOMAD_RC5.training_gpu import run_training as run_training_gpu
 
@@ -41,6 +42,12 @@ def test_simax_rc5_smoke(tmp_path):
     t2, y2, *_ = loaded.run()
     assert t2.shape == t.shape
     assert y2.shape == y.shape
+
+
+def test_rc5_data_is_2min():
+    data = load_rc5_data()
+    assert float(data.time_np[1] - data.time_np[0]) == DT
+    assert STEP_N == 30
 
 
 def test_env_smoke(tmp_path):
@@ -205,3 +212,44 @@ def test_training_rc5_gpu_smoke(tmp_path):
     assert Path(out["model_path"]).exists()
     assert Path(out["vecnorm_path"]).exists()
     assert Path(out["flow_path"]).exists()
+
+
+def test_training_rc5_gpu_sweep_smoke(tmp_path, monkeypatch):
+    import NOMAD_RC5.sweep_gpu as sweep_gpu
+
+    monkeypatch.setattr(sweep_gpu, "RUNS_ROOT", tmp_path / "sweep")
+    monkeypatch.setattr(
+        sweep_gpu,
+        "BASE_CFG",
+        {
+            "device": "cpu",
+            "adr_device": "cpu",
+            "init_flow_path": None,
+            "n_envs": 2,
+            "total_timesteps": 16,
+            "save_every_steps": 8,
+            "ppo": {"n_steps": 8, "batch_size": 4, "n_epochs": 1, "learning_rate": 1e-4, "verbose": 0},
+            "env": {"future_steps": 12, "max_episode_length": 4},
+            "adr": {"n_sample": 2, "iters": 1, "refine_steps": 0, "kl_M": 4, "surprise_coef": 0.1, "update_every_episodes": 1, "baseline_cs_coef": 1.0},
+        },
+    )
+    monkeypatch.setattr(sweep_gpu, "GRID", {"adr.ret_coef": [1.0, 2.0]})
+    monkeypatch.setattr(sweep_gpu, "MAX_WORKERS", 1)
+
+    run_dirs = sorted(sweep_gpu.main(), key=lambda path: path.name)
+    assert len(run_dirs) == 2
+
+    save_dirs = set()
+    tb_dirs = set()
+    for run_dir in run_dirs:
+        cfg = json.loads((run_dir / "config.json").read_text())
+        save_dirs.add(cfg["save_dir"])
+        tb_dirs.add(cfg["ppo"]["tensorboard_log"])
+        assert Path(cfg["save_dir"]) == run_dir
+        assert (run_dir / "train.log").exists()
+        assert (run_dir / "model.zip").exists()
+        assert (run_dir / "vecnormalize.pkl").exists()
+        assert (run_dir / "adr_flow.pt").exists()
+
+    assert len(save_dirs) == 2
+    assert len(tb_dirs) == 2
