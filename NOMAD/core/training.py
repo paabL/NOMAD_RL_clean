@@ -27,8 +27,8 @@ DEFAULT_CFG = {
     "plot_every_episodes": 100,
     "init_flow_path": None,
     "ppo": {
-        "learning_rate_start": 5e-4, #default 1e-4
-        "learning_rate_end": 1e-4, #default 5e-5
+        "learning_rate_start": 1e-4, #default 1e-4
+        "learning_rate_end": 5e-5, #default 5e-5
         "n_steps": 512, #default 128
         "batch_size": 256,
         "n_epochs": 5,
