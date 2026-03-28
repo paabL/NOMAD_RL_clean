@@ -194,17 +194,21 @@ class ADRUpdateCallback(BaseCallback):
         t1 = time.perf_counter()
         stats = self.adr.update()
         update_s = time.perf_counter() - t1
-        if _env_has_method(self.training_env, "set_sampling_dist"):
+        try:
             self.training_env.env_method("set_sampling_dist", self.adr.get_train_dist_on(self.train_device))
+        except Exception:
+            pass
         self.logger.record("adr/set_policy_s", float(set_policy_s))
         self.logger.record("adr/update_s", float(update_s))
         for key, value in stats.items():
             self.logger.record(f"adr/{key}", float(value))
         params_std_pct = 0.0
-        if _env_has_method(self.training_env, "get_rollout_std_pct_mean"):
+        try:
             vals = self.training_env.env_method("get_rollout_std_pct_mean")
             params_std_pct = float(np.mean(vals))
             self.logger.record("adr/params_std_pct_mean", params_std_pct)
+        except Exception:
+            pass
         self.n_updates += 1
         print(
             self._fmt(
@@ -257,8 +261,6 @@ class PeriodicPlotCallback(BaseCallback):
     def _on_step(self):
         if self.every <= 0:
             return True
-        if not (_env_has_method(self.training_env, "plot_last_episode") and _env_has_method(self.training_env, "save_last_episode")):
-            return True
         dones = np.asarray(self.locals["dones"])
         done_idx = np.flatnonzero(dones)
         count = int(done_idx.size)
@@ -270,15 +272,18 @@ class PeriodicPlotCallback(BaseCallback):
         self.out_dir.mkdir(parents=True, exist_ok=True)
         save_s = 0.0
         plot_s = 0.0
-        for idx in done_idx.tolist():
-            plot_path = self.out_dir / f"episode_{self.episodes:06d}_env{idx}.png"
-            data_path = self.out_dir / f"episode_{self.episodes:06d}_env{idx}.npz"
-            t0 = time.perf_counter()
-            self.training_env.env_method("save_last_episode", path=data_path, indices=idx)
-            save_s += time.perf_counter() - t0
-            t0 = time.perf_counter()
-            self.training_env.env_method("plot_last_episode", path=plot_path, indices=idx)
-            plot_s += time.perf_counter() - t0
+        try:
+            for idx in done_idx.tolist():
+                plot_path = self.out_dir / f"episode_{self.episodes:06d}_env{idx}.png"
+                data_path = self.out_dir / f"episode_{self.episodes:06d}_env{idx}.npz"
+                t0 = time.perf_counter()
+                self.training_env.env_method("save_last_episode", path=data_path, indices=idx)
+                save_s += time.perf_counter() - t0
+                t0 = time.perf_counter()
+                self.training_env.env_method("plot_last_episode", path=plot_path, indices=idx)
+                plot_s += time.perf_counter() - t0
+        except Exception:
+            return True
         self.logger.record("plot/save_s", float(save_s))
         self.logger.record("plot/png_s", float(plot_s))
         return True

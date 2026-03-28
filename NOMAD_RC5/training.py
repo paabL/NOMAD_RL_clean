@@ -1,8 +1,10 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 import sys
+import time
 
 import torch
 
@@ -32,6 +34,7 @@ else:
 
 ROOT = Path(__file__).resolve().parent
 LEGACY_FLOW_PATH = ROOT.parent / "last_chance_out_collapsed" / "flow.pt"
+RUN_ID = time.strftime("%Y%m%d_%H%M%S") + f"_{os.getpid()}"
 
 __all__ = [
     "ConvForecastTemporalFuseExtractor",
@@ -50,7 +53,7 @@ DEFAULT_CFG = {
     "total_timesteps": 10_000_000,
     "save_every_steps": 100_000,
     "init_flow_path": str(LEGACY_FLOW_PATH),
-    "save_dir": str(ROOT / "runs" / "default"),
+    "save_dir": str(ROOT / "runs" / RUN_ID),
     "plot_every_episodes": 100,
     "ppo": {
         "learning_rate_start": 5e-4,
@@ -74,7 +77,7 @@ DEFAULT_CFG = {
         "hidden": (64, 64),
         "iters": 50,
         "lr": 1e-3,
-        "n_sample": 500,
+        "n_sample": 1000,
         "refine_steps": 5,
         "refine_lr": 5e-3,
         "temp_init": 1.0,
