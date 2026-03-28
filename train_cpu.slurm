@@ -33,4 +33,4 @@ print("host:", platform.node())
 print("cpus visible:", os.cpu_count())
 PY
 
-python -u NOMAD_RC5/training.py
+python -u NOMAD_RC5/training.py --n_envs 10

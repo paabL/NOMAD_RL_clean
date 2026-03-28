@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 import sys
 
@@ -45,7 +46,7 @@ DEFAULT_CFG = {
     "seed": 0,
     "device": "cpu",
     "adr_device": "cpu",
-    "n_envs": 10,
+    "n_envs": 8,
     "total_timesteps": 6_000_000,
     "save_every_steps": 100_000,
     "init_flow_path": str(LEGACY_FLOW_PATH),
@@ -88,6 +89,41 @@ DEFAULT_CFG = {
 }
 
 
+def _parse_value(raw):
+    try:
+        return json.loads(raw)
+    except json.JSONDecodeError:
+        return raw
+
+
+def _set_nested(cfg, key, value):
+    keys = [part.replace("-", "_") for part in key.split(".")]
+    node = cfg
+    for part in keys[:-1]:
+        node = node.setdefault(part, {})
+    node[keys[-1]] = value
+
+
+def _parse_cli_overrides(argv):
+    cfg = {}
+    i = 0
+    while i < len(argv):
+        arg = argv[i]
+        if not arg.startswith("--"):
+            raise SystemExit(f"unexpected argument: {arg}")
+        key = arg[2:]
+        if "=" in key:
+            key, raw = key.split("=", 1)
+        else:
+            i += 1
+            if i >= len(argv):
+                raise SystemExit(f"missing value for --{key}")
+            raw = argv[i]
+        _set_nested(cfg, key, _parse_value(raw))
+        i += 1
+    return cfg
+
+
 def run_training(cfg=None):
     cfg = merge_dict(DEFAULT_CFG, cfg or {})
     backend = RC5Backend(env_cfg=cfg["env"], policy_cfg=cfg["policy"], adr_cfg=cfg["adr"])
@@ -95,8 +131,9 @@ def run_training(cfg=None):
     return run_core_training(backend, core_cfg)
 
 
-def main():
-    run_training()
+def main(argv=None):
+    argv = sys.argv[1:] if argv is None else list(argv)
+    run_training(_parse_cli_overrides(argv) if argv else None)
 
 
 if __name__ == "__main__":
