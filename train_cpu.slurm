@@ -3,7 +3,6 @@
 #SBATCH --time=24:00:00
 #SBATCH --cpus-per-task=10
 #SBATCH --mem=32G
-#SBATCH --cpu-bind=cores
 #SBATCH --job-name=nomad_rc5_cpu_subproc
 #SBATCH --output=logs/%x-%j.out
 #SBATCH --error=logs/%x-%j.err
