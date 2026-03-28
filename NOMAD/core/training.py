@@ -21,7 +21,7 @@ DEFAULT_CFG = {
     "device": "cpu",
     "adr_device": "mps",
     "n_envs": 8,
-    "total_timesteps": 6_000_000,
+    "total_timesteps": 10_000_000,
     "save_every_steps": 100_000,
     "save_dir": str(ROOT / "runs" / "default"),
     "plot_every_episodes": 100,
@@ -29,11 +29,12 @@ DEFAULT_CFG = {
     "ppo": {
         "learning_rate_start": 1e-4, #default 1e-4
         "learning_rate_end": 5e-5, #default 5e-5
-        "n_steps": 512, #default 128
+        "n_steps": 256, #default 128
         "batch_size": 256,
         "n_epochs": 5,
         "verbose": 1,
         "tensorboard_log": str(ROOT / "tensorboard_logs" / "tb"),
+        "target_kl": 0.01, #default None
     },
     "vecnorm": {
         "norm_obs": True,
