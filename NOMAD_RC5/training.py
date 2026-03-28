@@ -45,7 +45,7 @@ DEFAULT_CFG = {
     "seed": 0,
     "device": "cpu",
     "adr_device": "cpu",
-    "n_envs": 8,
+    "n_envs": 10,
     "total_timesteps": 6_000_000,
     "save_every_steps": 100_000,
     "init_flow_path": str(LEGACY_FLOW_PATH),

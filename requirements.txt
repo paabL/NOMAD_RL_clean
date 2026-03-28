@@ -13,3 +13,4 @@ jaxopt
 pandas
 scipy
 matplotlib
+tensorboard
