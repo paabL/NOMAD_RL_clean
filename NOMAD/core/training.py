@@ -24,6 +24,7 @@ DEFAULT_CFG = {
     "total_timesteps": 10_000_000,
     "save_every_steps": 100_000,
     "save_dir": str(ROOT / "runs" / "default"),
+    "resume_dir": None,
     "plot_every_episodes": 100,
     "init_flow_path": None,
     "ppo": {
@@ -108,8 +109,46 @@ def build_ppo_kwargs(cfg):
     return ppo
 
 
+def resolve_resume_dir(path):
+    path = Path(path)
+    if path.is_file():
+        path = path.parent
+    best = path if (path / "model.zip").exists() else None
+    for child in path.iterdir():
+        if child.is_dir() and child.name.isdigit() and (child / "model.zip").exists():
+            best_step = int(best.name) if best and best.name.isdigit() else -1
+            if best is None or int(child.name) > best_step:
+                best = child
+    if best is None:
+        raise FileNotFoundError(f"no checkpoint found in {path}")
+    if best != path and (path / "model.zip").exists() and (path / "model.zip").stat().st_mtime > (best / "model.zip").stat().st_mtime:
+        return path
+    return best
+
+
+def get_resume_paths(cfg):
+    resume_dir = cfg.get("resume_dir")
+    if not resume_dir:
+        return None
+    path = resolve_resume_dir(resume_dir)
+    return {
+        "dir": path,
+        "model": path / "model.zip",
+        "vecnorm": path / "vecnormalize.pkl",
+        "flow": path / "adr_flow.pt",
+    }
+
+
+def lock_model_lr(model):
+    lr = float(model.policy.optimizer.param_groups[0]["lr"])
+    model.learning_rate = lr
+    model.lr_schedule = lambda _: lr
+    return lr
+
+
 def build_initial_dist(cfg, device, backend):
-    init_flow_path = cfg.get("init_flow_path")
+    resume = get_resume_paths(cfg)
+    init_flow_path = resume["flow"] if resume and resume["flow"].exists() else cfg.get("init_flow_path")
     if init_flow_path:
         path = Path(init_flow_path)
         if path.exists():
@@ -204,6 +243,8 @@ class ADRUpdateCallback(BaseCallback):
             self.logger.record(f"adr/{key}", float(value))
         params_std_pct = 0.0
         try:
+            if not self.training_env.has_attr("get_rollout_std_pct_mean"):
+                raise AttributeError
             vals = self.training_env.env_method("get_rollout_std_pct_mean")
             params_std_pct = float(np.mean(vals))
             self.logger.record("adr/params_std_pct_mean", params_std_pct)
@@ -273,6 +314,8 @@ class PeriodicPlotCallback(BaseCallback):
         save_s = 0.0
         plot_s = 0.0
         try:
+            if not self.training_env.has_attr("save_last_episode") or not self.training_env.has_attr("plot_last_episode"):
+                return True
             for idx in done_idx.tolist():
                 plot_path = self.out_dir / f"episode_{self.episodes:06d}_env{idx}.png"
                 data_path = self.out_dir / f"episode_{self.episodes:06d}_env{idx}.npz"
@@ -293,6 +336,7 @@ def run_training(backend, cfg=None):
     cfg = merge_dict(DEFAULT_CFG, cfg or {})
     save_dir = Path(cfg["save_dir"])
     rollout_dir = save_dir / "rollouts"
+    resume = get_resume_paths(cfg)
     save_dir.mkdir(parents=True, exist_ok=True)
     rollout_dir.mkdir(parents=True, exist_ok=True)
 
@@ -312,17 +356,22 @@ def run_training(backend, cfg=None):
         for i in range(int(cfg["n_envs"]))
     ]
     #venv = DummyVecEnv(factories)
-    venv = SubprocVecEnv(factories, start_method="spawn")
-    venv = VecNormalize(venv, **cfg["vecnorm"])
+    base_venv = SubprocVecEnv(factories, start_method="spawn")
+    venv = VecNormalize.load(str(resume["vecnorm"]), base_venv) if resume and resume["vecnorm"].exists() else VecNormalize(base_venv, **cfg["vecnorm"])
 
     policy_spec = backend.policy_spec()
-    model = RecurrentPPO(
-        policy_spec.policy,
-        venv,
-        policy_kwargs=policy_spec.policy_kwargs,
-        device=device,
-        **build_ppo_kwargs(cfg),
-    )
+    if resume and resume["model"].exists():
+        print(f"Loading checkpoint from {resume['dir']}", flush=True)
+        model = RecurrentPPO.load(resume["model"], env=venv, device=device)
+        print(f"Resuming PPO with lr={lock_model_lr(model):.3e}", flush=True)
+    else:
+        model = RecurrentPPO(
+            policy_spec.policy,
+            venv,
+            policy_kwargs=policy_spec.policy_kwargs,
+            device=device,
+            **build_ppo_kwargs(cfg),
+        )
     # Initialize policy to have near-deterministic actions at the start of training, centered around zero
     # with torch.no_grad():
     #     model.policy.action_net.weight.fill_(0.0)
@@ -352,7 +401,7 @@ def run_training(backend, cfg=None):
         PeriodicSaveCallback(cfg["save_every_steps"], save_dir, adr),
         PeriodicPlotCallback(rollout_dir, cfg["plot_every_episodes"]),
     ]
-    model.learn(total_timesteps=int(cfg["total_timesteps"]), callback=callbacks)
+    model.learn(total_timesteps=int(cfg["total_timesteps"]), callback=callbacks, reset_num_timesteps=not resume)
 
     model_path = save_dir / "model.zip"
     vecnorm_path = save_dir / "vecnormalize.pkl"

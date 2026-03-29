@@ -13,7 +13,7 @@ import torch
 
 from NOMAD.core.adr import ADRFlows, NormFlowDist
 from NOMAD.core.backend import PolicySpec
-from NOMAD.core.training import run_training as run_core_training, vecnorm_stats
+from NOMAD.core.training import resolve_resume_dir, run_training as run_core_training, vecnorm_stats
 
 
 class ToyTrainEnv(gym.Env):
@@ -176,6 +176,51 @@ def test_core_training_smoke_and_flow_load(tmp_path):
     assert Path(out["model_path"]).exists()
     assert Path(out["vecnorm_path"]).exists()
     assert Path(out["flow_path"]).exists()
+
+
+def test_core_training_resume_keeps_checkpoint_lr(tmp_path):
+    backend = ToyBackend()
+    cfg = {
+        "n_envs": 1,
+        "total_timesteps": 16,
+        "save_every_steps": 8,
+        "plot_every_episodes": 0,
+        "ppo": {
+            "n_steps": 8,
+            "batch_size": 4,
+            "n_epochs": 1,
+            "learning_rate_start": 3e-4,
+            "learning_rate_end": 1e-4,
+            "verbose": 0,
+        },
+        "adr": {"n_sample": 2, "iters": 1, "refine_steps": 0, "kl_M": 4, "surprise_coef": 0.1, "update_every_episodes": 1},
+    }
+    first = run_core_training(backend, {"save_dir": str(tmp_path / "first"), **cfg})
+    checkpoint = resolve_resume_dir(first["save_dir"])
+    saved = RecurrentPPO.load(checkpoint / "model.zip", device="cpu")
+    resumed = run_core_training(
+        backend,
+        {
+            **cfg,
+            "save_dir": str(tmp_path / "second"),
+            "resume_dir": str(first["save_dir"]),
+            "total_timesteps": 8,
+        },
+    )
+    loaded = RecurrentPPO.load(resumed["model_path"], device="cpu")
+    assert loaded.num_timesteps > saved.num_timesteps
+    assert loaded.policy.optimizer.param_groups[0]["lr"] == saved.policy.optimizer.param_groups[0]["lr"]
+
+
+def test_resolve_resume_dir_prefers_latest_numeric_checkpoint(tmp_path):
+    root = tmp_path / "run"
+    root.mkdir()
+    (root / "model.zip").write_text("root")
+    (root / "10").mkdir()
+    (root / "10" / "model.zip").write_text("10")
+    (root / "20").mkdir()
+    (root / "20" / "model.zip").write_text("20")
+    assert resolve_resume_dir(root) == root / "20"
 
 
 def test_core_flow_load_base_key_compatibility():

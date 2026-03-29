@@ -13,13 +13,13 @@ if __package__ in (None, ""):
     if str(ROOT) not in sys.path:
         sys.path.insert(0, str(ROOT))
     from NOMAD.core.adr import ADRFlows
-    from NOMAD.core.training import ADRUpdateCallback, PeriodicSaveCallback, build_initial_dist, build_ppo_kwargs, merge_dict, set_global_seed
+    from NOMAD.core.training import ADRUpdateCallback, PeriodicSaveCallback, build_initial_dist, build_ppo_kwargs, get_resume_paths, lock_model_lr, merge_dict, set_global_seed
     from NOMAD_RC5.backend import DEFAULT_ADR_CFG, DEFAULT_ENV_CFG, DEFAULT_POLICY_CFG, RC5Backend
     from NOMAD_RC5.env import RC5TorchVecEnv
     from NOMAD_RC5.training import DEFAULT_CFG as CPU_DEFAULT_CFG
 else:
     from NOMAD.core.adr import ADRFlows
-    from NOMAD.core.training import ADRUpdateCallback, PeriodicSaveCallback, build_initial_dist, build_ppo_kwargs, merge_dict, set_global_seed
+    from NOMAD.core.training import ADRUpdateCallback, PeriodicSaveCallback, build_initial_dist, build_ppo_kwargs, get_resume_paths, lock_model_lr, merge_dict, set_global_seed
     from .backend import DEFAULT_ADR_CFG, DEFAULT_ENV_CFG, DEFAULT_POLICY_CFG, RC5Backend
     from .env import RC5TorchVecEnv
     from .training import DEFAULT_CFG as CPU_DEFAULT_CFG
@@ -52,6 +52,7 @@ def _load_cfg(path):
 def run_training(cfg=None):
     cfg = merge_dict(DEFAULT_CFG, cfg or {})
     save_dir = Path(cfg["save_dir"])
+    resume = get_resume_paths(cfg)
     save_dir.mkdir(parents=True, exist_ok=True)
 
     set_global_seed(int(cfg["seed"]))
@@ -79,21 +80,26 @@ def run_training(cfg=None):
         w_sat=cfg["env"]["w_sat"],
     )
     venv = VecMonitor(venv)
-    venv = VecNormalize(venv, **cfg["vecnorm"])
+    venv = VecNormalize.load(str(resume["vecnorm"]), venv) if resume and resume["vecnorm"].exists() else VecNormalize(venv, **cfg["vecnorm"])
 
     policy_spec = backend.policy_spec()
-    model = RecurrentPPO(
-        policy_spec.policy,
-        venv,
-        policy_kwargs=policy_spec.policy_kwargs,
-        device=device,
-        **build_ppo_kwargs(cfg),
-    )
-    with torch.no_grad():
-        model.policy.action_net.weight.fill_(0.0)
-        model.policy.action_net.bias.fill_(0.0)
-        if hasattr(model.policy, "log_std"):
-            model.policy.log_std.data.fill_(0.0)
+    if resume and resume["model"].exists():
+        print(f"Loading checkpoint from {resume['dir']}", flush=True)
+        model = RecurrentPPO.load(resume["model"], env=venv, device=device)
+        print(f"Resuming PPO with lr={lock_model_lr(model):.3e}", flush=True)
+    else:
+        model = RecurrentPPO(
+            policy_spec.policy,
+            venv,
+            policy_kwargs=policy_spec.policy_kwargs,
+            device=device,
+            **build_ppo_kwargs(cfg),
+        )
+        with torch.no_grad():
+            model.policy.action_net.weight.fill_(0.0)
+            model.policy.action_net.bias.fill_(0.0)
+            if hasattr(model.policy, "log_std"):
+                model.policy.log_std.data.fill_(0.0)
 
     adr = ADRFlows(
         backend,
@@ -115,7 +121,7 @@ def run_training(cfg=None):
         ADRUpdateCallback(adr, cfg["adr"]["update_every_episodes"], train_device=device),
         PeriodicSaveCallback(cfg["save_every_steps"], save_dir, adr),
     ]
-    model.learn(total_timesteps=int(cfg["total_timesteps"]), callback=callbacks)
+    model.learn(total_timesteps=int(cfg["total_timesteps"]), callback=callbacks, reset_num_timesteps=not resume)
 
     model_path = save_dir / "model.zip"
     vecnorm_path = save_dir / "vecnormalize.pkl"

@@ -405,6 +405,24 @@ or:
 python -m NOMAD_RC5.training
 ```
 
+To resume from a saved training folder, set `resume_dir`. The trainer will load `model.zip`, `vecnormalize.pkl`, and `adr_flow.pt` from that folder, and if numbered checkpoint subfolders exist it will pick the latest one automatically.
+
+```python
+run_training(
+    {
+        "resume_dir": "NOMAD_RC5/runs/my_run",
+        "save_dir": "NOMAD_RC5/runs/my_run_resume",
+        "total_timesteps": 500_000,
+    }
+)
+```
+
+or:
+
+```bash
+python -m NOMAD_RC5.training --resume_dir NOMAD_RC5/runs/my_run --save_dir NOMAD_RC5/runs/my_run_resume --total_timesteps 500000
+```
+
 ## What is generic, and what is not
 
 Generic pieces:

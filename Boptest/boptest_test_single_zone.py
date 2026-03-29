@@ -16,7 +16,7 @@ for path in (ROOT, BOPTEST_GYM):
 
 from boptestGymEnv import BoptestGymEnv
 from examples.test_and_plot import plot_results, test_agent
-from NOMAD_RC5.sim import BASE_SETPOINT, TZ_MAX_K, TZ_MIN_K, nominal_pid, nominal_theta, pack_context
+from NOMAD_RC5.sim import BASE_SETPOINT, FUTURE_STEPS, TZ_MAX_K, TZ_MIN_K, nominal_pid, nominal_theta, pack_context
 
 URL = "https://api.boptest.net"
 URL = "http://127.0.0.1:8000"  # local testing
@@ -26,7 +26,7 @@ VECNORM_PATH = ROOT / "NOMAD_RC5" / "runs" / "default" / "vecnormalize.pkl"
 MODEL_NAME = "nomad_rc5_single_zone"
 SCENARIO = {"electricity_price": "highly_dynamic"}
 STEP_PERIOD = 3600
-PREDICTIVE_PERIOD = 12 * 3600
+PREDICTIVE_PERIOD = FUTURE_STEPS * STEP_PERIOD
 START_TIME = 31 * 24 * 3600
 WARMUP_PERIOD = 3 * 24 * 3600
 EPISODE_LENGTH = 28 * 24 * 3600
@@ -124,7 +124,7 @@ class NomadBoptestAgent:
                         time_features(self.time + k * STEP_PERIOD),
                     ]
                 )
-                for k in range(1, 13)
+                for k in range(1, FUTURE_STEPS + 1)
             ],
             dtype=np.float32,
         )
@@ -174,7 +174,7 @@ def main():
     env = make_env()
     agent = NomadBoptestAgent(env).reset(START_TIME)
     try:
-        _, _, rewards, kpis = test_agent(
+        observations, _, rewards, kpis = test_agent(
             env,
             agent,
             start_time=START_TIME,
@@ -191,6 +191,9 @@ def main():
             save_to_file=True,
             action_point="oveTSet_u",
             action_label="Zone\nsetpoint\n(K)",
+            overlay_action_on_temp=True,
+            observations=observations,
+            price_on_temp_axis=True,
         )
         print(plot_path)
     finally:

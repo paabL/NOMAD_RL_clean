@@ -50,8 +50,9 @@ DEFAULT_CFG = {
     "device": "cpu",
     "adr_device": "cpu",
     "n_envs": 8,
-    "total_timesteps": 10_000_000,
+    "total_timesteps": 20_000_000,
     "save_every_steps": 100_000,
+    "resume_dir": "NOMAD_RC5/runs/20260328_160531_1876296",  # example: set to None to disable resume
     "init_flow_path": str(LEGACY_FLOW_PATH),
     "save_dir": str(ROOT / "runs" / RUN_ID),
     "plot_every_episodes": 100,

@@ -32,7 +32,7 @@ STEP_PERIOD = 3600
 PREDICTIVE_PERIOD = 12 * 3600
 START_TIME = 31 * 24 * 3600
 WARMUP_PERIOD = 3 * 24 * 3600
-EPISODE_LENGTH = 28 * 24 * 3600
+EPISODE_LENGTH = 28 * 7 * 3600
 RESULT_DIR = ROOT / "Boptest" / f"results_tests_{MODEL_NAME}_{SCENARIO['electricity_price']}"
 DATE0 = pd.Timestamp("2023-01-01")
 
@@ -295,6 +295,7 @@ def rollout_frame(env, observations, actions, rewards):
         "reward": np.asarray(rewards, dtype=np.float32),
         "TDryBul": [obs[idx["TDryBul_pred_0"]] - 273.15 for obs in obs0],
         "HDirNor": [obs[idx["HDirNor_pred_0"]] for obs in obs0],
+        "price": [obs[idx["PriceElectricPowerHighlyDynamic_pred_0"]] for obs in obs0],
     }
     acts = np.asarray(actions, dtype=np.float32)
     for i, zone in enumerate(ZONES):
@@ -316,6 +317,9 @@ def save_plot(frame):
         ax.plot(frame.index, frame[f"{key}_high"], color="gray", linewidth=1)
         ax.plot(frame.index, frame[f"{key}_rl"], color="black", linewidth=1)
         ax.set_ylabel(f"{key}\nTemp (C)")
+        axr = ax.twinx()
+        axr.plot(frame.index, frame["price"], color="dimgray", linestyle="dotted", linewidth=1)
+        axr.set_ylabel("Price")
     axs[-1].plot(frame.index, frame["reward"], color="royalblue", linewidth=1)
     axs[-1].set_ylabel("Reward")
     axt = axs[-1].twinx()
