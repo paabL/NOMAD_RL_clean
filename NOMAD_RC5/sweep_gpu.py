@@ -98,7 +98,7 @@ def _run_job(job):
     run_dir, cfg_path, log_path = job
     with log_path.open("w") as log:
         proc = subprocess.run(
-            [sys.executable, "-m", "NOMAD_RC5.training_gpu", str(cfg_path)],
+            [sys.executable, "-m", "NOMAD_RC5.training", str(cfg_path)],
             cwd=REPO_ROOT,
             stdout=log,
             stderr=subprocess.STDOUT,

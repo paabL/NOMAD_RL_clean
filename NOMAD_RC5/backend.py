@@ -1,22 +1,19 @@
 from __future__ import annotations
 
-from copy import deepcopy
-
 import torch
 import torch.nn as nn
 from gymnasium import spaces
 from sb3_contrib.ppo_recurrent.policies import MultiInputLstmPolicy
-from stable_baselines3.common.monitor import Monitor
 from stable_baselines3.common.torch_layers import BaseFeaturesExtractor
 
 from NOMAD.core.backend import PolicySpec
-from .env import NOMAD, NormalizeAction, RC5TorchBatch, ResidualActionWrapper
+from NOMAD.core.utils import merge_dict
+from .env import RC5TorchBatch
 from .sim import BASE_SETPOINT, FUTURE_STEPS, TZ_MAX_K, TZ_MIN_K, context_low_high, load_rc5_data
 
 DEFAULT_ENV_CFG = {
     "step_period": 3600.0,
     "future_steps": FUTURE_STEPS,
-    "warmup_steps": 2 * 24,
     "base_setpoint": BASE_SETPOINT,
     "max_dev": 5.0,
     "max_episode_length": 24 * 21, #3 semaines, relativement long : pour le LSTM
@@ -42,16 +39,6 @@ DEFAULT_ADR_CFG = {
     "php_min_w": 100.0,
     "cop_beta": 1.0,
 }
-
-
-def merge_dict(base, extra):
-    out = deepcopy(base)
-    for key, value in (extra or {}).items():
-        if isinstance(value, dict) and isinstance(out.get(key), dict):
-            out[key] = merge_dict(out[key], value)
-        else:
-            out[key] = value
-    return out
 
 
 class ConvForecastTemporalFuseExtractor(BaseFeaturesExtractor):
@@ -115,31 +102,6 @@ class RC5Backend:
 
     def flow_bounds(self, device):
         return context_low_high(device=device)
-
-    def make_train_env(self, *, sampling_dist, env_id, rollout_dir, plot_every_episodes):
-        env = NOMAD(
-            data=self.data,
-            sampling_dist=sampling_dist,
-            step_period=self.env_cfg["step_period"],
-            future_steps=self.env_cfg["future_steps"],
-            warmup_steps=self.env_cfg["warmup_steps"],
-            base_setpoint=self.env_cfg["base_setpoint"],
-            max_episode_length=self.env_cfg["max_episode_length"],
-            tz_min=self.env_cfg["tz_min"],
-            tz_max=self.env_cfg["tz_max"],
-            w_energy=self.env_cfg["w_energy"],
-            w_comfort=self.env_cfg["w_comfort"],
-            comfort_huber_k=self.env_cfg["comfort_huber_k"],
-            w_sat=self.env_cfg["w_sat"],
-            include_ctx=bool(self.policy_cfg["critic_use_ctx"]),
-            rollout_dir=rollout_dir,
-            auto_plot=False,
-            plot_every_episodes=plot_every_episodes,
-            env_id=env_id,
-        )
-        env = ResidualActionWrapper(env, base_action=self.env_cfg["base_setpoint"], max_dev=self.env_cfg["max_dev"])
-        env = NormalizeAction(env)
-        return Monitor(env)
 
     def make_adr_env(self, *, device, n_envs):
         max_episode_length = self.env_cfg["max_episode_length"] if self.adr_cfg["max_episode_length"] is None else self.adr_cfg["max_episode_length"]

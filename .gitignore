@@ -12,6 +12,7 @@ NOMAD_RC5/runs/
 NOMAD_test1/runs/
 NOMAD/tensorboard_logs/
 NOMAD_RC5/tensorboard_logs/
+external/
 
 slurm-*.out
 slurm-*.err

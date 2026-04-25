@@ -14,7 +14,8 @@ The repository is split into a generic core and one concrete RC5 backend.
 - `NOMAD_RC5/sim.py`: RC5 context definition, bounds, data loading, and differentiable simulation helpers.
 - `NOMAD_RC5/env.py`: optimized Torch RC5 batch simulator and its SB3 `VecEnv` adapter.
 - `NOMAD_RC5/backend.py`: RC5 backend, default environment/policy/ADR overrides, and policy wiring.
-- `NOMAD_RC5/training_gpu.py`: current RC5 training entry point.
+- `NOMAD_RC5/training.py`: RC5 training entry point.
+- `NOMAD_RC5/test/`: legacy Gym/JAX env and plot helpers for simax, MPC, and RL comparisons.
 - `NOMAD/tests/test_core_smoke.py` and `NOMAD_test1/tests/test_smoke.py`: minimal smoke tests.
 
 ## Training loop
@@ -39,7 +40,7 @@ In the current code:
 Use the optimized RC5 path:
 
 ```bash
-python -m NOMAD_RC5.training_gpu
+python -m NOMAD_RC5.training
 ```
 
 This path keeps RC5 simulation in Torch through two classes:
@@ -92,12 +93,11 @@ In the current RC5 setup:
 
 ### Action
 
-The policy outputs a normalized action in `[-1, 1]`. It is mapped in two steps:
+The policy outputs a normalized action in `[-1, 1]`. In the Torch env, it is mapped directly to a setpoint:
 
-1. `NormalizeAction` maps `[-1, 1]` to a residual in `[-max_dev, max_dev]`.
-2. `ResidualActionWrapper` adds this residual to `base_setpoint`.
+`setpoint = base_setpoint + max_dev * action`
 
-The final setpoint is then clipped to `[tz_min, tz_max]`.
+The setpoint is then clipped to `[tz_min, tz_max]`.
 
 This action design is generic in spirit, but the current implementation assumes a single scalar thermal setpoint (RC5-specific).
 
@@ -200,7 +200,7 @@ Default values are split across:
 
 - `NOMAD/core/training.py` for generic run, PPO, VecNormalize, and core ADR settings;
 - `NOMAD_RC5/backend.py` for RC5-specific environment, policy, and ADR overrides;
-- `NOMAD_RC5/training_gpu.py` for the assembled optimized RC5 `DEFAULT_CFG`.
+- `NOMAD_RC5/training.py` for the assembled optimized RC5 `DEFAULT_CFG`.
 
 The tables below report the effective default values of the current RC5 entry point.
 
@@ -216,8 +216,7 @@ The tables below report the effective default values of the current RC5 entry po
 | `n_envs` | `64` | Number of parallel RC5 environments inside `RC5TorchBatch`. | Increase until steps/sec stops improving or memory becomes tight. |
 | `total_timesteps` | `20_000_000` | Total PPO environment steps. | Set this from your time budget and convergence target; use shorter runs for quick sweeps, longer runs for final training. |
 | `save_every_steps` | `100_000` | Period for checkpointing `model.zip`, `vecnormalize.pkl`, and `adr_flow.pt`. | Save often enough to recover useful milestones without spending too much on I/O. |
-| `save_dir` | `NOMAD_RC5/runs/gpu_default` | Output directory. | Choose a run-specific directory when launching experiments you want to compare. |
-| `plot_every_episodes` | `0` | Rollout plotting frequency. | Keep `0` for the optimized Torch path. |
+| `save_dir` | `NOMAD_RC5/runs/default` | Output directory. | Choose a run-specific directory when launching experiments you want to compare. |
 | `init_flow_path` | `last_chance_out_collapsed/flow.pt` | Optional initial flow checkpoint. If the file does not exist, NOMAD falls back to a fresh bounded flow. The current default points to a legacy local path and is not generic. | Use an existing flow to warm-start ADR; use `None` when you want a clean run from scratch. |
 
 ### `ppo`
@@ -270,7 +269,6 @@ These parameters come from the current RC5 backend and are not meant to be gener
 | --- | --- | --- | --- |
 | `step_period` | `3600.0` | RL decision interval in seconds. In RC5, the data timestep is 30 s and `3600 s` means one action per hour. | Use a shorter period if you want finer control and can afford more computation. |
 | `future_steps` | `24` | Forecast horizon length in RL steps. | Match this to how far ahead forecasts are useful for control. |
-| `warmup_steps` | `48` | Number of steps used to initialize the simulator state before the episode starts. | Keep it long enough for the hidden thermal state and PID state to settle. |
 | `base_setpoint` | `294.15` | Reference setpoint around which residual actions are applied. | Set it to the nominal operating point around which residual actions should stay centered. |
 | `max_dev` | `5.0` | Maximum residual deviation around `base_setpoint`. | Use the smallest range that still allows meaningful corrective actions. |
 | `max_episode_length` | `504` | Episode length in RL steps. | Long episodes help the recurrent policy learn slow thermal effects. |
@@ -315,7 +313,6 @@ The tables below give a first-order tuning intuition only. They summarize the us
 | `total_timesteps` | More opportunity to improve the policy, but longer runs. | Faster experiments, but higher risk of stopping before convergence. |
 | `save_every_steps` | Less frequent saving, lower I/O overhead, fewer restore points. | More frequent saving, more disk I/O, finer-grained checkpoints. |
 | `save_dir` | No learning effect; only changes where artifacts are written. | No learning effect; only changes where artifacts are written. |
-| `plot_every_episodes` | More rollout plots and visibility, but more plotting overhead. | Fewer plots and less overhead; `0` disables automatic plotting. |
 | `init_flow_path` | Using a strong prior flow warm-starts ADR and biases search toward previous contexts. | `None` starts from a fresh bounded flow and explores from scratch. |
 
 ### `ppo`
@@ -366,7 +363,6 @@ The tables below give a first-order tuning intuition only. They summarize the us
 | --- | --- | --- |
 | `step_period` | Coarser control, fewer decisions, cheaper training, but less reactive control. | Finer control, more reactive policy, but longer sequences and more compute. |
 | `future_steps` | Longer forecast horizon, more anticipative behavior, larger observation/model burden. | Shorter lookahead, simpler observation, but less anticipation. |
-| `warmup_steps` | Better state initialization before each episode, but slower resets. | Cheaper resets, but initial state can be less settled. |
 | `base_setpoint` | Warmer default operating point; usually favors comfort over savings. | Colder default operating point; usually favors savings over comfort. |
 | `max_dev` | Larger action freedom and exploration, but more aggressive setpoints. | Tighter action range, safer behavior, but less corrective power. |
 | `max_episode_length` | Longer horizons and richer credit assignment, but slower episodes. | Shorter episodes, faster iteration, but less long-horizon signal. |
@@ -409,7 +405,7 @@ Each training run saves in `save_dir`:
 If you want to start from a fresh flow instead of the bundled legacy checkpoint, set `init_flow_path` to `None`.
 
 ```python
-from NOMAD_RC5.training_gpu import run_training
+from NOMAD_RC5.training import run_training
 
 run_training(
     {
@@ -429,7 +425,7 @@ run_training(
 or:
 
 ```bash
-python -m NOMAD_RC5.training_gpu
+python -m NOMAD_RC5.training
 ```
 
 To resume from a saved training folder, set `resume_dir`. The trainer will load `model.zip`, `vecnormalize.pkl`, and `adr_flow.pt` from that folder, and if numbered checkpoint subfolders exist it will pick the latest one automatically.
@@ -447,7 +443,7 @@ run_training(
 or:
 
 ```bash
-python -m NOMAD_RC5.training_gpu config.json
+python -m NOMAD_RC5.training config.json
 ```
 
 where `config.json` can contain:
