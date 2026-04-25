@@ -62,7 +62,8 @@ DEFAULT_CFG = {
         "n_sample": 500,
         "refine_steps": 5,
         "refine_lr": 5e-3,
-        "temp_init": 1.0,
+        "ess_bounds": (0.05, 0.2),
+        "temp_bounds": (1e-3, 1e3),
         "ret_coef": 2.0,
         "bonus_coef": 1.0,
         "surprise_coef": 5.0, #default 10.0
@@ -96,6 +97,8 @@ class ADRUpdateCallback(BaseCallback):
             f"obj={stats['obj_mean']:.3f} | "
             f"entropy={stats['entropy']:.3f} "
             f"ess={stats['ess']:.1f} "
+            f"temp={stats['temp']:.3g} "
+            f"wmax={stats['weight_max']:.3f} "
             f"flow_std={params_std_pct:.1f}%"
         )
 
@@ -265,7 +268,8 @@ def run_training(backend, cfg=None):
         n_sample=cfg["adr"]["n_sample"],
         refine_steps=cfg["adr"]["refine_steps"],
         refine_lr=cfg["adr"]["refine_lr"],
-        temp_init=cfg["adr"]["temp_init"],
+        ess_bounds=cfg["adr"]["ess_bounds"],
+        temp_bounds=cfg["adr"]["temp_bounds"],
         ret_coef=cfg["adr"]["ret_coef"],
         bonus_coef=cfg["adr"]["bonus_coef"],
         kl_beta=cfg["adr"]["kl_beta"],

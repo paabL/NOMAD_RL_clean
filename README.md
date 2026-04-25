@@ -189,7 +189,7 @@ Once weighted candidates are obtained, the flow parameters are optimized with:
 
 where the KL term is estimated by Monte Carlo with `kl_M` samples. In practice:
 
-- low `temp_init` makes the update concentrate on the best candidates;
+- low `ess_bounds` makes the update concentrate on fewer candidates;
 - high `kl_beta` keeps the flow conservative;
 - high `surprise_coef` pushes exploration toward low-density regions;
 - more `refine_steps` makes candidate search more adversarial.
@@ -204,6 +204,24 @@ Default values are split across:
 
 The tables below report the effective default values of the current RC5 entry point.
 
+For a complete Rorqual-ready configuration, use:
+
+```bash
+python -m NOMAD_RC5.training configs/rc5_reasonable.json
+```
+
+`configs/rc5_reasonable.json` is strict JSON because the trainer reads it with `json.loads`. Lightweight notes live in the top-level `__notes` field; avoid comment keys inside `ppo`, `env`, `policy`, `vecnorm`, or `adr`, because some of those dictionaries are passed directly into runtime constructors.
+
+This config keeps the RC5 defaults except for cluster-oriented sizing: `n_envs=128`, `save_every_steps=200_000`, `ppo.batch_size=1024`, `adr.n_sample=1024`, and run-specific output paths.
+
+For a short local smoke test before using the cluster:
+
+```bash
+python -m NOMAD_RC5.training configs/rc5_local_smoke_mps.json
+```
+
+Use `configs/rc5_local_smoke_cpu.json` instead if MPS is unavailable or unstable. These local configs intentionally shorten episodes, reduce model/ADR sizes, trigger a quick ADR update, and save checkpoints every `256` timesteps.
+
 ### Generic Hyperparameters
 
 ### Run-level
@@ -216,8 +234,9 @@ The tables below report the effective default values of the current RC5 entry po
 | `n_envs` | `64` | Number of parallel RC5 environments inside `RC5TorchBatch`. | Increase until steps/sec stops improving or memory becomes tight. |
 | `total_timesteps` | `20_000_000` | Total PPO environment steps. | Set this from your time budget and convergence target; use shorter runs for quick sweeps, longer runs for final training. |
 | `save_every_steps` | `100_000` | Period for checkpointing `model.zip`, `vecnormalize.pkl`, and `adr_flow.pt`. | Save often enough to recover useful milestones without spending too much on I/O. |
+| `resume_dir` | `None` | Optional run directory to resume from. The latest numbered checkpoint is used when present. | Set it to an existing `save_dir` when continuing a stopped run. |
 | `save_dir` | `NOMAD_RC5/runs/default` | Output directory. | Choose a run-specific directory when launching experiments you want to compare. |
-| `init_flow_path` | `last_chance_out_collapsed/flow.pt` | Optional initial flow checkpoint. If the file does not exist, NOMAD falls back to a fresh bounded flow. The current default points to a legacy local path and is not generic. | Use an existing flow to warm-start ADR; use `None` when you want a clean run from scratch. |
+| `init_flow_path` | `flows/collapsed_flow.pt` | Optional initial flow checkpoint. If the file does not exist, NOMAD falls back to a fresh bounded flow. The current default points to a bundled warm-start flow and is not generic. | Use an existing flow to warm-start ADR; use `None` when you want a clean run from scratch. |
 
 ### `ppo`
 
@@ -253,7 +272,8 @@ The tables below report the effective default values of the current RC5 entry po
 | `refine_lr` | `5e-3` | Step size for context refinement. | Lower it if refinement is erratic; raise it if refinement barely moves candidates. |
 | `ret_coef` | `2.0` | Weight of the RL return in the ADR objective. | Increase it if ADR should rank contexts more by policy return than by shaping terms. |
 | `bonus_coef` | `1.0` | Weight of the baseline shaping term in the ADR objective. | Increase it if ADR should care more about comfort, saturation, and COP shaping. |
-| <span style="color: red;">`temp_init`</span> | <span style="color: red;">`1.0`</span> | <span style="color: red;">Softmax temperature used to convert candidate objectives into weights.</span> | <span style="color: red;">Lower it to focus on the best contexts; raise it to spread weight more broadly.</span> |
+| <span style="color: red;">`ess_bounds`</span> | <span style="color: red;">`(0.05, 0.2)`</span> | <span style="color: red;">Target ESS interval. Values `<= 1` are fractions of the weighted candidate count.</span> | <span style="color: red;">Raise it for broader ADR updates; lower it for sharper context selection.</span> |
+| <span style="color: red;">`temp_bounds`</span> | <span style="color: red;">`(1e-3, 1e3)`</span> | <span style="color: red;">Allowed temperature interval for ESS adaptation.</span> | <span style="color: red;">Keep wide unless diagnostics show numerical extremes.</span> |
 | `surprise_coef` | `5.0` | Coefficient of the novelty bonus `-log q(c)`. | Increase it if ADR collapses too quickly onto familiar contexts. |
 | <span style="color: red;">`kl_beta`</span> | <span style="color: red;">`500.0`</span> | <span style="color: red;">Weight of the trust-region KL penalty between successive flows.</span> | <span style="color: red;">Increase it if the flow moves too abruptly; decrease it if adaptation is too conservative.</span> |
 | `kl_M` | `1000` | Monte Carlo sample count for the KL estimate and entropy diagnostics. | Increase for less noisy estimates if compute allows; otherwise keep it moderate. |
@@ -293,6 +313,7 @@ These parameters come from the current RC5 backend and are not meant to be gener
 | --- | --- | --- | --- |
 | `baseline_cs_coef` | `50.0` | Global scale of the baseline shaping term `bcs`. | Increase it if baseline-derived shaping should matter more in context ranking. |
 | `baseline_cop_coef` | `5.0` | Extra scale of the baseline COP penalty. | Increase it if you want ADR to reject implausible heat-pump behavior more strongly. |
+| `max_episode_length` | `120` | ADR rollout horizon in RL steps. This is shorter than the training episode length to keep ADR updates cheaper. | Increase it if ADR needs longer-horizon behavior; decrease it if ADR updates dominate runtime. |
 | `cop_bounds` | `(1.0, 5.0)` | Admissible effective COP interval used by the baseline COP penalty. This is heat-pump specific in the current code. | Set bounds from the physically acceptable COP range of your equipment model. |
 | `php_min_w` | `100.0` | Minimum heat-pump power used before a COP sample is considered meaningful. | Raise it if low-power COP estimates are too noisy; lower it if you want to use more samples. |
 | `cop_beta` | `1.0` | Softness parameter used in the smooth COP bound aggregation. | Increase it to approximate a harder worst-case penalty; decrease it for smoother aggregation. |
@@ -349,7 +370,7 @@ The tables below give a first-order tuning intuition only. They summarize the us
 | `refine_lr` | Larger refinement jumps, which can find harder contexts faster but be unstable. | Smaller refinement steps, which are safer but less aggressive. |
 | `ret_coef` | ADR ranking depends more on policy return. | ADR ranking depends less on policy return. |
 | `bonus_coef` | ADR ranking depends more on baseline shaping terms. | ADR ranking depends less on baseline shaping terms. |
-| <span style="color: red;">`temp_init`</span> | <span style="color: red;">Flatter softmax weights, so ADR spreads mass over more candidates.</span> | <span style="color: red;">Sharper weights, so ADR concentrates on the best candidates more aggressively.</span> |
+| <span style="color: red;">`ess_bounds`</span> | <span style="color: red;">Broader target ESS, so ADR uses more candidates.</span> | <span style="color: red;">Sharper target ESS, so ADR concentrates more strongly.</span> |
 | `surprise_coef` | Stronger novelty pressure toward low-density contexts and exploration. | Less novelty pressure; ADR stays closer to already visited high-value regions. |
 | <span style="color: red;">`kl_beta`</span> | <span style="color: red;">More conservative flow updates; the distribution moves less each ADR step.</span> | <span style="color: red;">More aggressive flow drift toward current weighted candidates.</span> |
 | `kl_M` | More accurate KL/entropy estimates, but more compute. | Cheaper estimates, but noisier regularization diagnostics. |
@@ -402,6 +423,21 @@ Each training run saves in `save_dir`:
 
 ## Minimal usage
 
+For a complete single-GPU run with explicit hyperparameters:
+
+```bash
+python -m NOMAD_RC5.training configs/rc5_reasonable.json
+```
+
+For a MacBook smoke test:
+
+```bash
+python -m NOMAD_RC5.training configs/rc5_local_smoke_mps.json
+tensorboard --logdir NOMAD_RC5/tensorboard_logs --port 16006
+```
+
+The optimized RC5 training path logs TensorBoard and saves checkpoints, but it does not currently generate episode plots. Plotting helpers live in the legacy `NOMAD_RC5/test` environment.
+
 If you want to start from a fresh flow instead of the bundled legacy checkpoint, set `init_flow_path` to `None`.
 
 ```python
@@ -425,7 +461,7 @@ run_training(
 or:
 
 ```bash
-python -m NOMAD_RC5.training
+python -m NOMAD_RC5.training config.json
 ```
 
 To resume from a saved training folder, set `resume_dir`. The trainer will load `model.zip`, `vecnormalize.pkl`, and `adr_flow.pt` from that folder, and if numbered checkpoint subfolders exist it will pick the latest one automatically.

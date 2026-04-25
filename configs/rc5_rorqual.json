@@ -1,0 +1,72 @@
+{
+  "__notes": [
+    "JSON strict: comments are kept here because python -m NOMAD_RC5.training reads this file with json.loads.",
+    "Cluster baseline for one CUDA GPU. Code defaults are documented in README.md.",
+    "Use resume_dir to continue a run; keep save_dir unchanged when resuming in place."
+  ],
+  "seed": 0,
+  "device": "cuda",
+  "adr_device": "cuda",
+  "n_envs": 128,
+  "total_timesteps": 20000000,
+  "save_every_steps": 200000,
+  "resume_dir": null,
+  "init_flow_path": "flows/collapsed_flow.pt",
+  "save_dir": "NOMAD_RC5/runs/rc5_reasonable_seed0",
+  "ppo": {
+    "learning_rate_start": 0.0005,
+    "learning_rate_end": 0.0001,
+    "n_steps": 512,
+    "batch_size": 2048,
+    "n_epochs": 5,
+    "verbose": 1,
+    "tensorboard_log": "NOMAD_RC5/tensorboard_logs/rc5_reasonable_seed0"
+  },
+  "vecnorm": {
+    "norm_obs": true,
+    "norm_reward": true,
+    "clip_obs": 10.0
+  },
+  "env": {
+    "step_period": 3600.0,
+    "future_steps": 24,
+    "base_setpoint": 294.15,
+    "max_dev": 5.0,
+    "max_episode_length": 504,
+    "tz_min": 288.15,
+    "tz_max": 303.15,
+    "w_energy": 1.0,
+    "w_comfort": 5.0,
+    "comfort_huber_k": 0.0,
+    "w_sat": 0.2
+  },
+  "policy": {
+    "critic_use_ctx": true,
+    "policy_hidden": [128, 128],
+    "value_hidden": [128, 128]
+  },
+  "adr": {
+    "transforms": 3,
+    "bins": 8,
+    "hidden": [64, 64],
+    "iters": 50,
+    "lr": 0.001,
+    "n_sample": 1024,
+    "refine_steps": 5,
+    "refine_lr": 0.005,
+    "ess_bounds": [0.05, 0.2],
+    "temp_bounds": [0.001, 1000.0],
+    "ret_coef": 2.0,
+    "bonus_coef": 1.0,
+    "surprise_coef": 5.0,
+    "kl_beta": 500.0,
+    "kl_M": 1000,
+    "update_every_episodes": 100,
+    "baseline_cs_coef": 50.0,
+    "baseline_cop_coef": 5.0,
+    "max_episode_length": 120,
+    "cop_bounds": [1.0, 5.0],
+    "php_min_w": 100.0,
+    "cop_beta": 1.0
+  }
+}

@@ -154,7 +154,8 @@ class ADRFlows:
         n_sample=64,
         refine_steps=0,
         refine_lr=1e-3,
-        temp_init=1.0,
+        ess_bounds=(0.05, 0.2),
+        temp_bounds=(1e-3, 1e3),
         kl_beta=0.1,
         kl_M=1024,
         ret_coef=1.0,
@@ -171,12 +172,46 @@ class ADRFlows:
         self.n_sample = int(n_sample)
         self.refine_steps = int(refine_steps)
         self.refine_lr = float(refine_lr)
-        self.temp = float(temp_init)
+        self.ess_bounds = tuple(map(float, ess_bounds))
+        self.temp_bounds = tuple(map(float, temp_bounds))
+        self.temp = (self.temp_bounds[0] * self.temp_bounds[1]) ** 0.5
         self.kl_beta = float(kl_beta)
         self.kl_M = int(kl_M)
         self.ret_coef = float(ret_coef)
         self.bonus_coef = float(bonus_coef)
         self.surprise_coef = float(surprise_coef)
+
+    @staticmethod
+    def _weights_ess(scores, temp):
+        weights = torch.softmax(scores / max(float(temp), 1e-6), dim=0)
+        return weights, 1.0 / torch.sum(weights * weights)
+
+    def _ess_bounds(self, n):
+        lo, hi = self.ess_bounds
+        if hi <= 1.0:
+            lo, hi = lo * n, hi * n
+        lo = max(1.0, lo)
+        return lo, min(float(n), max(lo, hi))
+
+    def _adapt_temp(self, scores, temp):
+        weights, ess = self._weights_ess(scores, temp)
+        lo, hi = self._ess_bounds(scores.numel())
+        if lo <= float(ess.item()) <= hi:
+            return temp, weights, ess, lo, hi
+        target = 0.5 * (lo + hi)
+        a, b = self.temp_bounds
+        # ESS increases with temperature, so a short bisection is enough.
+        for _ in range(30):
+            mid = (a * b) ** 0.5
+            _, mid_ess = self._weights_ess(scores, mid)
+            if mid_ess < target:
+                a = mid
+            else:
+                b = mid
+        temp = (a * b) ** 0.5
+        weights, ess = self._weights_ess(scores, temp)
+        self.temp = temp
+        return temp, weights, ess, lo, hi
 
     def set_policy(self, model, obs_norm=None):
         stats = None
@@ -279,9 +314,8 @@ class ADRFlows:
         x_data = torch.cat(xs, dim=0)
         obj_all = torch.cat(objs, dim=0)
         with torch.no_grad():
-            scores = finite_clip(obj_all - finite_clip(obj_all, logp_clip).max(), logp_clip) / temp
-            weights = torch.softmax(scores, dim=0)
-        ess = 1.0 / torch.sum(weights * weights)
+            raw_scores = finite_clip(obj_all - finite_clip(obj_all, logp_clip).max(), logp_clip)
+            temp, weights, ess, ess_lo, ess_hi = self._adapt_temp(raw_scores, temp)
 
         ref = self.current.clone()
         for p in ref.get_params():
@@ -329,6 +363,10 @@ class ADRFlows:
             "surprise_std": float(surprise.std().item()),
             "entropy": float(entropy),
             "ess": float(ess.item()),
+            "ess_low": float(ess_lo),
+            "ess_high": float(ess_hi),
+            "temp": float(temp),
+            "weight_max": float(weights.max().item()),
             "loss_fit": float(loss_fit_val.item()),
             "beta_kl": float((self.kl_beta * kl_val).item()),
         }

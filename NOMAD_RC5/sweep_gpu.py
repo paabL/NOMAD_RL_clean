@@ -30,7 +30,7 @@ GRID = {
 
 # GRID = {
 #     "adr.n_sample": [128, 256, 512],
-#     "adr.temp_init": [0.5, 1.0, 2.0],
+#     "adr.ess_bounds": [[0.05, 0.2], [0.1, 0.3]],
 #     "ppo.batch_size": [128, 256],
 #     "ppo.n_steps": [128, 256],
 #     "env.max_episode_length": [24 * 7, 24 * 21],

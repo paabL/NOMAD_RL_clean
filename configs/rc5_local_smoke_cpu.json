@@ -1,0 +1,72 @@
+{
+  "__notes": [
+    "Local smoke test for CPU. Same intent as rc5_local_smoke_mps.json, slower but more conservative.",
+    "This checks imports, short training, ADR update, TensorBoard logging, and checkpoint saving.",
+    "The optimized NOMAD_RC5.training path does not currently plot episodes."
+  ],
+  "seed": 0,
+  "device": "cpu",
+  "adr_device": "cpu",
+  "n_envs": 16,
+  "total_timesteps": 50000,
+  "save_every_steps": 10000,
+  "resume_dir": null,
+  "init_flow_path": "flows/flow_collapsed.pt",
+  "save_dir": "NOMAD_RC5/runs/local_smoke_cpu",
+  "ppo": {
+    "learning_rate_start": 0.0005,
+    "learning_rate_end": 0.0001,
+    "n_steps": 2048,
+    "batch_size": 256,
+    "n_epochs": 2,
+    "verbose": 1,
+    "tensorboard_log": "NOMAD_RC5/tensorboard_logs/local_smoke_cpu"
+  },
+  "vecnorm": {
+    "norm_obs": true,
+    "norm_reward": true,
+    "clip_obs": 10.0
+  },
+  "env": {
+    "step_period": 3600.0,
+    "future_steps": 24,
+    "base_setpoint": 294.15,
+    "max_dev": 5.0,
+    "max_episode_length": 480,
+    "tz_min": 288.15,
+    "tz_max": 303.15,
+    "w_energy": 1.0,
+    "w_comfort": 5.0,
+    "comfort_huber_k": 0.0,
+    "w_sat": 0.2
+  },
+  "policy": {
+    "critic_use_ctx": true,
+    "policy_hidden": [64, 64],
+    "value_hidden": [64, 64]
+  },
+  "adr": {
+    "transforms": 2,
+    "bins": 8,
+    "hidden": [32, 32],
+    "iters": 5,
+    "lr": 0.005,
+    "n_sample": 100,
+    "refine_steps": 0,
+    "refine_lr": 0.005,
+    "ess_bounds": [0.05, 0.2],
+    "temp_bounds": [0.001, 1000.0],
+    "ret_coef": 2.0,
+    "bonus_coef": 1.0,
+    "surprise_coef": 1.0,
+    "kl_beta": 100.0,
+    "kl_M": 1000,
+    "update_every_episodes": 100,
+    "baseline_cs_coef": 50.0,
+    "baseline_cop_coef": 5.0,
+    "max_episode_length": 12,
+    "cop_bounds": [1.0, 5.0],
+    "php_min_w": 100.0,
+    "cop_beta": 1.0
+  }
+}
