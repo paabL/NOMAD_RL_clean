@@ -13,7 +13,8 @@ import torch
 
 from NOMAD.core.adr import ADRFlows, NormFlowDist
 from NOMAD.core.backend import PolicySpec
-from NOMAD.core.training import resolve_resume_dir, run_training as run_core_training, vecnorm_stats
+from NOMAD.core.training import run_training as run_core_training
+from NOMAD.core.utils import resolve_resume_dir, vecnorm_stats
 
 
 class ToyTrainEnv(gym.Env):
@@ -110,6 +111,19 @@ class ToyBackend:
         return PolicySpec(policy="MultiInputLstmPolicy", policy_kwargs={})
 
 
+class NaNToyBatchEnv(ToyBatchEnv):
+    def step(self, action):
+        obs, reward, done, info = super().step(action)
+        reward[0] = torch.nan
+        info["adr_bonus"][1] = torch.nan
+        return obs, reward, done, info
+
+
+class NaNToyBackend(ToyBackend):
+    def make_adr_env(self, *, device, n_envs):
+        return NaNToyBatchEnv(device=device, n_envs=n_envs)
+
+
 def test_core_adr_smoke():
     backend = ToyBackend()
     venv = DummyVecEnv([lambda: backend.make_train_env(sampling_dist=None, env_id=0, rollout_dir=None, plot_every_episodes=0)])
@@ -123,6 +137,25 @@ def test_core_adr_smoke():
     assert np.isfinite(stats["obj_mean"])
     assert np.isfinite(stats["ret_mean"])
     assert np.isfinite(stats["bonus_mean"])
+    assert np.isfinite(stats["loss_fit"])
+    venv.close()
+
+
+def test_core_adr_update_ignores_non_finite_rollout_terms():
+    backend = NaNToyBackend()
+    venv = DummyVecEnv([lambda: ToyBackend().make_train_env(sampling_dist=None, env_id=0, rollout_dir=None, plot_every_episodes=0)])
+    venv = VecNormalize(venv, norm_obs=True, norm_reward=True, clip_obs=10.0)
+    model = RecurrentPPO("MultiInputLstmPolicy", venv, n_steps=8, batch_size=4, n_epochs=1, learning_rate=1e-4, verbose=0, device="cpu")
+    model.learn(total_timesteps=16)
+
+    adr = ADRFlows(backend, device="cpu", n_sample=2, iters=1, refine_steps=1, kl_M=4, surprise_coef=0.1)
+    adr.set_policy(model, obs_norm=vecnorm_stats(venv))
+    stats = adr.update()
+    assert np.isfinite(stats["obj_mean"])
+    assert np.isfinite(stats["ret_mean"])
+    assert np.isfinite(stats["bonus_mean"])
+    assert np.isfinite(stats["entropy"])
+    assert np.isfinite(stats["beta_kl"])
     assert np.isfinite(stats["loss_fit"])
     venv.close()
 

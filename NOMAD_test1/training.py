@@ -8,11 +8,13 @@ if __package__ in (None, ""):
     if str(ROOT) not in sys.path:
         sys.path.insert(0, str(ROOT))
     from NOMAD.core.training import DEFAULT_CFG as CORE_DEFAULT_CFG
-    from NOMAD.core.training import merge_dict, run_training as run_core_training
+    from NOMAD.core.training import run_training as run_core_training
+    from NOMAD.core.utils import merge_dict
     from NOMAD_test1.backend import DEFAULT_ADR_CFG, DEFAULT_ENV_CFG, SwingBackend
 else:
     from NOMAD.core.training import DEFAULT_CFG as CORE_DEFAULT_CFG
-    from NOMAD.core.training import merge_dict, run_training as run_core_training
+    from NOMAD.core.training import run_training as run_core_training
+    from NOMAD.core.utils import merge_dict
     from .backend import DEFAULT_ADR_CFG, DEFAULT_ENV_CFG, SwingBackend
 
 ROOT = Path(__file__).resolve().parent

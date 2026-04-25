@@ -13,13 +13,15 @@ if __package__ in (None, ""):
     if str(ROOT) not in sys.path:
         sys.path.insert(0, str(ROOT))
     from NOMAD.core.adr import ADRFlows
-    from NOMAD.core.training import ADRUpdateCallback, PeriodicSaveCallback, build_initial_dist, build_ppo_kwargs, get_resume_paths, lock_model_lr, merge_dict, set_global_seed
+    from NOMAD.core.training import ADRUpdateCallback, PeriodicSaveCallback
+    from NOMAD.core.utils import build_initial_dist, build_ppo_kwargs, get_resume_paths, lock_model_lr, merge_dict, set_global_seed
     from NOMAD_RC5.backend import DEFAULT_ADR_CFG, DEFAULT_ENV_CFG, DEFAULT_POLICY_CFG, RC5Backend
     from NOMAD_RC5.env import RC5TorchVecEnv
     from NOMAD_RC5.training import DEFAULT_CFG as CPU_DEFAULT_CFG
 else:
     from NOMAD.core.adr import ADRFlows
-    from NOMAD.core.training import ADRUpdateCallback, PeriodicSaveCallback, build_initial_dist, build_ppo_kwargs, get_resume_paths, lock_model_lr, merge_dict, set_global_seed
+    from NOMAD.core.training import ADRUpdateCallback, PeriodicSaveCallback
+    from NOMAD.core.utils import build_initial_dist, build_ppo_kwargs, get_resume_paths, lock_model_lr, merge_dict, set_global_seed
     from .backend import DEFAULT_ADR_CFG, DEFAULT_ENV_CFG, DEFAULT_POLICY_CFG, RC5Backend
     from .env import RC5TorchVecEnv
     from .training import DEFAULT_CFG as CPU_DEFAULT_CFG

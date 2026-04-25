@@ -10,6 +10,11 @@ import zuko
 from .backend import NomadBackend
 
 
+def finite_clip(x, clip=60.0):
+    clip = float(clip)
+    return torch.nan_to_num(x, nan=0.0, posinf=clip, neginf=-clip).clamp(-clip, clip)
+
+
 def normalize_obs(obs, stats):
     clip = float(stats["clip_obs"])
     eps = float(stats["eps"])
@@ -227,6 +232,8 @@ class ADRFlows:
         if self.ev is None:
             raise ValueError("ADRFlows.set_policy(model, obs_norm) must be called before update().")
 
+        logp_clip = 60.0
+        temp = max(self.temp, 1e-6)
         t0 = time.perf_counter()
         low, high = self.current.low, self.current.high
         x = (low + (high - low) * torch.rand((self.n_sample, low.numel()), device=self.device)).requires_grad_(True)
@@ -243,20 +250,20 @@ class ADRFlows:
             bonus = torch.zeros((self.n_sample,), device=self.device)
             for _ in range(env.max_episode_length):
                 obs, reward, done, info = env.step(self.ev.act(obs))
-                ret += reward
-                bonus += info["adr_bonus"]
+                ret += torch.nan_to_num(reward)
+                bonus += torch.nan_to_num(info["adr_bonus"])
             return self.ret_coef * ret + self.bonus_coef * bonus, ret, bonus
 
         for _ in range(self.refine_steps):
             obj, ret, bonus = rollout_objective()
             if ret_pre is None:
                 ret_pre, bonus_pre = ret.detach(), bonus.detach()
-            surprise = self.surprise_coef * (-self.current.log_prob(x)) if self.surprise_coef else torch.zeros_like(obj)
+            surprise = self.surprise_coef * (-finite_clip(self.current.log_prob(x), logp_clip)) if self.surprise_coef else torch.zeros_like(obj)
             surprise_pre = surprise.detach() if surprise_pre is None else surprise_pre
             total = obj + surprise
             xs.append(x.detach().clone())
             objs.append(total.detach())
-            grad = torch.autograd.grad(total.sum(), x)[0]
+            grad = torch.nan_to_num(torch.autograd.grad(total.sum(), x)[0])
             with torch.no_grad():
                 x.add_(self.refine_lr * grad).clamp_(low, high)
             x = x.detach().requires_grad_(True)
@@ -264,7 +271,7 @@ class ADRFlows:
         obj, ret, bonus = rollout_objective()
         if ret_pre is None:
             ret_pre, bonus_pre = ret.detach(), bonus.detach()
-        surprise = self.surprise_coef * (-self.current.log_prob(x)) if self.surprise_coef else torch.zeros_like(obj)
+        surprise = self.surprise_coef * (-finite_clip(self.current.log_prob(x), logp_clip)) if self.surprise_coef else torch.zeros_like(obj)
         surprise_pre = surprise.detach() if surprise_pre is None else surprise_pre
         xs.append(x.detach())
         objs.append((obj + surprise).detach())
@@ -272,7 +279,8 @@ class ADRFlows:
         x_data = torch.cat(xs, dim=0)
         obj_all = torch.cat(objs, dim=0)
         with torch.no_grad():
-            weights = torch.softmax(obj_all / self.temp, dim=0)
+            scores = finite_clip(obj_all - finite_clip(obj_all, logp_clip).max(), logp_clip) / temp
+            weights = torch.softmax(scores, dim=0)
         ess = 1.0 / torch.sum(weights * weights)
 
         ref = self.current.clone()
@@ -281,19 +289,27 @@ class ADRFlows:
 
         loss_fit_val = torch.zeros((), device=self.device)
         kl_val = torch.zeros((), device=self.device)
+        params = tuple(self.current.get_params())
         for _ in range(self.iters):
             self.opt.zero_grad(set_to_none=True)
-            loss_fit = -(weights * self.current.log_prob(x_data)).sum()
+            loss_fit = -(weights * finite_clip(self.current.log_prob(x_data), logp_clip)).sum()
             x_kl = self.current.rsample((self.kl_M,))
-            kl = (self.current.log_prob(x_kl) - ref.log_prob(x_kl)).mean()
+            kl = finite_clip(self.current.log_prob(x_kl) - ref.log_prob(x_kl), logp_clip).mean()
             loss_fit_val = loss_fit.detach()
             kl_val = kl.detach()
-            (loss_fit + self.kl_beta * kl).backward()
+            loss = loss_fit + self.kl_beta * kl
+            if not torch.isfinite(loss):
+                continue
+            loss.backward()
+            torch.nn.utils.clip_grad_norm_(params, max_norm=10.0)
+            if any(p.grad is not None and not torch.isfinite(p.grad).all() for p in params):
+                self.opt.zero_grad(set_to_none=True)
+                continue
             self.opt.step()
 
         with torch.no_grad():
             x_mc = self.current.sample((self.kl_M,))
-            entropy = (-self.current.log_prob(x_mc)).mean().item()
+            entropy = (-finite_clip(self.current.log_prob(x_mc), logp_clip)).mean().item()
         ret_np = ret.detach().cpu().numpy()
         bonus_mean = float(bonus.mean().item())
         bonus_mean_pre = float(bonus_pre.mean().item())

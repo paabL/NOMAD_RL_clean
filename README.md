@@ -12,10 +12,10 @@ The repository is split into a generic core and one concrete RC5 backend.
 - `NOMAD/core/adr.py`: bounded normalizing-flow distribution and ADR update rule.
 - `NOMAD/core/backend.py`: backend interface used to plug a simulator into the generic core.
 - `NOMAD_RC5/sim.py`: RC5 context definition, bounds, data loading, and differentiable simulation helpers.
-- `NOMAD_RC5/env.py`: Gymnasium environment, reward construction, action wrappers, and differentiable `RC5TorchBatch`.
+- `NOMAD_RC5/env.py`: optimized Torch RC5 batch simulator and its SB3 `VecEnv` adapter.
 - `NOMAD_RC5/backend.py`: RC5 backend, default environment/policy/ADR overrides, and policy wiring.
-- `NOMAD_RC5/training.py`: end-to-end entry point for the RC5 instantiation.
-- `NOMAD/tests/test_core_smoke.py` and `NOMAD_RC5/tests/test_smoke.py`: minimal smoke tests.
+- `NOMAD_RC5/training_gpu.py`: current RC5 training entry point.
+- `NOMAD/tests/test_core_smoke.py` and `NOMAD_test1/tests/test_smoke.py`: minimal smoke tests.
 
 ## Training loop
 
@@ -33,6 +33,31 @@ In the current code:
 - the observation is a dict with a `now` vector and a `forecast` tensor;
 - the action is a normalized residual around a base temperature setpoint (RC5-specific);
 - ADR updates are done by `ADRFlows`, then pushed back to all vectorized environments through `set_sampling_dist`.
+
+## RC5 Torch/GPU training
+
+Use the optimized RC5 path:
+
+```bash
+python -m NOMAD_RC5.training_gpu
+```
+
+This path keeps RC5 simulation in Torch through two classes:
+
+- `RC5TorchBatch`: simulates many RC5 environments as one tensor batch on `cuda`, `mps`, or `cpu`;
+- `RC5TorchVecEnv`: thin Stable-Baselines3 adapter around `RC5TorchBatch`.
+
+For PPO, `n_envs` is the batch size of parallel environments. Each row has its own context, start hour, exogenous window, state, reward, and done flag. PPO collects:
+
+`rollout_size = n_envs * n_steps`
+
+Then it computes advantages and minibatch updates from that rollout.
+
+For ADR, `ADRFlows` also uses `RC5TorchBatch`, but directly. `n_sample` candidate contexts are evaluated in parallel on `adr_device`. After each ADR update, the learned context distribution is copied back to the PPO training env with `set_sampling_dist`.
+
+One practical limitation remains: SB3 expects NumPy at the `VecEnv` boundary. The physics runs in Torch, but observations and rewards are converted back to NumPy before PPO consumes them. Larger `n_envs` helps amortize that boundary cost.
+
+`torch.compile` is not enabled by default. Local tests showed speedups on CPU for the physics step after a large first compile cost, but MPS failed in Inductor. Treat it as an experiment, not as the default path.
 
 ## Environment interface
 
@@ -175,7 +200,7 @@ Default values are split across:
 
 - `NOMAD/core/training.py` for generic run, PPO, VecNormalize, and core ADR settings;
 - `NOMAD_RC5/backend.py` for RC5-specific environment, policy, and ADR overrides;
-- `NOMAD_RC5/training.py` for the assembled `DEFAULT_CFG` and the default legacy flow path.
+- `NOMAD_RC5/training_gpu.py` for the assembled optimized RC5 `DEFAULT_CFG`.
 
 The tables below report the effective default values of the current RC5 entry point.
 
@@ -186,21 +211,22 @@ The tables below report the effective default values of the current RC5 entry po
 | Key | Default | Meaning | How to choose |
 | --- | --- | --- | --- |
 | `seed` | `0` | Global random seed. | Keep fixed for reproducibility; change it only to measure sensitivity to randomness. |
-| `device` | `"cpu"` | Torch device used by PPO and ADR. | Use the fastest available device that is stable in your setup. |
-| `n_envs` | `4` | Number of vectorized RL environments. | Increase until you hit memory/CPU limits; keep it modest if each environment is expensive. |
-| `total_timesteps` | `6_000_000` | Total PPO environment steps. | Set this from your time budget and convergence target; use shorter runs for quick sweeps, longer runs for final training. |
+| `device` | auto: `cuda`, else `mps`, else `cpu` | Torch device used by PPO and the RC5 Torch batch env. | Prefer `cuda` when available. Use `mps` only after checking stability. |
+| `adr_device` | same as `device` | Torch device used for ADR context rollouts. | Keep it equal to `device` unless PPO and ADR need different hardware. |
+| `n_envs` | `64` | Number of parallel RC5 environments inside `RC5TorchBatch`. | Increase until steps/sec stops improving or memory becomes tight. |
+| `total_timesteps` | `20_000_000` | Total PPO environment steps. | Set this from your time budget and convergence target; use shorter runs for quick sweeps, longer runs for final training. |
 | `save_every_steps` | `100_000` | Period for checkpointing `model.zip`, `vecnormalize.pkl`, and `adr_flow.pt`. | Save often enough to recover useful milestones without spending too much on I/O. |
-| `save_dir` | `NOMAD_RC5/runs/default` | Output directory. | Choose a run-specific directory when launching experiments you want to compare. |
-| `plot_every_episodes` | `100` | Rollout plotting frequency. | Use a positive value for debugging and qualitative inspection; set to `0` if plotting overhead is undesirable. |
+| `save_dir` | `NOMAD_RC5/runs/gpu_default` | Output directory. | Choose a run-specific directory when launching experiments you want to compare. |
+| `plot_every_episodes` | `0` | Rollout plotting frequency. | Keep `0` for the optimized Torch path. |
 | `init_flow_path` | `last_chance_out_collapsed/flow.pt` | Optional initial flow checkpoint. If the file does not exist, NOMAD falls back to a fresh bounded flow. The current default points to a legacy local path and is not generic. | Use an existing flow to warm-start ADR; use `None` when you want a clean run from scratch. |
 
 ### `ppo`
 
 | Key | Default | Meaning | How to choose |
 | --- | --- | --- | --- |
-| `learning_rate_start` | `1e-4` | Initial PPO learning rate. | Start here for stability; raise it only if learning is clearly too slow. |
-| `learning_rate_end` | `5e-5` | Final PPO learning rate for the linear schedule. | Lower it if you want gentler late training updates; raise it if convergence is too conservative. |
-| `n_steps` | `128` | Rollout length per environment before each PPO update. | Increase for longer-horizon credit assignment; decrease for more frequent updates. |
+| `learning_rate_start` | `5e-4` | Initial PPO learning rate. | Lower it first if PPO is unstable. |
+| `learning_rate_end` | `1e-4` | Final PPO learning rate for the linear schedule. | Lower it if you want gentler late training updates. |
+| `n_steps` | `512` | Rollout length per environment before each PPO update. | Keep enough temporal horizon for the LSTM; reduce it when increasing `n_envs`. |
 | `batch_size` | `256` | Minibatch size for PPO optimization. | Use the largest stable batch that fits your hardware. |
 | `n_epochs` | `5` | Number of PPO passes over each rollout batch. | Increase if PPO underfits each batch; decrease if it becomes slow or overfits stale data. |
 | `verbose` | `1` | Stable-Baselines verbosity. | Raise for debugging, lower for quieter runs. |
@@ -221,16 +247,16 @@ The tables below report the effective default values of the current RC5 entry po
 | `transforms` | `3` | Number of autoregressive transforms in the flow. | Increase only if the learned context distribution seems too simple for the task. |
 | `bins` | `8` | Number of spline bins per transform. | Increase for a more flexible flow; keep modest if ADR fitting becomes heavy. |
 | `hidden` | `(64, 64)` | Hidden-layer sizes of the flow conditioner network. | Increase if the flow underfits candidate weights; decrease for a lighter ADR model. |
-| `iters` | `30` | Number of optimizer steps used to fit the flow after each ADR update. | Increase if the flow adapts too slowly; decrease if ADR updates are too expensive. |
+| `iters` | `50` | Number of optimizer steps used to fit the flow after each ADR update. | Increase if the flow adapts too slowly; decrease if ADR updates are too expensive. |
 | `lr` | `1e-3` | Adam learning rate for the flow. | Lower it first if ADR updates are unstable; raise it only if adaptation is too slow. |
-| `n_sample` | `1000` | Number of candidate contexts evaluated per ADR update. | Increase when you need broader context-space coverage and can afford the cost. |
+| `n_sample` | `512` | Number of candidate contexts evaluated per ADR update. | Increase when you need broader context-space coverage and can afford the cost. |
 | `refine_steps` | `5` | Number of gradient-ascent steps in context space before fitting the flow. | Increase to search for harder contexts; reduce if ADR becomes too adversarial or costly. |
 | `refine_lr` | `5e-3` | Step size for context refinement. | Lower it if refinement is erratic; raise it if refinement barely moves candidates. |
-| `ret_coef` | `1.0` | Weight of the RL return in the ADR objective. | Increase it if ADR should rank contexts more by policy return than by shaping terms. |
+| `ret_coef` | `2.0` | Weight of the RL return in the ADR objective. | Increase it if ADR should rank contexts more by policy return than by shaping terms. |
 | `bonus_coef` | `1.0` | Weight of the baseline shaping term in the ADR objective. | Increase it if ADR should care more about comfort, saturation, and COP shaping. |
 | <span style="color: red;">`temp_init`</span> | <span style="color: red;">`1.0`</span> | <span style="color: red;">Softmax temperature used to convert candidate objectives into weights.</span> | <span style="color: red;">Lower it to focus on the best contexts; raise it to spread weight more broadly.</span> |
-| `surprise_coef` | `10.0` | Coefficient of the novelty bonus `-log q(c)`. | Increase it if ADR collapses too quickly onto familiar contexts. |
-| <span style="color: red;">`kl_beta`</span> | <span style="color: red;">`20.0`</span> | <span style="color: red;">Weight of the trust-region KL penalty between successive flows.</span> | <span style="color: red;">Increase it if the flow moves too abruptly; decrease it if adaptation is too conservative.</span> |
+| `surprise_coef` | `5.0` | Coefficient of the novelty bonus `-log q(c)`. | Increase it if ADR collapses too quickly onto familiar contexts. |
+| <span style="color: red;">`kl_beta`</span> | <span style="color: red;">`500.0`</span> | <span style="color: red;">Weight of the trust-region KL penalty between successive flows.</span> | <span style="color: red;">Increase it if the flow moves too abruptly; decrease it if adaptation is too conservative.</span> |
 | `kl_M` | `1000` | Monte Carlo sample count for the KL estimate and entropy diagnostics. | Increase for less noisy estimates if compute allows; otherwise keep it moderate. |
 | `update_every_episodes` | `100` | ADR update period, measured in completed episodes across vectorized environments. | Reduce it for faster ADR adaptation; increase it if the training distribution changes too often. |
 
@@ -243,11 +269,11 @@ These parameters come from the current RC5 backend and are not meant to be gener
 | Key | Default | Meaning | How to choose |
 | --- | --- | --- | --- |
 | `step_period` | `3600.0` | RL decision interval in seconds. In RC5, the data timestep is 30 s and `3600 s` means one action per hour. | Use a shorter period if you want finer control and can afford more computation. |
-| `future_steps` | `12` | Forecast horizon length in RL steps. | Match this to how far ahead forecasts are useful for control. |
+| `future_steps` | `24` | Forecast horizon length in RL steps. | Match this to how far ahead forecasts are useful for control. |
 | `warmup_steps` | `48` | Number of steps used to initialize the simulator state before the episode starts. | Keep it long enough for the hidden thermal state and PID state to settle. |
 | `base_setpoint` | `294.15` | Reference setpoint around which residual actions are applied. | Set it to the nominal operating point around which residual actions should stay centered. |
 | `max_dev` | `5.0` | Maximum residual deviation around `base_setpoint`. | Use the smallest range that still allows meaningful corrective actions. |
-| `max_episode_length` | `120` | Episode length in RL steps. | Choose a horizon long enough to capture the control tradeoffs you care about. |
+| `max_episode_length` | `504` | Episode length in RL steps. | Long episodes help the recurrent policy learn slow thermal effects. |
 | `tz_min` | `288.15` | Hard lower bound on the final setpoint. | Set from the coldest admissible command you consider physically and operationally acceptable. |
 | `tz_max` | `303.15` | Hard upper bound on the final setpoint. | Set from the hottest admissible command you consider physically and operationally acceptable. |
 | `w_energy` | `1.0` | Weight of electricity cost in the reward. | Increase it if you want the policy to prioritize energy savings more strongly. |
@@ -376,24 +402,25 @@ Each training run saves in `save_dir`:
 - `model.zip`: PPO policy;
 - `vecnormalize.pkl`: observation and reward normalization statistics;
 - `adr_flow.pt`: learned flow over contexts;
-- `<timesteps>/`: periodic snapshots with the same three files;
-- `rollouts/`: optional plots and `.npz` trajectory dumps.
+- `<timesteps>/`: periodic snapshots with the same three files.
 
 ## Minimal usage
 
 If you want to start from a fresh flow instead of the bundled legacy checkpoint, set `init_flow_path` to `None`.
 
 ```python
-from NOMAD_RC5.training import run_training
+from NOMAD_RC5.training_gpu import run_training
 
 run_training(
     {
         "save_dir": "NOMAD_RC5/runs/my_run",
-        "device": "cpu",
-        "n_envs": 4,
+        "device": "cuda",      # use "mps" or "cpu" if needed
+        "adr_device": "cuda",
+        "n_envs": 128,
         "total_timesteps": 1_000_000,
         "init_flow_path": None,
-        "env": {"future_steps": 12, "max_episode_length": 24 * 5},
+        "ppo": {"n_steps": 256, "batch_size": 1024},
+        "env": {"future_steps": 24, "max_episode_length": 24 * 21},
         "adr": {"update_every_episodes": 100, "n_sample": 1000, "ret_coef": 2.0, "bonus_coef": 1.0},
     }
 )
@@ -402,7 +429,7 @@ run_training(
 or:
 
 ```bash
-python -m NOMAD_RC5.training
+python -m NOMAD_RC5.training_gpu
 ```
 
 To resume from a saved training folder, set `resume_dir`. The trainer will load `model.zip`, `vecnormalize.pkl`, and `adr_flow.pt` from that folder, and if numbered checkpoint subfolders exist it will pick the latest one automatically.
@@ -420,7 +447,17 @@ run_training(
 or:
 
 ```bash
-python -m NOMAD_RC5.training --resume_dir NOMAD_RC5/runs/my_run --save_dir NOMAD_RC5/runs/my_run_resume --total_timesteps 500000
+python -m NOMAD_RC5.training_gpu config.json
+```
+
+where `config.json` can contain:
+
+```json
+{
+  "resume_dir": "NOMAD_RC5/runs/my_run",
+  "save_dir": "NOMAD_RC5/runs/my_run_resume",
+  "total_timesteps": 500000
+}
 ```
 
 ## What is generic, and what is not

@@ -11,10 +11,10 @@ if __package__ in (None, ""):
     REPO_ROOT = Path(__file__).resolve().parents[1]
     if str(REPO_ROOT) not in sys.path:
         sys.path.insert(0, str(REPO_ROOT))
-    from NOMAD.core.training import merge_dict
+    from NOMAD.core.utils import merge_dict
 else:
     REPO_ROOT = Path(__file__).resolve().parents[1]
-    from NOMAD.core.training import merge_dict
+    from NOMAD.core.utils import merge_dict
 
 ROOT = Path(__file__).resolve().parent
 RUNS_ROOT = ROOT / "runs" / "sweep_gpu"

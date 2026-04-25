@@ -825,6 +825,11 @@ class NormalizeAction(gym.ActionWrapper):
 
 
 class RC5TorchBatch:
+    """Batched RC5 simulator used by GPU PPO training and ADR.
+
+    One tensor row is one independent environment: its own context, start hour,
+    state, action, exogenous window, reward, and done flag.
+    """
     def __init__(
         self,
         *,
@@ -871,6 +876,7 @@ class RC5TorchBatch:
         self.cop_beta = float(cop_beta)
         self.sampling_dist = sampling_dist
 
+        # Exogenous data stays on the target device; each env indexes its own hour.
         usable = (self.data.dist_matrix.shape[0] // self.step_n) * self.step_n
         dist = self.data.dist_matrix[:usable]
         dist_h = dist.reshape(-1, self.step_n, dist.shape[1]).mean(axis=1)
@@ -923,6 +929,7 @@ class RC5TorchBatch:
         self.sampling_dist = dist
 
     def set_ctx(self, ctx_batch):
+        # One context per env, split into thermal dynamics, heat pump, and PID gains.
         ctx_batch = torch.as_tensor(ctx_batch, device=self.device, dtype=torch.float32).reshape(-1, self.ctx_dim)
         if ctx_batch.shape[0] == 1 and self.n_envs > 1:
             ctx_batch = ctx_batch.expand(self.n_envs, -1)
@@ -961,6 +968,7 @@ class RC5TorchBatch:
         self.set_ctx(self.ctx)
 
     def reset_indices(self, indices=None, *, start_hour=None, ctx=None):
+        # Reset all envs, or only the finished subset selected by SB3.
         idx = self._index_tensor(indices)
         if idx.numel() == 0:
             return self._build_obs()
@@ -1007,6 +1015,7 @@ class RC5TorchBatch:
         return self.reset_indices(start_hour=start_hour)
 
     def _step_one(self, state, i_err, e_prev, d_err, sp, ta, qsol, occ, price):
+        # Pure tensor physics over shape (2, n_envs, ...): agent and reference.
         kp, ki, kd = self.kp, self.ki, self.kd
         th, pac = self.th, self.pac
         rinf, rw1, rw2, rf, ri, rc = (th[k] for k in ("R_inf", "R_w1", "R_w2", "R_f", "R_i", "R_c"))
@@ -1077,14 +1086,13 @@ class RC5TorchBatch:
         a = torch.as_tensor(action, device=self.device, dtype=torch.float32).reshape(-1)
         sp = torch.clamp(self.base_setpoint + self.max_dev * a, self.tz_min, self.tz_max)
 
-        row_h = self.dist_h[self.h_idx]
-        ta_h, qsol_h, occ_h, occ_exp_h, price_h = (row_h[:, i] for i in (0, 1, 2, 3, 4))
         row = self.dist2[self.h_idx]
         ta = row[:, :, 0]
         qsol = row[:, :, 1]
         occ = row[:, :, 2]
         price = row[:, :, 4]
 
+        # Simulate the policy trajectory and the fixed-setpoint baseline together.
         sp2 = torch.stack([sp, torch.full_like(sp, self.base_setpoint)], dim=0)
         state2 = torch.stack([self.state, self.state_ref], dim=0)
         i_err2 = torch.stack([self.i_err, self.i_err_ref], dim=0)
@@ -1100,6 +1108,7 @@ class RC5TorchBatch:
         self.tz_last, self.tz_last_ref = tz_last2[0], tz_last2[1]
         self.php_last, self.php_last_ref = php_last2[0], php_last2[1]
 
+        # PPO sees improvement over the baseline; ADR only needs adr_bonus below.
         reward_raw, reward_ref, reward_ref_n = rew2[0], rew2[1], rew_n2[1]
         rew = (reward_raw - reward_ref) / torch.clamp(-reward_ref_n, min=1e-3)
         comfort_bonus = -(self.w_comfort * comfort2[1])
@@ -1127,35 +1136,15 @@ class RC5TorchBatch:
         self.steps += 1
         done = (self.steps >= self.max_episode_length) | (self.h_idx >= self.idx_max_h)
         done = done | bad
-        return self._build_obs(), rew, done, {
-            "adr_bonus": adr_bonus,
-            "context": self.ctx,
-            "h_idx": self.h_idx,
-            "tz": self.tz_last,
-            "setpoint": sp,
-            "php": self.php_last,
-            "php_ref": self.php_last_ref,
-            "qc": qc2[0],
-            "qc_ref": qc2[1],
-            "qe": qe2[0],
-            "u": u2[0],
-            "ta": ta_h,
-            "qsol": qsol_h,
-            "occ": occ_h,
-            "occ_exp": occ_exp_h,
-            "price": price_h,
-            "comfort_kh": comfort2[0],
-            "energy_eur": energy2[0],
-            "sat_uh": sat2[0],
-            "reward_raw": reward_raw,
-            "reward_ref": reward_ref,
-            "reward_ref_N": reward_ref_n,
-            "comfort_ref_kh": comfort2[1],
-            "sat_ref_uh": sat2[1],
-        }
+        return self._build_obs(), rew, done, {"adr_bonus": adr_bonus}
 
 
 class RC5TorchVecEnv(VecEnv):
+    """Thin SB3 adapter around RC5TorchBatch.
+
+    The simulator runs in Torch. This wrapper only implements the VecEnv API,
+    converts tensors to NumPy for SB3, and resets finished rows of the batch.
+    """
     metadata = {"render_modes": []}
 
     def __init__(self, *, data=None, sampling_dist=None, device="cpu", n_envs=1, **batch_kwargs):
@@ -1184,13 +1173,14 @@ class RC5TorchVecEnv(VecEnv):
         self.batch.set_sampling_dist(dist)
 
     def _obs_to_numpy(self, obs):
+        # SB3 VecEnv boundary: observations/rewards must cross back to NumPy here.
         return {k: v.detach().cpu().numpy().astype(np.float32, copy=False) for k, v in obs.items()}
 
     def _slice_obs(self, obs, idx):
         return {k: v[idx].copy() for k, v in obs.items()}
 
     def _reset_info(self, idx):
-        return {"context": self.batch.ctx[idx].detach().cpu().numpy().copy(), "start_hour": int(self.batch.h_idx[idx].item())}
+        return {"start_hour": int(self.batch.h_idx[idx].item())}
 
     def reset(self):
         maybe_options = self._options[0] if self._options else {}
@@ -1210,10 +1200,10 @@ class RC5TorchVecEnv(VecEnv):
         done_np = done.detach().cpu().numpy().astype(bool, copy=False)
         info_list = [{"TimeLimit.truncated": bool(flag)} for flag in done_np]
         done_idx = np.flatnonzero(done_np)
-        for i in range(self.num_envs):
-            if done_np[i]:
-                info_list[i]["terminal_observation"] = self._slice_obs(obs_np, i)
+        for i in done_idx.tolist():
+            info_list[i]["terminal_observation"] = self._slice_obs(obs_np, i)
         if done_idx.size:
+            # VecEnv auto-reset: SB3 gets terminal_observation, then the row is reused.
             obs_reset = self._obs_to_numpy(self.batch.reset_indices(done_idx))
             for i in done_idx.tolist():
                 for key in obs_np:

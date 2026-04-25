@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import json
 import os
 from pathlib import Path
 import sys
@@ -12,7 +11,8 @@ if __package__ in (None, ""):
     ROOT = Path(__file__).resolve().parents[1]
     if str(ROOT) not in sys.path:
         sys.path.insert(0, str(ROOT))
-    from NOMAD.core.training import merge_dict, run_training as run_core_training, vecnorm_stats
+    from NOMAD.core.training import run_training as run_core_training
+    from NOMAD.core.utils import _parse_cli_overrides, merge_dict, vecnorm_stats
     from NOMAD_RC5.backend import (
         ConvForecastTemporalFuseExtractor,
         DEFAULT_ADR_CFG,
@@ -22,7 +22,8 @@ if __package__ in (None, ""):
         ValueCtxLstmPolicy,
     )
 else:
-    from NOMAD.core.training import merge_dict, run_training as run_core_training, vecnorm_stats
+    from NOMAD.core.training import run_training as run_core_training
+    from NOMAD.core.utils import _parse_cli_overrides, merge_dict, vecnorm_stats
     from .backend import (
         ConvForecastTemporalFuseExtractor,
         DEFAULT_ADR_CFG,
@@ -52,7 +53,7 @@ DEFAULT_CFG = {
     "n_envs": 8,
     "total_timesteps": 20_000_000,
     "save_every_steps": 100_000,
-    "resume_dir": "NOMAD_RC5/runs/20260328_160531_1876296",  # example: set to None to disable resume
+    "resume_dir": None,  # example: set to None to disable resume
     "init_flow_path": str(LEGACY_FLOW_PATH),
     "save_dir": str(ROOT / "runs" / RUN_ID),
     "plot_every_episodes": 100,
@@ -91,42 +92,6 @@ DEFAULT_CFG = {
         **DEFAULT_ADR_CFG,
     },
 }
-
-
-def _parse_value(raw):
-    try:
-        return json.loads(raw)
-    except json.JSONDecodeError:
-        return raw
-
-
-def _set_nested(cfg, key, value):
-    keys = [part.replace("-", "_") for part in key.split(".")]
-    node = cfg
-    for part in keys[:-1]:
-        node = node.setdefault(part, {})
-    node[keys[-1]] = value
-
-
-def _parse_cli_overrides(argv):
-    cfg = {}
-    i = 0
-    while i < len(argv):
-        arg = argv[i]
-        if not arg.startswith("--"):
-            raise SystemExit(f"unexpected argument: {arg}")
-        key = arg[2:]
-        if "=" in key:
-            key, raw = key.split("=", 1)
-        else:
-            i += 1
-            if i >= len(argv):
-                raise SystemExit(f"missing value for --{key}")
-            raw = argv[i]
-        _set_nested(cfg, key, _parse_value(raw))
-        i += 1
-    return cfg
-
 
 def run_training(cfg=None):
     cfg = merge_dict(DEFAULT_CFG, cfg or {})

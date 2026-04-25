@@ -1,9 +1,6 @@
 from __future__ import annotations
 
-from copy import deepcopy
 from pathlib import Path
-import importlib.util
-import random
 import time
 
 import numpy as np
@@ -12,7 +9,21 @@ from sb3_contrib import RecurrentPPO
 from stable_baselines3.common.callbacks import BaseCallback
 from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize, SubprocVecEnv
 
-from .adr import ADRFlows, NormFlowDist
+from .adr import ADRFlows
+from .utils import (
+    _base_vec_env,
+    _env_getattr,
+    _env_has_method,
+    build_initial_dist,
+    build_ppo_kwargs,
+    get_resume_paths,
+    lr_schedule,
+    lock_model_lr,
+    merge_dict,
+    resolve_resume_dir,
+    set_global_seed,
+    vecnorm_stats,
+)
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -60,141 +71,6 @@ DEFAULT_CFG = {
         "update_every_episodes": 100,
     },
 }
-
-
-def merge_dict(base, extra):
-    out = deepcopy(base)
-    for key, value in (extra or {}).items():
-        if isinstance(value, dict) and isinstance(out.get(key), dict):
-            out[key] = merge_dict(out[key], value)
-        else:
-            out[key] = value
-    return out
-
-
-def set_global_seed(seed):
-    random.seed(seed)
-    np.random.seed(seed)
-    torch.manual_seed(seed)
-
-
-def vecnorm_stats(vecnorm):
-    rms = vecnorm.obs_rms
-    stats = {"clip_obs": float(vecnorm.clip_obs), "eps": float(getattr(vecnorm, "epsilon", 1e-8))}
-    if isinstance(rms, dict):
-        for key, value in rms.items():
-            stats[f"{key}_mean"] = np.asarray(value.mean, dtype=np.float32)
-            stats[f"{key}_var"] = np.asarray(value.var, dtype=np.float32)
-    return stats
-
-
-def lr_schedule(start, end):
-    start = float(start)
-    end = float(end)
-
-    def schedule(progress_remaining):
-        return end + (start - end) * float(progress_remaining)
-
-    return schedule
-
-
-def build_ppo_kwargs(cfg):
-    ppo = dict(cfg["ppo"])
-    start = ppo.pop("learning_rate_start", 1e-4)
-    end = ppo.pop("learning_rate_end", start)
-    if "learning_rate" not in ppo:
-        ppo["learning_rate"] = lr_schedule(start, end)
-    if ppo.get("tensorboard_log") and importlib.util.find_spec("tensorboard") is None:
-        ppo.pop("tensorboard_log", None)
-    return ppo
-
-
-def resolve_resume_dir(path):
-    path = Path(path)
-    if path.is_file():
-        path = path.parent
-    best = path if (path / "model.zip").exists() else None
-    for child in path.iterdir():
-        if child.is_dir() and child.name.isdigit() and (child / "model.zip").exists():
-            best_step = int(best.name) if best and best.name.isdigit() else -1
-            if best is None or int(child.name) > best_step:
-                best = child
-    if best is None:
-        raise FileNotFoundError(f"no checkpoint found in {path}")
-    if best != path and (path / "model.zip").exists() and (path / "model.zip").stat().st_mtime > (best / "model.zip").stat().st_mtime:
-        return path
-    return best
-
-
-def get_resume_paths(cfg):
-    resume_dir = cfg.get("resume_dir")
-    if not resume_dir:
-        return None
-    path = resolve_resume_dir(resume_dir)
-    return {
-        "dir": path,
-        "model": path / "model.zip",
-        "vecnorm": path / "vecnormalize.pkl",
-        "flow": path / "adr_flow.pt",
-    }
-
-
-def lock_model_lr(model):
-    lr = float(model.policy.optimizer.param_groups[0]["lr"])
-    model.learning_rate = lr
-    model.lr_schedule = lambda _: lr
-    return lr
-
-
-def build_initial_dist(cfg, device, backend):
-    resume = get_resume_paths(cfg)
-    init_flow_path = resume["flow"] if resume and resume["flow"].exists() else cfg.get("init_flow_path")
-    if init_flow_path:
-        path = Path(init_flow_path)
-        if path.exists():
-            state = torch.load(path, map_location=device, weights_only=False)
-            dist = NormFlowDist(
-                state["low"],
-                state["high"],
-                transforms=int(state.get("transforms", cfg["adr"]["transforms"])),
-                bins=int(state.get("bins", cfg["adr"]["bins"])),
-                hidden=tuple(state.get("hidden", cfg["adr"]["hidden"])),
-                device=device,
-            )
-            dist.load_state_dict(state)
-            print(f"Loading flow from {path}", flush=True)
-            return dist
-    low, high = backend.flow_bounds(device=device)
-    return NormFlowDist(
-        low,
-        high,
-        transforms=int(cfg["adr"]["transforms"]),
-        bins=int(cfg["adr"]["bins"]),
-        hidden=tuple(cfg["adr"]["hidden"]),
-        device=device,
-    )
-
-
-def _base_vec_env(vec_env):
-    return getattr(vec_env, "venv", vec_env)
-
-
-def _env_getattr(vec_env, name):
-    envs = getattr(_base_vec_env(vec_env), "envs", [])
-    if not envs:
-        return None
-    env = envs[0]
-    getter = getattr(env, "get_wrapper_attr", None)
-    if getter is not None:
-        try:
-            return getter(name)
-        except AttributeError:
-            return None
-    return getattr(env, name, None)
-
-
-def _env_has_method(vec_env, name):
-    return callable(_env_getattr(vec_env, name))
 
 
 class ADRUpdateCallback(BaseCallback):
@@ -373,6 +249,7 @@ def run_training(backend, cfg=None):
             **build_ppo_kwargs(cfg),
         )
     # Initialize policy to have near-deterministic actions at the start of training, centered around zero
+    # ==== MAY HARM EXPLORATION, USE WITH CAUTION ==== 
     # with torch.no_grad():
     #     model.policy.action_net.weight.fill_(0.0)
     #     model.policy.action_net.bias.fill_(0.0)
