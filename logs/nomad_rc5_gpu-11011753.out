@@ -1,0 +1,44 @@
+hostname: rg13302
+SLURM_SUBMIT_DIR=/lustre09/project/6110728/paablo/NOMAD_RL_clean
+PWD=/lustre09/project/6110728/paablo/NOMAD_RL_clean
+CUDA_VISIBLE_DEVICES=MIG-4b310886-4838-5b6f-802b-83cc03f84ec1
+SLURM_CPUS_PER_TASK=6
+config: configs/rc5_rorqual.json
+Sun Apr 26 16:03:27 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 570.211.01             Driver Version: 570.211.01     CUDA Version: 12.8     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA H100 80GB HBM3          Off |   00000000:4E:00.0 Off |                   On |
+| N/A   54C    P0            183W /  700W |   17121MiB /  81559MiB |     N/A      Default |
+|                                         |                        |              Enabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| MIG devices:                                                                            |
++------------------+----------------------------------+-----------+-----------------------+
+| GPU  GI  CI  MIG |                     Memory-Usage |        Vol|        Shared         |
+|      ID  ID  Dev |                       BAR1-Usage | SM     Unc| CE ENC  DEC  OFA  JPG |
+|                  |                                  |        ECC|                       |
+|==================+==================================+===========+=======================|
+|  0    2   0   0  |              26MiB / 40448MiB    | 60      0 |  3   0    3    0    3 |
+|                  |                 0MiB / 65535MiB  |           |                       |
++------------------+----------------------------------+-----------+-----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+torch: 2.11.0
+cuda: True
+device_count: 1
+device_name: NVIDIA H100 80GB HBM3 MIG 3g.40gb
+Loading flow from flows/collapsed_flow.pt
+Using cuda device
+Logging to NOMAD_RC5/tensorboard_logs/rc5_reasonable_seed0/RecurrentPPO_3

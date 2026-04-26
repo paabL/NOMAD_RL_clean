@@ -120,7 +120,7 @@ class ADRUpdateCallback(BaseCallback):
         self.logger.record("adr/update_s", float(update_s))
         for key, value in stats.items():
             self.logger.record(f"adr/{key}", float(value))
-        params_std_pct = 0.0
+        params_std_pct = float(stats.get("params_std_pct_mean", 0.0))
         try:
             if not self.training_env.has_attr("get_rollout_std_pct_mean"):
                 raise AttributeError

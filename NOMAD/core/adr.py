@@ -15,6 +15,11 @@ def finite_clip(x, clip=60.0):
     return torch.nan_to_num(x, nan=0.0, posinf=clip, neginf=-clip).clamp(-clip, clip)
 
 
+def finite(x, bound=1e6):
+    # Keep real log-prob magnitudes; only replace invalid values.
+    return torch.nan_to_num(x, nan=0.0, posinf=float(bound), neginf=-float(bound))
+
+
 def normalize_obs(obs, stats):
     clip = float(stats["clip_obs"])
     eps = float(stats["eps"])
@@ -293,7 +298,7 @@ class ADRFlows:
             obj, ret, bonus = rollout_objective()
             if ret_pre is None:
                 ret_pre, bonus_pre = ret.detach(), bonus.detach()
-            surprise = self.surprise_coef * (-finite_clip(self.current.log_prob(x), logp_clip)) if self.surprise_coef else torch.zeros_like(obj)
+            surprise = self.surprise_coef * (-finite(self.current.log_prob(x))) if self.surprise_coef else torch.zeros_like(obj)
             surprise_pre = surprise.detach() if surprise_pre is None else surprise_pre
             total = obj + surprise
             xs.append(x.detach().clone())
@@ -306,7 +311,7 @@ class ADRFlows:
         obj, ret, bonus = rollout_objective()
         if ret_pre is None:
             ret_pre, bonus_pre = ret.detach(), bonus.detach()
-        surprise = self.surprise_coef * (-finite_clip(self.current.log_prob(x), logp_clip)) if self.surprise_coef else torch.zeros_like(obj)
+        surprise = self.surprise_coef * (-finite(self.current.log_prob(x))) if self.surprise_coef else torch.zeros_like(obj)
         surprise_pre = surprise.detach() if surprise_pre is None else surprise_pre
         xs.append(x.detach())
         objs.append((obj + surprise).detach())
@@ -314,7 +319,9 @@ class ADRFlows:
         x_data = torch.cat(xs, dim=0)
         obj_all = torch.cat(objs, dim=0)
         with torch.no_grad():
-            raw_scores = finite_clip(obj_all - finite_clip(obj_all, logp_clip).max(), logp_clip)
+            # Center before clipping so large objectives do not flatten all weights.
+            scores = finite(obj_all)
+            raw_scores = finite_clip(scores - scores.max(), logp_clip)
             temp, weights, ess, ess_lo, ess_hi = self._adapt_temp(raw_scores, temp)
 
         ref = self.current.clone()
@@ -326,7 +333,8 @@ class ADRFlows:
         params = tuple(self.current.get_params())
         for _ in range(self.iters):
             self.opt.zero_grad(set_to_none=True)
-            loss_fit = -(weights * finite_clip(self.current.log_prob(x_data), logp_clip)).sum()
+            # Do not clip finite log-probs here: clipping made loss_fit and surprise saturate.
+            loss_fit = -(weights * finite(self.current.log_prob(x_data))).sum()
             x_kl = self.current.rsample((self.kl_M,))
             kl = finite_clip(self.current.log_prob(x_kl) - ref.log_prob(x_kl), logp_clip).mean()
             loss_fit_val = loss_fit.detach()
@@ -343,7 +351,8 @@ class ADRFlows:
 
         with torch.no_grad():
             x_mc = self.current.sample((self.kl_M,))
-            entropy = (-finite_clip(self.current.log_prob(x_mc), logp_clip)).mean().item()
+            entropy = (-finite(self.current.log_prob(x_mc))).mean().item()
+            params_std_pct = (100.0 * x_mc.std(dim=0, unbiased=False) / x_mc.mean(dim=0).abs().clamp_min(1e-12)).mean().item()
         ret_np = ret.detach().cpu().numpy()
         bonus_mean = float(bonus.mean().item())
         bonus_mean_pre = float(bonus_pre.mean().item())
@@ -361,6 +370,7 @@ class ADRFlows:
             "surprise_mean_pre": float(surprise_pre.mean().item()),
             "surprise_mean": float(surprise.mean().item()),
             "surprise_std": float(surprise.std().item()),
+            "params_std_pct_mean": float(params_std_pct),
             "entropy": float(entropy),
             "ess": float(ess.item()),
             "ess_low": float(ess_lo),

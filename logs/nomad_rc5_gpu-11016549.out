@@ -1,0 +1,124 @@
+hostname: rg12903
+SLURM_SUBMIT_DIR=/lustre09/project/6110728/paablo/NOMAD_RL_clean
+PWD=/lustre09/project/6110728/paablo/NOMAD_RL_clean
+CUDA_VISIBLE_DEVICES=MIG-ff294ce0-5df6-5618-be36-db7d43ffe5fe
+SLURM_CPUS_PER_TASK=3
+config: configs/rc5_rorqual.json
+Sun Apr 26 18:22:24 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 570.211.01             Driver Version: 570.211.01     CUDA Version: 12.8     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA H100 80GB HBM3          Off |   00000000:CB:00.0 Off |                   On |
+| N/A   53C    P0            139W /  700W |   41142MiB /  81559MiB |     N/A      Default |
+|                                         |                        |              Enabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| MIG devices:                                                                            |
++------------------+----------------------------------+-----------+-----------------------+
+| GPU  GI  CI  MIG |                     Memory-Usage |        Vol|        Shared         |
+|      ID  ID  Dev |                       BAR1-Usage | SM     Unc| CE ENC  DEC  OFA  JPG |
+|                  |                                  |        ECC|                       |
+|==================+==================================+===========+=======================|
+|  0    9   0   0  |               9MiB /  9984MiB    | 16      0 |  1   0    1    0    1 |
+|                  |                 0MiB / 16383MiB  |           |                       |
++------------------+----------------------------------+-----------+-----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+torch: 2.11.0
+cuda: True
+device_count: 1
+device_name: NVIDIA H100 80GB HBM3 MIG 1g.10gb
+Loading flow from flows/collapsed_flow.pt
+Using cuda device
+Logging to NOMAD_RC5/tensorboard_logs/tb/RecurrentPPO_1
+----------------------------------
+| rollout/           |           |
+|    ep_len_mean     | 512       |
+|    ep_rew_mean     | -5.43e+03 |
+| time/              |           |
+|    fps             | 10818     |
+|    iterations      | 1         |
+|    time_elapsed    | 12        |
+|    total_timesteps | 131072    |
+----------------------------------
+[ADR #001] steps=262144 episodes=512 set=0.021s upd=87.89s dt=86.38s | ret=-7283.399 bonus=-33216.699 obj=-41543.520 | entropy=-56.062 ess=768.0 temp=11.2 wmax=0.034 flow_std=3.6%
+------------------------------------------
+| adr/                    |              |
+|    B                    | 1.02e+03     |
+|    bcs_mean             | -3.32e+04    |
+|    bcs_mean_pre         | -4.02e+04    |
+|    beta_kl              | 296          |
+|    bonus_mean           | -3.32e+04    |
+|    bonus_mean_pre       | -4.02e+04    |
+|    dt                   | 86.4         |
+|    entropy              | -56.1        |
+|    ess                  | 768          |
+|    ess_high             | 1.23e+03     |
+|    ess_low              | 307          |
+|    loss_fit             | 1.05e+03     |
+|    obj_mean             | -4.15e+04    |
+|    params_std_pct_mean  | 3.6          |
+|    ret_mean             | -7.28e+03    |
+|    ret_mean_pre         | -6.61e+03    |
+|    ret_std              | 1.59e+04     |
+|    set_policy_s         | 0.0213       |
+|    surprise_mean        | 6.24e+03     |
+|    surprise_mean_pre    | 1.06e+03     |
+|    surprise_std         | 726          |
+|    temp                 | 11.2         |
+|    update_s             | 87.9         |
+|    weight_max           | 0.0339       |
+| rollout/                |              |
+|    ep_len_mean          | 512          |
+|    ep_rew_mean          | -4.1e+03     |
+| time/                   |              |
+|    fps                  | 903          |
+|    iterations           | 2            |
+|    time_elapsed         | 289          |
+|    total_timesteps      | 262144       |
+| train/                  |              |
+|    approx_kl            | 0.0041805385 |
+|    clip_fraction        | 0.0359       |
+|    clip_range           | 0.2          |
+|    entropy_loss         | -1.41        |
+|    explained_variance   | 0.0248       |
+|    learning_rate        | 0.000998     |
+|    loss                 | 0.0747       |
+|    n_updates            | 5            |
+|    policy_gradient_loss | -0.00281     |
+|    std                  | 0.99         |
+|    value_loss           | 0.311        |
+------------------------------------------
+------------------------------------------
+| rollout/                |              |
+|    ep_len_mean          | 512          |
+|    ep_rew_mean          | -3.24e+03    |
+| time/                   |              |
+|    fps                  | 811          |
+|    iterations           | 3            |
+|    time_elapsed         | 484          |
+|    total_timesteps      | 393216       |
+| train/                  |              |
+|    approx_kl            | 0.0087252185 |
+|    clip_fraction        | 0.0841       |
+|    clip_range           | 0.2          |
+|    entropy_loss         | -1.37        |
+|    explained_variance   | 0.665        |
+|    learning_rate        | 0.000996     |
+|    loss                 | 0.0024       |
+|    n_updates            | 10           |
+|    policy_gradient_loss | -0.0072      |
+|    std                  | 0.944        |
+|    value_loss           | 0.0374       |
+------------------------------------------

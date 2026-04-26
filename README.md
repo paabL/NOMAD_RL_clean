@@ -194,6 +194,8 @@ where the KL term is estimated by Monte Carlo with `kl_M` samples. In practice:
 - high `surprise_coef` pushes exploration toward low-density regions;
 - more `refine_steps` makes candidate search more adversarial.
 
+The fit loss and surprise use unclipped finite log probabilities; clipping is kept only for score weighting and KL stabilization.
+
 ## Hyperparameters
 
 Default values are split across:
@@ -435,6 +437,8 @@ For a MacBook smoke test:
 python -m NOMAD_RC5.training configs/rc5_local_smoke_mps.json
 tensorboard --logdir NOMAD_RC5/tensorboard_logs --port 16006
 ```
+
+Each ADR update logs `adr/params_std_pct_mean`, the mean relative context standard deviation of the current flow, in percent.
 
 The optimized RC5 training path logs TensorBoard and saves checkpoints, but it does not currently generate episode plots. Plotting helpers live in the legacy `NOMAD_RC5/test` environment.
 

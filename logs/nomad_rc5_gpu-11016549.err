@@ -1,0 +1,2 @@
+<frozen runpy>:128: RuntimeWarning: 'NOMAD_RC5.training' found in sys.modules after import of package 'NOMAD_RC5', but prior to execution of 'NOMAD_RC5.training'; this may result in unpredictable behaviour
+An NVIDIA GPU may be present on this machine, but a CUDA-enabled jaxlib is not installed. Falling back to cpu.
