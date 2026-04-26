@@ -52,6 +52,7 @@ class RC5TorchBatch:
         data=None,
         device="cpu",
         n_envs=1,
+        dt=DT,
         step_period=3600.0,
         future_steps=FUTURE_STEPS,
         max_episode_length=24 * 4,
@@ -73,11 +74,12 @@ class RC5TorchBatch:
         th=None,
         pac=None,
     ):
-        self.data = load_rc5_data() if data is None else data
+        self.data = load_rc5_data(dt=dt) if data is None else data
         self.device = torch.device(device)
         self.n_envs = int(n_envs)
+        self.dt = float(getattr(self.data, "dt", dt))
         self.step_period = float(step_period)
-        self.step_n = max(1, int(round(self.step_period / DT)))
+        self.step_n = max(1, int(round(self.step_period / self.dt)))
         self.future_steps = int(future_steps)
         self.max_episode_length = int(max_episode_length)
         self.base_setpoint = float(base_setpoint)
@@ -252,11 +254,12 @@ class RC5TorchBatch:
         sat_uh = torch.zeros_like(sp)
 
         hub = float(self.comfort_huber_k)
+        dt = self.dt
         for k in range(self.step_n):
             tz, tw, ti, tf, tc = (state[..., j] for j in range(5))
             err = sp - tz
-            i_err = torch.clamp(i_err + err * DT, -100.0, 100.0)
-            d_err = ((err - e_prev) / DT + d_err) * 0.5
+            i_err = torch.clamp(i_err + err * dt, -100.0, 100.0)
+            d_err = ((err - e_prev) / dt + d_err) * 0.5
             u_raw = kp * err + kd * d_err + ki * i_err
             u = torch.clamp(u_raw, 0.0, 1.0)
             delta_sat = u_raw - u
@@ -277,7 +280,7 @@ class RC5TorchBatch:
             d_ti = ((tz - ti) / ri) / ci
             d_tf = ((tz - tf) / rf + (tc - tf) / rc) / cf
             d_tc = ((tf - tc) / rc + qc) / cc
-            state = state + DT * torch.stack([d_tz, d_tw, d_ti, d_tf, d_tc], dim=-1)
+            state = state + dt * torch.stack([d_tz, d_tw, d_ti, d_tf, d_tc], dim=-1)
 
             tz_k = state[..., 0]
             tz_sum += tz_k
@@ -285,12 +288,12 @@ class RC5TorchBatch:
             v = torch.relu(LOWER_K - tz_k) + torch.relu(tz_k - UPPER_K)
             if hub > 0:
                 v = torch.where(v <= hub, 0.5 * v * v / hub, v - 0.5 * hub)
-            comfort_kh += v * occ_k * (DT / 3600.0)
-            comfort_kh_n += v * (DT / 3600.0)
+            comfort_kh += v * occ_k * (dt / 3600.0)
+            comfort_kh_n += v * (dt / 3600.0)
             p_k = price[:, k][None, :]
-            energy_eur += p_k * torch.relu(php) * (DT / 3600.0) / 1000.0
-            energy_eur_n += torch.relu(php) * (DT / 3600.0) / 1000.0
-            sat_uh += torch.abs(delta_sat) * (DT / 3600.0)
+            energy_eur += p_k * torch.relu(php) * (dt / 3600.0) / 1000.0
+            energy_eur_n += torch.relu(php) * (dt / 3600.0) / 1000.0
+            sat_uh += torch.abs(delta_sat) * (dt / 3600.0)
 
         tz_last = tz_sum / self.step_n
         php_last = php_sum / self.step_n

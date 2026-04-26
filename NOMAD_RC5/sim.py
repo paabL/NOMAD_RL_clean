@@ -11,7 +11,6 @@ from NOMAD.simax import Controller_constSeq, Model_JAX, SimulationDataset, Simul
 
 RAW_DT = 30.0
 DT = 120.0
-STEP_N = 30
 FUTURE_STEPS = 24 #24H de forecast
 
 Q_INTERNAL_CON_W = 146.0
@@ -103,6 +102,7 @@ ASSET_PATH = Path(__file__).resolve().parent / "assets" / "rc5_data.npz"
 
 @dataclass(frozen=True)
 class RC5Data:
+    dt: float
     time: jnp.ndarray
     time_np: np.ndarray
     time_h: np.ndarray
@@ -178,22 +178,25 @@ def sample_params_uniform(n_envs, device="cpu", th_bounds=None, pac_bounds=None,
     return sample(th_bounds), sample(pac_bounds), sample(pid_bounds)
 
 
-def load_rc5_data(path: str | Path | None = None) -> RC5Data:
+def load_rc5_data(path: str | Path | None = None, *, dt=DT) -> RC5Data:
     path = ASSET_PATH if path is None else Path(path)
+    dt = float(dt)
     with np.load(path) as data:
         time_np = np.asarray(data["time_s"], dtype=np.float32)
         dist_matrix = np.asarray(data["dist_30s"], dtype=np.float32)
 
-    downsample = max(1, int(round(DT / RAW_DT)))
+    downsample = max(1, int(round(dt / RAW_DT)))
+    dt = float(downsample * RAW_DT)
     usable = (dist_matrix.shape[0] // downsample) * downsample
     dist_matrix = dist_matrix[:usable].reshape(-1, downsample, dist_matrix.shape[1]).mean(axis=1).astype(np.float32)
     time_np = time_np[:usable].reshape(-1, downsample)[:, 0].astype(np.float32)
 
-    usable = (dist_matrix.shape[0] // STEP_N) * STEP_N
+    step_n = max(1, int(round(3600.0 / dt)))
+    usable = (dist_matrix.shape[0] // step_n) * step_n
     dist_matrix = dist_matrix[:usable]
     time_np = time_np[:usable]
-    dist_h = dist_matrix.reshape(-1, STEP_N, dist_matrix.shape[1]).mean(axis=1).astype(np.float32)
-    time_h = time_np.reshape(-1, STEP_N)[:, 0].astype(np.float32)
+    dist_h = dist_matrix.reshape(-1, step_n, dist_matrix.shape[1]).mean(axis=1).astype(np.float32)
+    time_h = time_np.reshape(-1, step_n)[:, 0].astype(np.float32)
     occ = dist_matrix[:, 2]
 
     dataset = SimulationDataset(
@@ -217,6 +220,7 @@ def load_rc5_data(path: str | Path | None = None) -> RC5Data:
         },
     )
     return RC5Data(
+        dt=dt,
         time=dataset.time,
         time_np=time_np,
         time_h=time_h,
@@ -347,7 +351,7 @@ def rc5_steady_state_tz_fixed(ta, q_solar, q_con, q_rad, tz_set, theta):
     return jnp.clip(t, t_min, t_max), qc_dot_val
 
 
-def build_rc5_simulation(data: RC5Data | None = None, *, x0=None, controller=None, integrator="euler", theta=None, base_setpoint=BASE_SETPOINT):
+def build_rc5_simulation(data: RC5Data | None = None, *, x0=None, controller=None, theta=None, base_setpoint=BASE_SETPOINT):
     data = load_rc5_data() if data is None else data
     theta = build_rc5_model(theta).theta if theta is not None else nominal_theta()
     row = data.dist_matrix[0]
@@ -361,5 +365,5 @@ def build_rc5_simulation(data: RC5Data | None = None, *, x0=None, controller=Non
         model=build_rc5_model(theta),
         controller=controller,
         x0=jnp.asarray(x0 if x0 is not None else x0_default, dtype=jnp.float32),
-        integrator=integrator,
+        integrator="euler",
     )

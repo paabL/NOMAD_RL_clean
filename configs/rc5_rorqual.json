@@ -29,6 +29,7 @@
     "clip_obs": 10.0
   },
   "env": {
+    "dt": 120.0,
     "step_period": 3600.0,
     "future_steps": 24,
     "base_setpoint": 294.15,

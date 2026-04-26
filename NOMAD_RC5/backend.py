@@ -9,9 +9,10 @@ from stable_baselines3.common.torch_layers import BaseFeaturesExtractor
 from NOMAD.core.backend import PolicySpec
 from NOMAD.core.utils import merge_dict
 from .env import RC5TorchBatch
-from .sim import BASE_SETPOINT, FUTURE_STEPS, TZ_MAX_K, TZ_MIN_K, context_low_high, load_rc5_data
+from .sim import BASE_SETPOINT, DT, FUTURE_STEPS, TZ_MAX_K, TZ_MIN_K, context_low_high, load_rc5_data
 
 DEFAULT_ENV_CFG = {
+    "dt": DT,
     "step_period": 3600.0,
     "future_steps": FUTURE_STEPS,
     "base_setpoint": BASE_SETPOINT,
@@ -98,7 +99,7 @@ class RC5Backend:
         self.env_cfg = merge_dict(DEFAULT_ENV_CFG, env_cfg)
         self.policy_cfg = merge_dict(DEFAULT_POLICY_CFG, policy_cfg)
         self.adr_cfg = merge_dict(DEFAULT_ADR_CFG, adr_cfg)
-        self.data = load_rc5_data() if data is None else data
+        self.data = load_rc5_data(dt=self.env_cfg["dt"]) if data is None else data
 
     def flow_bounds(self, device):
         return context_low_high(device=device)
@@ -109,6 +110,7 @@ class RC5Backend:
             data=self.data,
             device=device,
             n_envs=n_envs,
+            dt=self.env_cfg["dt"],
             step_period=self.env_cfg["step_period"],
             future_steps=self.env_cfg["future_steps"],
             max_episode_length=max_episode_length,
