@@ -19,6 +19,7 @@
     "n_steps": 2048,
     "batch_size": 256,
     "n_epochs": 2,
+    "target_kl": 0.05,
     "verbose": 1,
     "tensorboard_log": "NOMAD_RC5/tensorboard_logs/local_smoke_cpu"
   },
