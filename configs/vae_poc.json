@@ -1,0 +1,30 @@
+{
+  "__notes": [
+    "POC hors-RL pour apprendre un latent comportemental RC5: tau -> z -> ctx_hat.",
+    "Le script pre-genere n_traj trajectoires, puis entraine le VAE par minibatch aleatoire."
+  ],
+  "seed": 0,
+  "device": "auto",
+  "data_path": null,
+  "save_dir": "NOMAD_RC5/runs/vae_poc",
+  "param_bounds": [0.5, 2.0],
+  "n_traj": 1024,
+  "batch_size": 128,
+  "horizon": 24,
+  "latent_dim": 8,
+  "hidden": [128, 128],
+  "steps": 500,
+  "lr": 0.001,
+  "beta_KL": 0.0001,
+  "lambda_ctx": 0.001,
+  "lambda_phys": 0.01,
+  "val_fraction": 0.2,
+  "log_every": 25,
+  "plot_count": 4,
+  "channels": ["Tz", "u_hp", "P_hp"],
+  "env": {
+    "dt": 120.0,
+    "step_period": 3600.0,
+    "future_steps": 72
+  }
+}

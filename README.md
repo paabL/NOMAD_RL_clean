@@ -13,6 +13,7 @@ The repository is split into a generic core and one concrete RC5 backend.
 - `NOMAD/core/backend.py`: backend interface used to plug a simulator into the generic core.
 - `NOMAD_RC5/sim.py`: RC5 context definition, bounds, data loading, and differentiable simulation helpers.
 - `NOMAD_RC5/env.py`: optimized Torch RC5 batch simulator and its SB3 `VecEnv` adapter.
+- `NOMAD_RC5/latent_vae.py` and `NOMAD_RC5/pretrain_latent_vae.py`: offline behavioral VAE POC for RC5 probing trajectories.
 - `NOMAD_RC5/backend.py`: RC5 backend, default environment/policy/ADR overrides, and policy wiring.
 - `NOMAD_RC5/training.py`: RC5 training entry point.
 - `NOMAD_RC5/test/`: legacy Gym/JAX env and plot helpers for simax, MPC, and RL comparisons.
@@ -61,6 +62,41 @@ One practical limitation remains: SB3 expects NumPy at the `VecEnv` boundary. Th
 Long GPU runs also trim host memory after ADR updates and between PPO rollouts. This returns freed CPU allocations to the OS with `malloc_trim(0)` on Linux, which helps Slurm see the memory as released instead of killing the step after RSS drift.
 
 `torch.compile` is not enabled by default. Local tests showed speedups on CPU for the physics step after a large first compile cost, but MPS failed in Inductor. Treat it as an experiment, not as the default path.
+
+## RC5 latent VAE POC
+
+The repository also includes an offline POC for learning a low-dimensional behavioral latent from RC5 probing trajectories. It stays in Torch for a continuous autograd path through `ctx_hat -> RC5TorchBatch.probe_rollout -> tau_hat`, and it does not change PPO, ADR, `NormFlowDist`, or the current flow-over-context training path.
+
+Run it with the default `configs/vae_poc.json` config:
+
+```bash
+python -m NOMAD_RC5.pretrain_latent_vae
+```
+
+Direct script execution is also supported:
+
+```bash
+python NOMAD_RC5/pretrain_latent_vae.py
+```
+
+In normal use, edit `configs/vae_poc.json`. The script exits with an error if that file is missing or if required keys are missing.
+
+The script pre-generates `n_traj` valid RC5 contexts inside `context_low_high`, generates setpoint probes as sums of 2h, 6h, and 12h sinusoids, rolls them out with `RC5TorchBatch.probe_rollout`, then trains a small VAE by random minibatches of size `batch_size`:
+
+`tau -> encoder -> z -> decoder -> ctx_hat -> RC5TorchBatch`
+
+The pre-generated dataset is split once with `val_fraction`. Training logs both train and validation losses; validation uses `z=mu` for a deterministic reconstruction check.
+
+`ctx_hat` is bounded with the same sigmoid-plus-affine map used by the flow support logic. The loss combines normalized trajectory reconstruction, KL, a small normalized context reconstruction term, and simple physical penalties for invalid rollouts.
+
+Outputs are written to `NOMAD_RC5/runs/vae_poc` by default:
+
+- `encoder.pt` and `decoder.pt`;
+- `traj_norm.pt` with trajectory normalization statistics;
+- `ctx_bounds.pt` with the context bounds and names;
+- `loss_train_val.png` and `losses.csv`;
+- `reconstruction_*.png` for `Tz`, `u_hp`, and `P_hp`;
+- `interpolation.png` for linear interpolation in latent space.
 
 ## Environment interface
 

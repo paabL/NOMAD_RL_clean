@@ -357,6 +357,36 @@ class RC5TorchBatch:
         done = done | bad
         return self._build_obs(), rew, done, {"adr_bonus": adr_bonus}
 
+    def probe_rollout(self, ctx, setpoints, start_hour=None):
+        """Roll out fixed setpoint probes and expose signals used by latent-VAE pretraining."""
+        ctx = torch.as_tensor(ctx, device=self.device, dtype=torch.float32).reshape(self.n_envs, self.ctx_dim)
+        setpoints = torch.as_tensor(setpoints, device=self.device, dtype=torch.float32)
+        if setpoints.ndim == 1:
+            setpoints = setpoints[None, :].expand(self.n_envs, -1)
+        self.set_ctx(ctx)
+        h0 = self._sample_start_hour(self.n_envs, start_hour=start_hour)
+        ta0 = self.dist_h[h0, 0]
+        tz0 = torch.full((self.n_envs,), self.base_setpoint, device=self.device)
+        tw0 = (ta0 * self.th["R_w2"] + tz0 * self.th["R_w1"]) / (self.th["R_w1"] + self.th["R_w2"])
+        state = torch.stack([tz0, tw0, tz0, tz0, tz0], dim=1)
+        i_err = torch.zeros((self.n_envs,), device=self.device)
+        e_prev = torch.zeros((self.n_envs,), device=self.device)
+        d_err = torch.zeros((self.n_envs,), device=self.device)
+        traces = {k: [] for k in ("Tz", "u_hp", "P_hp", "COP")}
+        for t in range(int(setpoints.shape[1])):
+            row = self.dist2[(h0 + t).clamp(max=self.idx_max_h)]
+            sp = torch.clamp(setpoints[:, t], self.tz_min, self.tz_max)[None, :]
+            state1, i1, e1, d1 = state[None], i_err[None], e_prev[None], d_err[None]
+            state1, i1, e1, d1, tz, php, _, _, qc, _, u, _, _, _ = self._step_one(
+                state1, i1, e1, d1, sp, row[:, :, 0], row[:, :, 1], row[:, :, 2], row[:, :, 4]
+            )
+            state, i_err, e_prev, d_err = state1[0], i1[0], e1[0], d1[0]
+            qc, php, u, tz = qc[0], php[0], u[0], tz[0]
+            cop = torch.where(php > self.php_min_w, qc / torch.clamp(php, min=1e-6), torch.ones_like(php))
+            for k, v in (("Tz", tz), ("u_hp", u), ("P_hp", php), ("COP", cop)):
+                traces[k].append(v)
+        return {k: torch.stack(v, dim=1) for k, v in traces.items()}
+
 
 class RC5TorchVecEnv(VecEnv):
     """Thin SB3 adapter around RC5TorchBatch.
