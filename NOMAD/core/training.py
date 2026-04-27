@@ -10,6 +10,7 @@ from stable_baselines3.common.callbacks import BaseCallback
 from stable_baselines3.common.vec_env import DummyVecEnv, VecNormalize, SubprocVecEnv
 
 from .adr import ADRFlows
+from .memory import trim_memory
 from .utils import (
     _base_vec_env,
     _env_getattr,
@@ -145,6 +146,18 @@ class ADRUpdateCallback(BaseCallback):
             flush=True,
         )
         self.episodes_since_update = 0
+        trim_memory()
+        return True
+
+
+class MemoryTrimCallback(BaseCallback):
+    def _on_rollout_start(self):
+        trim_memory()
+
+    def _on_training_end(self):
+        trim_memory()
+
+    def _on_step(self):
         return True
 
 
@@ -168,6 +181,7 @@ class PeriodicSaveCallback(BaseCallback):
         if self.num_timesteps % self.save_freq == 0:
             self._save(self.save_dir)
             self._save(self.save_dir / str(int(self.num_timesteps)))
+            trim_memory()
         return True
 
 
@@ -281,6 +295,7 @@ def run_training(backend, cfg=None):
         ADRUpdateCallback(adr, cfg["adr"]["update_every_episodes"], train_device=device),
         PeriodicSaveCallback(cfg["save_every_steps"], save_dir, adr),
         PeriodicPlotCallback(rollout_dir, cfg["plot_every_episodes"]),
+        MemoryTrimCallback(),
     ]
     model.learn(total_timesteps=int(cfg["total_timesteps"]), callback=callbacks, reset_num_timesteps=not resume)
 

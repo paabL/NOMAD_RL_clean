@@ -58,6 +58,8 @@ For ADR, `ADRFlows` also uses `RC5TorchBatch`, but directly. `n_sample` candidat
 
 One practical limitation remains: SB3 expects NumPy at the `VecEnv` boundary. The physics runs in Torch, but observations and rewards are converted back to NumPy before PPO consumes them. Larger `n_envs` helps amortize that boundary cost.
 
+Long GPU runs also trim host memory after ADR updates and between PPO rollouts. This returns freed CPU allocations to the OS with `malloc_trim(0)` on Linux, which helps Slurm see the memory as released instead of killing the step after RSS drift.
+
 `torch.compile` is not enabled by default. Local tests showed speedups on CPU for the physics step after a large first compile cost, but MPS failed in Inductor. Treat it as an experiment, not as the default path.
 
 ## Environment interface

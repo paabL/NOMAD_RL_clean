@@ -13,13 +13,13 @@ if __package__ in (None, ""):
     if str(ROOT) not in sys.path:
         sys.path.insert(0, str(ROOT))
     from NOMAD.core.adr import ADRFlows
-    from NOMAD.core.training import ADRUpdateCallback, PeriodicSaveCallback
+    from NOMAD.core.training import ADRUpdateCallback, MemoryTrimCallback, PeriodicSaveCallback
     from NOMAD.core.utils import build_initial_dist, build_ppo_kwargs, get_resume_paths, lock_model_lr, merge_dict, set_global_seed
     from NOMAD_RC5.backend import DEFAULT_ADR_CFG, DEFAULT_ENV_CFG, DEFAULT_POLICY_CFG, RC5Backend
     from NOMAD_RC5.env import RC5TorchVecEnv
 else:
     from NOMAD.core.adr import ADRFlows
-    from NOMAD.core.training import ADRUpdateCallback, PeriodicSaveCallback
+    from NOMAD.core.training import ADRUpdateCallback, MemoryTrimCallback, PeriodicSaveCallback
     from NOMAD.core.utils import build_initial_dist, build_ppo_kwargs, get_resume_paths, lock_model_lr, merge_dict, set_global_seed
     from .backend import DEFAULT_ADR_CFG, DEFAULT_ENV_CFG, DEFAULT_POLICY_CFG, RC5Backend
     from .env import RC5TorchVecEnv
@@ -142,6 +142,7 @@ def run_training(cfg=None):
     callbacks = [
         ADRUpdateCallback(adr, cfg["adr"]["update_every_episodes"], train_device=device),
         PeriodicSaveCallback(cfg["save_every_steps"], save_dir, adr),
+        MemoryTrimCallback(),
     ]
     model.learn(total_timesteps=int(cfg["total_timesteps"]), callback=callbacks, reset_num_timesteps=not resume)
 

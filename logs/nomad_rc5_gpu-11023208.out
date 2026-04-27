@@ -962,3 +962,3130 @@ Logging to NOMAD_RC5/tensorboard_logs/tb/RecurrentPPO_1
 |    std                  | 0.307        |
 |    value_loss           | 0.00141      |
 ------------------------------------------
+[ADR #014] steps=3670016 episodes=512 set=0.001s upd=102.04s dt=99.97s | ret=-6699.493 bonus=-10046.523 obj=-17898.264 | entropy=-30.179 ess=758.1 temp=11.2 wmax=0.034 flow_std=6.7%
+-----------------------------------------
+| adr/                    |             |
+|    B                    | 1.02e+03    |
+|    bcs_mean             | -1e+04      |
+|    bcs_mean_pre         | -2.3e+04    |
+|    beta_kl              | 20          |
+|    bonus_mean           | -1e+04      |
+|    bonus_mean_pre       | -2.3e+04    |
+|    dt                   | 100         |
+|    entropy              | -30.2       |
+|    ess                  | 758         |
+|    ess_high             | 1.23e+03    |
+|    ess_low              | 307         |
+|    loss_fit             | 956         |
+|    obj_mean             | -1.79e+04   |
+|    params_std_pct_mean  | 6.69        |
+|    ret_mean             | -6.7e+03    |
+|    ret_mean_pre         | -2.08e+03   |
+|    ret_std              | 2.34e+04    |
+|    set_policy_s         | 0.00142     |
+|    surprise_mean        | 5.55e+03    |
+|    surprise_mean_pre    | 422         |
+|    surprise_std         | 794         |
+|    temp                 | 11.2        |
+|    update_s             | 102         |
+|    weight_max           | 0.0337      |
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | -210        |
+| time/                   |             |
+|    fps                  | 549         |
+|    iterations           | 28          |
+|    time_elapsed         | 6679        |
+|    total_timesteps      | 3670016     |
+| train/                  |             |
+|    approx_kl            | 0.010705227 |
+|    clip_fraction        | 0.103       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -0.187      |
+|    explained_variance   | 0.906       |
+|    learning_rate        | 0.000943    |
+|    loss                 | -0.0047     |
+|    n_updates            | 135         |
+|    policy_gradient_loss | -0.00288    |
+|    std                  | 0.291       |
+|    value_loss           | 0.00159     |
+-----------------------------------------
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | -223        |
+| time/                   |             |
+|    fps                  | 552         |
+|    iterations           | 29          |
+|    time_elapsed         | 6881        |
+|    total_timesteps      | 3801088     |
+| train/                  |             |
+|    approx_kl            | 0.011963563 |
+|    clip_fraction        | 0.113       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -0.134      |
+|    explained_variance   | 0.88        |
+|    learning_rate        | 0.000941    |
+|    loss                 | 0.00401     |
+|    n_updates            | 140         |
+|    policy_gradient_loss | -0.00325    |
+|    std                  | 0.274       |
+|    value_loss           | 0.00192     |
+-----------------------------------------
+[ADR #015] steps=3932160 episodes=512 set=0.002s upd=106.40s dt=104.40s | ret=-7506.406 bonus=-11713.349 obj=-21251.393 | entropy=-28.725 ess=768.0 temp=11.2 wmax=0.034 flow_std=6.8%
+-----------------------------------------
+| adr/                    |             |
+|    B                    | 1.02e+03    |
+|    bcs_mean             | -1.17e+04   |
+|    bcs_mean_pre         | -1.85e+04   |
+|    beta_kl              | 15.4        |
+|    bonus_mean           | -1.17e+04   |
+|    bonus_mean_pre       | -1.85e+04   |
+|    dt                   | 104         |
+|    entropy              | -28.7       |
+|    ess                  | 768         |
+|    ess_high             | 1.23e+03    |
+|    ess_low              | 307         |
+|    loss_fit             | 949         |
+|    obj_mean             | -2.13e+04   |
+|    params_std_pct_mean  | 6.78        |
+|    ret_mean             | -7.51e+03   |
+|    ret_mean_pre         | -3.07e+03   |
+|    ret_std              | 2.33e+04    |
+|    set_policy_s         | 0.00156     |
+|    surprise_mean        | 5.47e+03    |
+|    surprise_mean_pre    | 418         |
+|    surprise_std         | 761         |
+|    temp                 | 11.2        |
+|    update_s             | 106         |
+|    weight_max           | 0.0339      |
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | -171        |
+| time/                   |             |
+|    fps                  | 546         |
+|    iterations           | 30          |
+|    time_elapsed         | 7198        |
+|    total_timesteps      | 3932160     |
+| train/                  |             |
+|    approx_kl            | 0.012312019 |
+|    clip_fraction        | 0.115       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -0.073      |
+|    explained_variance   | 0.896       |
+|    learning_rate        | 0.000939    |
+|    loss                 | -0.00599    |
+|    n_updates            | 145         |
+|    policy_gradient_loss | -0.00238    |
+|    std                  | 0.259       |
+|    value_loss           | 0.00159     |
+-----------------------------------------
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | -172        |
+| time/                   |             |
+|    fps                  | 548         |
+|    iterations           | 31          |
+|    time_elapsed         | 7402        |
+|    total_timesteps      | 4063232     |
+| train/                  |             |
+|    approx_kl            | 0.012464739 |
+|    clip_fraction        | 0.113       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -0.0127     |
+|    explained_variance   | 0.88        |
+|    learning_rate        | 0.000937    |
+|    loss                 | -0.00599    |
+|    n_updates            | 150         |
+|    policy_gradient_loss | -0.0027     |
+|    std                  | 0.244       |
+|    value_loss           | 0.00153     |
+-----------------------------------------
+[ADR #016] steps=4194304 episodes=512 set=0.002s upd=102.39s dt=100.25s | ret=-6029.808 bonus=-16471.988 obj=-22985.371 | entropy=-24.946 ess=768.0 temp=11.2 wmax=0.034 flow_std=7.2%
+-----------------------------------------
+| adr/                    |             |
+|    B                    | 1.02e+03    |
+|    bcs_mean             | -1.65e+04   |
+|    bcs_mean_pre         | -1.62e+04   |
+|    beta_kl              | 30.9        |
+|    bonus_mean           | -1.65e+04   |
+|    bonus_mean_pre       | -1.62e+04   |
+|    dt                   | 100         |
+|    entropy              | -24.9       |
+|    ess                  | 768         |
+|    ess_high             | 1.23e+03    |
+|    ess_low              | 307         |
+|    loss_fit             | 950         |
+|    obj_mean             | -2.3e+04    |
+|    params_std_pct_mean  | 7.24        |
+|    ret_mean             | -6.03e+03   |
+|    ret_mean_pre         | -1.98e+03   |
+|    ret_std              | 2e+04       |
+|    set_policy_s         | 0.00161     |
+|    surprise_mean        | 5.55e+03    |
+|    surprise_mean_pre    | 416         |
+|    surprise_std         | 777         |
+|    temp                 | 11.2        |
+|    update_s             | 102         |
+|    weight_max           | 0.0339      |
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | -132        |
+| time/                   |             |
+|    fps                  | 544         |
+|    iterations           | 32          |
+|    time_elapsed         | 7707        |
+|    total_timesteps      | 4194304     |
+| train/                  |             |
+|    approx_kl            | 0.013031859 |
+|    clip_fraction        | 0.12        |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 0.0431      |
+|    explained_variance   | 0.885       |
+|    learning_rate        | 0.000935    |
+|    loss                 | -0.001      |
+|    n_updates            | 155         |
+|    policy_gradient_loss | -0.00299    |
+|    std                  | 0.23        |
+|    value_loss           | 0.00125     |
+-----------------------------------------
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | -113        |
+| time/                   |             |
+|    fps                  | 546         |
+|    iterations           | 33          |
+|    time_elapsed         | 7910        |
+|    total_timesteps      | 4325376     |
+| train/                  |             |
+|    approx_kl            | 0.013263986 |
+|    clip_fraction        | 0.12        |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 0.103       |
+|    explained_variance   | 0.909       |
+|    learning_rate        | 0.000933    |
+|    loss                 | -0.000388   |
+|    n_updates            | 160         |
+|    policy_gradient_loss | -0.00272    |
+|    std                  | 0.217       |
+|    value_loss           | 0.000956    |
+-----------------------------------------
+[ADR #017] steps=4456448 episodes=512 set=0.001s upd=102.65s dt=100.43s | ret=-7070.868 bonus=-11566.897 obj=-20187.814 | entropy=-23.602 ess=768.0 temp=11.2 wmax=0.034 flow_std=7.1%
+-----------------------------------------
+| adr/                    |             |
+|    B                    | 1.02e+03    |
+|    bcs_mean             | -1.16e+04   |
+|    bcs_mean_pre         | -2.08e+04   |
+|    beta_kl              | 16.7        |
+|    bonus_mean           | -1.16e+04   |
+|    bonus_mean_pre       | -2.08e+04   |
+|    dt                   | 100         |
+|    entropy              | -23.6       |
+|    ess                  | 768         |
+|    ess_high             | 1.23e+03    |
+|    ess_low              | 307         |
+|    loss_fit             | 948         |
+|    obj_mean             | -2.02e+04   |
+|    params_std_pct_mean  | 7.14        |
+|    ret_mean             | -7.07e+03   |
+|    ret_mean_pre         | -2.7e+03    |
+|    ret_std              | 2.21e+04    |
+|    set_policy_s         | 0.0014      |
+|    surprise_mean        | 5.52e+03    |
+|    surprise_mean_pre    | 399         |
+|    surprise_std         | 769         |
+|    temp                 | 11.2        |
+|    update_s             | 103         |
+|    weight_max           | 0.0339      |
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | -94.9       |
+| time/                   |             |
+|    fps                  | 542         |
+|    iterations           | 34          |
+|    time_elapsed         | 8217        |
+|    total_timesteps      | 4456448     |
+| train/                  |             |
+|    approx_kl            | 0.015266731 |
+|    clip_fraction        | 0.13        |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 0.163       |
+|    explained_variance   | 0.904       |
+|    learning_rate        | 0.000931    |
+|    loss                 | -0.00733    |
+|    n_updates            | 165         |
+|    policy_gradient_loss | -0.00233    |
+|    std                  | 0.205       |
+|    value_loss           | 0.00093     |
+-----------------------------------------
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | -71.8       |
+| time/                   |             |
+|    fps                  | 544         |
+|    iterations           | 35          |
+|    time_elapsed         | 8420        |
+|    total_timesteps      | 4587520     |
+| train/                  |             |
+|    approx_kl            | 0.013139414 |
+|    clip_fraction        | 0.124       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 0.216       |
+|    explained_variance   | 0.908       |
+|    learning_rate        | 0.000929    |
+|    loss                 | 0.000336    |
+|    n_updates            | 170         |
+|    policy_gradient_loss | -0.0015     |
+|    std                  | 0.193       |
+|    value_loss           | 0.000885    |
+-----------------------------------------
+[ADR #018] steps=4718592 episodes=512 set=0.001s upd=103.11s dt=100.81s | ret=-7810.519 bonus=-15745.701 obj=-25850.477 | entropy=-23.690 ess=768.7 temp=11.2 wmax=0.034 flow_std=6.9%
+-----------------------------------------
+| adr/                    |             |
+|    B                    | 1.02e+03    |
+|    bcs_mean             | -1.57e+04   |
+|    bcs_mean_pre         | -1.77e+04   |
+|    beta_kl              | 28.3        |
+|    bonus_mean           | -1.57e+04   |
+|    bonus_mean_pre       | -1.77e+04   |
+|    dt                   | 101         |
+|    entropy              | -23.7       |
+|    ess                  | 769         |
+|    ess_high             | 1.23e+03    |
+|    ess_low              | 307         |
+|    loss_fit             | 948         |
+|    obj_mean             | -2.59e+04   |
+|    params_std_pct_mean  | 6.85        |
+|    ret_mean             | -7.81e+03   |
+|    ret_mean_pre         | -2.14e+03   |
+|    ret_std              | 2.3e+04     |
+|    set_policy_s         | 0.00149     |
+|    surprise_mean        | 5.52e+03    |
+|    surprise_mean_pre    | 396         |
+|    surprise_std         | 770         |
+|    temp                 | 11.2        |
+|    update_s             | 103         |
+|    weight_max           | 0.0339      |
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | -82.8       |
+| time/                   |             |
+|    fps                  | 540         |
+|    iterations           | 36          |
+|    time_elapsed         | 8728        |
+|    total_timesteps      | 4718592     |
+| train/                  |             |
+|    approx_kl            | 0.014652076 |
+|    clip_fraction        | 0.137       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 0.279       |
+|    explained_variance   | 0.914       |
+|    learning_rate        | 0.000927    |
+|    loss                 | -0.00301    |
+|    n_updates            | 175         |
+|    policy_gradient_loss | -0.00222    |
+|    std                  | 0.182       |
+|    value_loss           | 0.000671    |
+-----------------------------------------
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | -43.1       |
+| time/                   |             |
+|    fps                  | 542         |
+|    iterations           | 37          |
+|    time_elapsed         | 8931        |
+|    total_timesteps      | 4849664     |
+| train/                  |             |
+|    approx_kl            | 0.012995835 |
+|    clip_fraction        | 0.132       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 0.327       |
+|    explained_variance   | 0.845       |
+|    learning_rate        | 0.000925    |
+|    loss                 | 2e-05       |
+|    n_updates            | 180         |
+|    policy_gradient_loss | -0.0012     |
+|    std                  | 0.174       |
+|    value_loss           | 0.00117     |
+-----------------------------------------
+[ADR #019] steps=4980736 episodes=512 set=0.002s upd=104.23s dt=102.11s | ret=-6291.107 bonus=-13379.932 obj=-20409.639 | entropy=-27.406 ess=768.6 temp=11.2 wmax=0.034 flow_std=6.5%
+-----------------------------------------
+| adr/                    |             |
+|    B                    | 1.02e+03    |
+|    bcs_mean             | -1.34e+04   |
+|    bcs_mean_pre         | -2.21e+04   |
+|    beta_kl              | 29.2        |
+|    bonus_mean           | -1.34e+04   |
+|    bonus_mean_pre       | -2.21e+04   |
+|    dt                   | 102         |
+|    entropy              | -27.4       |
+|    ess                  | 769         |
+|    ess_high             | 1.23e+03    |
+|    ess_low              | 307         |
+|    loss_fit             | 954         |
+|    obj_mean             | -2.04e+04   |
+|    params_std_pct_mean  | 6.46        |
+|    ret_mean             | -6.29e+03   |
+|    ret_mean_pre         | -2.15e+03   |
+|    ret_std              | 2.09e+04    |
+|    set_policy_s         | 0.00155     |
+|    surprise_mean        | 5.55e+03    |
+|    surprise_mean_pre    | 403         |
+|    surprise_std         | 770         |
+|    temp                 | 11.2        |
+|    update_s             | 104         |
+|    weight_max           | 0.0338      |
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | -39.1       |
+| time/                   |             |
+|    fps                  | 538         |
+|    iterations           | 38          |
+|    time_elapsed         | 9241        |
+|    total_timesteps      | 4980736     |
+| train/                  |             |
+|    approx_kl            | 0.013963823 |
+|    clip_fraction        | 0.132       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 0.379       |
+|    explained_variance   | 0.902       |
+|    learning_rate        | 0.000922    |
+|    loss                 | -0.00657    |
+|    n_updates            | 185         |
+|    policy_gradient_loss | -0.00163    |
+|    std                  | 0.165       |
+|    value_loss           | 0.000674    |
+-----------------------------------------
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | -29.9       |
+| time/                   |             |
+|    fps                  | 541         |
+|    iterations           | 39          |
+|    time_elapsed         | 9446        |
+|    total_timesteps      | 5111808     |
+| train/                  |             |
+|    approx_kl            | 0.013894892 |
+|    clip_fraction        | 0.128       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 0.436       |
+|    explained_variance   | 0.892       |
+|    learning_rate        | 0.00092     |
+|    loss                 | -0.00283    |
+|    n_updates            | 190         |
+|    policy_gradient_loss | -0.00165    |
+|    std                  | 0.156       |
+|    value_loss           | 0.00071     |
+-----------------------------------------
+[ADR #020] steps=5242880 episodes=512 set=0.002s upd=104.84s dt=102.81s | ret=-6729.005 bonus=-14055.400 obj=-22002.609 | entropy=-27.265 ess=768.0 temp=11.2 wmax=0.034 flow_std=6.4%
+-----------------------------------------
+| adr/                    |             |
+|    B                    | 1.02e+03    |
+|    bcs_mean             | -1.41e+04   |
+|    bcs_mean_pre         | -2.09e+04   |
+|    beta_kl              | 23.2        |
+|    bonus_mean           | -1.41e+04   |
+|    bonus_mean_pre       | -2.09e+04   |
+|    dt                   | 103         |
+|    entropy              | -27.3       |
+|    ess                  | 768         |
+|    ess_high             | 1.23e+03    |
+|    ess_low              | 307         |
+|    loss_fit             | 947         |
+|    obj_mean             | -2.2e+04    |
+|    params_std_pct_mean  | 6.36        |
+|    ret_mean             | -6.73e+03   |
+|    ret_mean_pre         | -2e+03      |
+|    ret_std              | 2.24e+04    |
+|    set_policy_s         | 0.00155     |
+|    surprise_mean        | 5.51e+03    |
+|    surprise_mean_pre    | 405         |
+|    surprise_std         | 775         |
+|    temp                 | 11.2        |
+|    update_s             | 105         |
+|    weight_max           | 0.0339      |
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | -16.8       |
+| time/                   |             |
+|    fps                  | 537         |
+|    iterations           | 40          |
+|    time_elapsed         | 9758        |
+|    total_timesteps      | 5242880     |
+| train/                  |             |
+|    approx_kl            | 0.014919992 |
+|    clip_fraction        | 0.138       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 0.487       |
+|    explained_variance   | 0.888       |
+|    learning_rate        | 0.000918    |
+|    loss                 | -0.000108   |
+|    n_updates            | 195         |
+|    policy_gradient_loss | -0.00128    |
+|    std                  | 0.148       |
+|    value_loss           | 0.000672    |
+-----------------------------------------
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | -5.48       |
+| time/                   |             |
+|    fps                  | 539         |
+|    iterations           | 41          |
+|    time_elapsed         | 9962        |
+|    total_timesteps      | 5373952     |
+| train/                  |             |
+|    approx_kl            | 0.016478375 |
+|    clip_fraction        | 0.147       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 0.548       |
+|    explained_variance   | 0.909       |
+|    learning_rate        | 0.000916    |
+|    loss                 | -0.00519    |
+|    n_updates            | 200         |
+|    policy_gradient_loss | -0.00156    |
+|    std                  | 0.139       |
+|    value_loss           | 0.000462    |
+-----------------------------------------
+[ADR #021] steps=5505024 episodes=512 set=0.001s upd=105.12s dt=102.92s | ret=-6733.182 bonus=-16251.367 obj=-24201.184 | entropy=-27.272 ess=768.0 temp=11.2 wmax=0.034 flow_std=6.0%
+----------------------------------------
+| adr/                    |            |
+|    B                    | 1.02e+03   |
+|    bcs_mean             | -1.63e+04  |
+|    bcs_mean_pre         | -1.82e+04  |
+|    beta_kl              | 14.5       |
+|    bonus_mean           | -1.63e+04  |
+|    bonus_mean_pre       | -1.82e+04  |
+|    dt                   | 103        |
+|    entropy              | -27.3      |
+|    ess                  | 768        |
+|    ess_high             | 1.23e+03   |
+|    ess_low              | 307        |
+|    loss_fit             | 950        |
+|    obj_mean             | -2.42e+04  |
+|    params_std_pct_mean  | 6.01       |
+|    ret_mean             | -6.73e+03  |
+|    ret_mean_pre         | -1.64e+03  |
+|    ret_std              | 2.11e+04   |
+|    set_policy_s         | 0.00142    |
+|    surprise_mean        | 5.52e+03   |
+|    surprise_mean_pre    | 404        |
+|    surprise_std         | 766        |
+|    temp                 | 11.2       |
+|    update_s             | 105        |
+|    weight_max           | 0.0339     |
+| rollout/                |            |
+|    ep_len_mean          | 512        |
+|    ep_rew_mean          | -0.307     |
+| time/                   |            |
+|    fps                  | 535        |
+|    iterations           | 42         |
+|    time_elapsed         | 10273      |
+|    total_timesteps      | 5505024    |
+| train/                  |            |
+|    approx_kl            | 0.01670098 |
+|    clip_fraction        | 0.15       |
+|    clip_range           | 0.2        |
+|    entropy_loss         | 0.606      |
+|    explained_variance   | 0.911      |
+|    learning_rate        | 0.000914   |
+|    loss                 | -0.00254   |
+|    n_updates            | 205        |
+|    policy_gradient_loss | -0.000535  |
+|    std                  | 0.131      |
+|    value_loss           | 0.000437   |
+----------------------------------------
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 2.31        |
+| time/                   |             |
+|    fps                  | 537         |
+|    iterations           | 43          |
+|    time_elapsed         | 10478       |
+|    total_timesteps      | 5636096     |
+| train/                  |             |
+|    approx_kl            | 0.016438637 |
+|    clip_fraction        | 0.151       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 0.66        |
+|    explained_variance   | 0.914       |
+|    learning_rate        | 0.000912    |
+|    loss                 | 0.000147    |
+|    n_updates            | 210         |
+|    policy_gradient_loss | -0.000248   |
+|    std                  | 0.124       |
+|    value_loss           | 0.000403    |
+-----------------------------------------
+[ADR #022] steps=5767168 episodes=512 set=0.002s upd=105.08s dt=102.99s | ret=-8236.222 bonus=-17538.547 obj=-28466.973 | entropy=-25.163 ess=768.4 temp=11.2 wmax=0.034 flow_std=6.1%
+-----------------------------------------
+| adr/                    |             |
+|    B                    | 1.02e+03    |
+|    bcs_mean             | -1.75e+04   |
+|    bcs_mean_pre         | -2.06e+04   |
+|    beta_kl              | 23.9        |
+|    bonus_mean           | -1.75e+04   |
+|    bonus_mean_pre       | -2.06e+04   |
+|    dt                   | 103         |
+|    entropy              | -25.2       |
+|    ess                  | 768         |
+|    ess_high             | 1.23e+03    |
+|    ess_low              | 307         |
+|    loss_fit             | 951         |
+|    obj_mean             | -2.85e+04   |
+|    params_std_pct_mean  | 6.07        |
+|    ret_mean             | -8.24e+03   |
+|    ret_mean_pre         | -2.62e+03   |
+|    ret_std              | 2.42e+04    |
+|    set_policy_s         | 0.00161     |
+|    surprise_mean        | 5.54e+03    |
+|    surprise_mean_pre    | 407         |
+|    surprise_std         | 796         |
+|    temp                 | 11.2        |
+|    update_s             | 105         |
+|    weight_max           | 0.0339      |
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 15.8        |
+| time/                   |             |
+|    fps                  | 534         |
+|    iterations           | 44          |
+|    time_elapsed         | 10790       |
+|    total_timesteps      | 5767168     |
+| train/                  |             |
+|    approx_kl            | 0.017254006 |
+|    clip_fraction        | 0.157       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 0.719       |
+|    explained_variance   | 0.867       |
+|    learning_rate        | 0.00091     |
+|    loss                 | 0.00133     |
+|    n_updates            | 215         |
+|    policy_gradient_loss | -0.000892   |
+|    std                  | 0.117       |
+|    value_loss           | 0.000545    |
+-----------------------------------------
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 32.3        |
+| time/                   |             |
+|    fps                  | 536         |
+|    iterations           | 45          |
+|    time_elapsed         | 10994       |
+|    total_timesteps      | 5898240     |
+| train/                  |             |
+|    approx_kl            | 0.020810347 |
+|    clip_fraction        | 0.166       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 0.783       |
+|    explained_variance   | 0.853       |
+|    learning_rate        | 0.000908    |
+|    loss                 | -0.00219    |
+|    n_updates            | 220         |
+|    policy_gradient_loss | -0.000115   |
+|    std                  | 0.11        |
+|    value_loss           | 0.000558    |
+-----------------------------------------
+[ADR #023] steps=6029312 episodes=512 set=0.001s upd=105.72s dt=103.14s | ret=-6870.282 bonus=-15065.259 obj=-23283.434 | entropy=-24.318 ess=768.0 temp=11.2 wmax=0.034 flow_std=6.0%
+-----------------------------------------
+| adr/                    |             |
+|    B                    | 1.02e+03    |
+|    bcs_mean             | -1.51e+04   |
+|    bcs_mean_pre         | -1.91e+04   |
+|    beta_kl              | 12          |
+|    bonus_mean           | -1.51e+04   |
+|    bonus_mean_pre       | -1.91e+04   |
+|    dt                   | 103         |
+|    entropy              | -24.3       |
+|    ess                  | 768         |
+|    ess_high             | 1.23e+03    |
+|    ess_low              | 307         |
+|    loss_fit             | 950         |
+|    obj_mean             | -2.33e+04   |
+|    params_std_pct_mean  | 5.97        |
+|    ret_mean             | -6.87e+03   |
+|    ret_mean_pre         | -2.64e+03   |
+|    ret_std              | 2.12e+04    |
+|    set_policy_s         | 0.00139     |
+|    surprise_mean        | 5.52e+03    |
+|    surprise_mean_pre    | 403         |
+|    surprise_std         | 766         |
+|    temp                 | 11.2        |
+|    update_s             | 106         |
+|    weight_max           | 0.0339      |
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 42.8        |
+| time/                   |             |
+|    fps                  | 533         |
+|    iterations           | 46          |
+|    time_elapsed         | 11307       |
+|    total_timesteps      | 6029312     |
+| train/                  |             |
+|    approx_kl            | 0.018470237 |
+|    clip_fraction        | 0.163       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 0.84        |
+|    explained_variance   | 0.886       |
+|    learning_rate        | 0.000906    |
+|    loss                 | -0.000694   |
+|    n_updates            | 225         |
+|    policy_gradient_loss | 0.000271    |
+|    std                  | 0.104       |
+|    value_loss           | 0.000404    |
+-----------------------------------------
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 55.3        |
+| time/                   |             |
+|    fps                  | 535         |
+|    iterations           | 47          |
+|    time_elapsed         | 11512       |
+|    total_timesteps      | 6160384     |
+| train/                  |             |
+|    approx_kl            | 0.018067414 |
+|    clip_fraction        | 0.157       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 0.894       |
+|    explained_variance   | 0.91        |
+|    learning_rate        | 0.000904    |
+|    loss                 | -0.00825    |
+|    n_updates            | 230         |
+|    policy_gradient_loss | -0.000147   |
+|    std                  | 0.0985      |
+|    value_loss           | 0.000309    |
+-----------------------------------------
+[ADR #024] steps=6291456 episodes=512 set=0.001s upd=105.29s dt=103.06s | ret=-7129.273 bonus=-13638.127 obj=-22407.494 | entropy=-24.383 ess=768.0 temp=11.2 wmax=0.034 flow_std=6.5%
+-----------------------------------------
+| adr/                    |             |
+|    B                    | 1.02e+03    |
+|    bcs_mean             | -1.36e+04   |
+|    bcs_mean_pre         | -1.79e+04   |
+|    beta_kl              | 17.2        |
+|    bonus_mean           | -1.36e+04   |
+|    bonus_mean_pre       | -1.79e+04   |
+|    dt                   | 103         |
+|    entropy              | -24.4       |
+|    ess                  | 768         |
+|    ess_high             | 1.23e+03    |
+|    ess_low              | 307         |
+|    loss_fit             | 949         |
+|    obj_mean             | -2.24e+04   |
+|    params_std_pct_mean  | 6.49        |
+|    ret_mean             | -7.13e+03   |
+|    ret_mean_pre         | -2.2e+03    |
+|    ret_std              | 2.21e+04    |
+|    set_policy_s         | 0.00146     |
+|    surprise_mean        | 5.49e+03    |
+|    surprise_mean_pre    | 392         |
+|    surprise_std         | 789         |
+|    temp                 | 11.2        |
+|    update_s             | 105         |
+|    weight_max           | 0.0339      |
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 63.2        |
+| time/                   |             |
+|    fps                  | 532         |
+|    iterations           | 48          |
+|    time_elapsed         | 11823       |
+|    total_timesteps      | 6291456     |
+| train/                  |             |
+|    approx_kl            | 0.018634614 |
+|    clip_fraction        | 0.168       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 0.949       |
+|    explained_variance   | 0.899       |
+|    learning_rate        | 0.000901    |
+|    loss                 | -0.00191    |
+|    n_updates            | 235         |
+|    policy_gradient_loss | 0.00136     |
+|    std                  | 0.0928      |
+|    value_loss           | 0.000375    |
+-----------------------------------------
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 67.4        |
+| time/                   |             |
+|    fps                  | 533         |
+|    iterations           | 49          |
+|    time_elapsed         | 12027       |
+|    total_timesteps      | 6422528     |
+| train/                  |             |
+|    approx_kl            | 0.018452033 |
+|    clip_fraction        | 0.168       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 1.01        |
+|    explained_variance   | 0.916       |
+|    learning_rate        | 0.000899    |
+|    loss                 | -0.0011     |
+|    n_updates            | 240         |
+|    policy_gradient_loss | 0.0018      |
+|    std                  | 0.0881      |
+|    value_loss           | 0.000282    |
+-----------------------------------------
+[ADR #025] steps=6553600 episodes=512 set=0.002s upd=110.26s dt=107.87s | ret=-6103.729 bonus=-14506.389 obj=-21189.447 | entropy=-23.652 ess=768.0 temp=11.2 wmax=0.034 flow_std=6.4%
+-----------------------------------------
+| adr/                    |             |
+|    B                    | 1.02e+03    |
+|    bcs_mean             | -1.45e+04   |
+|    bcs_mean_pre         | -1.98e+04   |
+|    beta_kl              | 14.2        |
+|    bonus_mean           | -1.45e+04   |
+|    bonus_mean_pre       | -1.98e+04   |
+|    dt                   | 108         |
+|    entropy              | -23.7       |
+|    ess                  | 768         |
+|    ess_high             | 1.23e+03    |
+|    ess_low              | 307         |
+|    loss_fit             | 950         |
+|    obj_mean             | -2.12e+04   |
+|    params_std_pct_mean  | 6.4         |
+|    ret_mean             | -6.1e+03    |
+|    ret_mean_pre         | -2.13e+03   |
+|    ret_std              | 2.08e+04    |
+|    set_policy_s         | 0.00153     |
+|    surprise_mean        | 5.52e+03    |
+|    surprise_mean_pre    | 384         |
+|    surprise_std         | 786         |
+|    temp                 | 11.2        |
+|    update_s             | 110         |
+|    weight_max           | 0.0339      |
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 73.9        |
+| time/                   |             |
+|    fps                  | 530         |
+|    iterations           | 50          |
+|    time_elapsed         | 12346       |
+|    total_timesteps      | 6553600     |
+| train/                  |             |
+|    approx_kl            | 0.022725971 |
+|    clip_fraction        | 0.175       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 1.06        |
+|    explained_variance   | 0.922       |
+|    learning_rate        | 0.000897    |
+|    loss                 | -0.00377    |
+|    n_updates            | 245         |
+|    policy_gradient_loss | 0.00168     |
+|    std                  | 0.0836      |
+|    value_loss           | 0.00023     |
+-----------------------------------------
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 80.9        |
+| time/                   |             |
+|    fps                  | 532         |
+|    iterations           | 51          |
+|    time_elapsed         | 12554       |
+|    total_timesteps      | 6684672     |
+| train/                  |             |
+|    approx_kl            | 0.021428578 |
+|    clip_fraction        | 0.182       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 1.12        |
+|    explained_variance   | 0.93        |
+|    learning_rate        | 0.000895    |
+|    loss                 | -0.00377    |
+|    n_updates            | 250         |
+|    policy_gradient_loss | 0.00159     |
+|    std                  | 0.0786      |
+|    value_loss           | 0.000222    |
+-----------------------------------------
+[ADR #026] steps=6815744 episodes=512 set=0.002s upd=106.04s dt=103.47s | ret=-7583.814 bonus=-13312.764 obj=-22948.387 | entropy=-22.498 ess=497.8 temp=11.2 wmax=0.033 flow_std=6.6%
+----------------------------------------
+| adr/                    |            |
+|    B                    | 1.02e+03   |
+|    bcs_mean             | -1.33e+04  |
+|    bcs_mean_pre         | -1.99e+04  |
+|    beta_kl              | 17.2       |
+|    bonus_mean           | -1.33e+04  |
+|    bonus_mean_pre       | -1.99e+04  |
+|    dt                   | 103        |
+|    entropy              | -22.5      |
+|    ess                  | 498        |
+|    ess_high             | 1.23e+03   |
+|    ess_low              | 307        |
+|    loss_fit             | 963        |
+|    obj_mean             | -2.29e+04  |
+|    params_std_pct_mean  | 6.59       |
+|    ret_mean             | -7.58e+03  |
+|    ret_mean_pre         | -2.1e+03   |
+|    ret_std              | 2.33e+04   |
+|    set_policy_s         | 0.00163    |
+|    surprise_mean        | 5.53e+03   |
+|    surprise_mean_pre    | 389        |
+|    surprise_std         | 800        |
+|    temp                 | 11.2       |
+|    update_s             | 106        |
+|    weight_max           | 0.033      |
+| rollout/                |            |
+|    ep_len_mean          | 512        |
+|    ep_rew_mean          | 90.7       |
+| time/                   |            |
+|    fps                  | 529        |
+|    iterations           | 52         |
+|    time_elapsed         | 12869      |
+|    total_timesteps      | 6815744    |
+| train/                  |            |
+|    approx_kl            | 0.01982576 |
+|    clip_fraction        | 0.178      |
+|    clip_range           | 0.2        |
+|    entropy_loss         | 1.17       |
+|    explained_variance   | 0.91       |
+|    learning_rate        | 0.000893   |
+|    loss                 | -0.00221   |
+|    n_updates            | 255        |
+|    policy_gradient_loss | 0.00252    |
+|    std                  | 0.0744     |
+|    value_loss           | 0.000249   |
+----------------------------------------
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 94.6        |
+| time/                   |             |
+|    fps                  | 531         |
+|    iterations           | 53          |
+|    time_elapsed         | 13076       |
+|    total_timesteps      | 6946816     |
+| train/                  |             |
+|    approx_kl            | 0.021946259 |
+|    clip_fraction        | 0.179       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 1.23        |
+|    explained_variance   | 0.886       |
+|    learning_rate        | 0.000891    |
+|    loss                 | -0.00594    |
+|    n_updates            | 260         |
+|    policy_gradient_loss | 0.00201     |
+|    std                  | 0.07        |
+|    value_loss           | 0.000264    |
+-----------------------------------------
+[ADR #027] steps=7077888 episodes=512 set=0.001s upd=108.37s dt=105.52s | ret=-6526.226 bonus=-16985.422 obj=-24521.039 | entropy=-24.450 ess=768.0 temp=11.2 wmax=0.034 flow_std=6.0%
+-----------------------------------------
+| adr/                    |             |
+|    B                    | 1.02e+03    |
+|    bcs_mean             | -1.7e+04    |
+|    bcs_mean_pre         | -2.24e+04   |
+|    beta_kl              | 14.5        |
+|    bonus_mean           | -1.7e+04    |
+|    bonus_mean_pre       | -2.24e+04   |
+|    dt                   | 106         |
+|    entropy              | -24.4       |
+|    ess                  | 768         |
+|    ess_high             | 1.23e+03    |
+|    ess_low              | 307         |
+|    loss_fit             | 950         |
+|    obj_mean             | -2.45e+04   |
+|    params_std_pct_mean  | 6.04        |
+|    ret_mean             | -6.53e+03   |
+|    ret_mean_pre         | -2.66e+03   |
+|    ret_std              | 2.08e+04    |
+|    set_policy_s         | 0.0014      |
+|    surprise_mean        | 5.52e+03    |
+|    surprise_mean_pre    | 378         |
+|    surprise_std         | 775         |
+|    temp                 | 11.2        |
+|    update_s             | 108         |
+|    weight_max           | 0.0339      |
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 103         |
+| time/                   |             |
+|    fps                  | 528         |
+|    iterations           | 54          |
+|    time_elapsed         | 13392       |
+|    total_timesteps      | 7077888     |
+| train/                  |             |
+|    approx_kl            | 0.021561438 |
+|    clip_fraction        | 0.184       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 1.28        |
+|    explained_variance   | 0.888       |
+|    learning_rate        | 0.000889    |
+|    loss                 | -0.00174    |
+|    n_updates            | 265         |
+|    policy_gradient_loss | 0.00341     |
+|    std                  | 0.0665      |
+|    value_loss           | 0.000276    |
+-----------------------------------------
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 112         |
+| time/                   |             |
+|    fps                  | 530         |
+|    iterations           | 55          |
+|    time_elapsed         | 13598       |
+|    total_timesteps      | 7208960     |
+| train/                  |             |
+|    approx_kl            | 0.022697221 |
+|    clip_fraction        | 0.193       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 1.34        |
+|    explained_variance   | 0.842       |
+|    learning_rate        | 0.000887    |
+|    loss                 | 0.00703     |
+|    n_updates            | 270         |
+|    policy_gradient_loss | 0.00284     |
+|    std                  | 0.0628      |
+|    value_loss           | 0.000323    |
+-----------------------------------------
+[ADR #028] steps=7340032 episodes=512 set=0.001s upd=108.50s dt=105.63s | ret=-8529.373 bonus=-16614.430 obj=-28184.797 | entropy=-23.621 ess=768.0 temp=11.2 wmax=0.034 flow_std=6.4%
+-----------------------------------------
+| adr/                    |             |
+|    B                    | 1.02e+03    |
+|    bcs_mean             | -1.66e+04   |
+|    bcs_mean_pre         | -2.15e+04   |
+|    beta_kl              | 12.3        |
+|    bonus_mean           | -1.66e+04   |
+|    bonus_mean_pre       | -2.15e+04   |
+|    dt                   | 106         |
+|    entropy              | -23.6       |
+|    ess                  | 768         |
+|    ess_high             | 1.23e+03    |
+|    ess_low              | 307         |
+|    loss_fit             | 946         |
+|    obj_mean             | -2.82e+04   |
+|    params_std_pct_mean  | 6.43        |
+|    ret_mean             | -8.53e+03   |
+|    ret_mean_pre         | -1.57e+03   |
+|    ret_std              | 2.39e+04    |
+|    set_policy_s         | 0.0014      |
+|    surprise_mean        | 5.49e+03    |
+|    surprise_mean_pre    | 394         |
+|    surprise_std         | 792         |
+|    temp                 | 11.2        |
+|    update_s             | 108         |
+|    weight_max           | 0.0339      |
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 117         |
+| time/                   |             |
+|    fps                  | 527         |
+|    iterations           | 56          |
+|    time_elapsed         | 13915       |
+|    total_timesteps      | 7340032     |
+| train/                  |             |
+|    approx_kl            | 0.026970513 |
+|    clip_fraction        | 0.2         |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 1.39        |
+|    explained_variance   | 0.912       |
+|    learning_rate        | 0.000885    |
+|    loss                 | 0.00245     |
+|    n_updates            | 275         |
+|    policy_gradient_loss | 0.00444     |
+|    std                  | 0.0598      |
+|    value_loss           | 0.000185    |
+-----------------------------------------
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 120         |
+| time/                   |             |
+|    fps                  | 528         |
+|    iterations           | 57          |
+|    time_elapsed         | 14123       |
+|    total_timesteps      | 7471104     |
+| train/                  |             |
+|    approx_kl            | 0.025504477 |
+|    clip_fraction        | 0.207       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 1.44        |
+|    explained_variance   | 0.896       |
+|    learning_rate        | 0.000883    |
+|    loss                 | 0.0108      |
+|    n_updates            | 280         |
+|    policy_gradient_loss | 0.00529     |
+|    std                  | 0.0566      |
+|    value_loss           | 0.000218    |
+-----------------------------------------
+[ADR #029] steps=7602176 episodes=512 set=0.001s upd=108.71s dt=105.81s | ret=-7520.818 bonus=-14327.158 obj=-23840.062 | entropy=-21.074 ess=768.0 temp=11.2 wmax=0.034 flow_std=6.6%
+-----------------------------------------
+| adr/                    |             |
+|    B                    | 1.02e+03    |
+|    bcs_mean             | -1.43e+04   |
+|    bcs_mean_pre         | -1.85e+04   |
+|    beta_kl              | 26.7        |
+|    bonus_mean           | -1.43e+04   |
+|    bonus_mean_pre       | -1.85e+04   |
+|    dt                   | 106         |
+|    entropy              | -21.1       |
+|    ess                  | 768         |
+|    ess_high             | 1.23e+03    |
+|    ess_low              | 307         |
+|    loss_fit             | 948         |
+|    obj_mean             | -2.38e+04   |
+|    params_std_pct_mean  | 6.56        |
+|    ret_mean             | -7.52e+03   |
+|    ret_mean_pre         | -1.75e+03   |
+|    ret_std              | 2.33e+04    |
+|    set_policy_s         | 0.00143     |
+|    surprise_mean        | 5.53e+03    |
+|    surprise_mean_pre    | 388         |
+|    surprise_std         | 764         |
+|    temp                 | 11.2        |
+|    update_s             | 109         |
+|    weight_max           | 0.0339      |
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 125         |
+| time/                   |             |
+|    fps                  | 526         |
+|    iterations           | 58          |
+|    time_elapsed         | 14442       |
+|    total_timesteps      | 7602176     |
+| train/                  |             |
+|    approx_kl            | 0.024827229 |
+|    clip_fraction        | 0.204       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 1.5         |
+|    explained_variance   | 0.912       |
+|    learning_rate        | 0.00088     |
+|    loss                 | 0.0105      |
+|    n_updates            | 285         |
+|    policy_gradient_loss | 0.00562     |
+|    std                  | 0.0537      |
+|    value_loss           | 0.000161    |
+-----------------------------------------
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 123         |
+| time/                   |             |
+|    fps                  | 527         |
+|    iterations           | 59          |
+|    time_elapsed         | 14649       |
+|    total_timesteps      | 7733248     |
+| train/                  |             |
+|    approx_kl            | 0.030567285 |
+|    clip_fraction        | 0.22        |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 1.54        |
+|    explained_variance   | 0.897       |
+|    learning_rate        | 0.000878    |
+|    loss                 | 0.0136      |
+|    n_updates            | 290         |
+|    policy_gradient_loss | 0.0078      |
+|    std                  | 0.0513      |
+|    value_loss           | 0.000205    |
+-----------------------------------------
+[ADR #030] steps=7864320 episodes=512 set=0.001s upd=110.86s dt=107.83s | ret=-7232.525 bonus=-16178.705 obj=-25126.775 | entropy=-20.962 ess=768.7 temp=11.2 wmax=0.034 flow_std=6.3%
+-----------------------------------------
+| adr/                    |             |
+|    B                    | 1.02e+03    |
+|    bcs_mean             | -1.62e+04   |
+|    bcs_mean_pre         | -1.86e+04   |
+|    beta_kl              | 10.4        |
+|    bonus_mean           | -1.62e+04   |
+|    bonus_mean_pre       | -1.86e+04   |
+|    dt                   | 108         |
+|    entropy              | -21         |
+|    ess                  | 769         |
+|    ess_high             | 1.23e+03    |
+|    ess_low              | 307         |
+|    loss_fit             | 946         |
+|    obj_mean             | -2.51e+04   |
+|    params_std_pct_mean  | 6.33        |
+|    ret_mean             | -7.23e+03   |
+|    ret_mean_pre         | -2.65e+03   |
+|    ret_std              | 2.29e+04    |
+|    set_policy_s         | 0.00144     |
+|    surprise_mean        | 5.52e+03    |
+|    surprise_mean_pre    | 385         |
+|    surprise_std         | 802         |
+|    temp                 | 11.2        |
+|    update_s             | 111         |
+|    weight_max           | 0.0339      |
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 131         |
+| time/                   |             |
+|    fps                  | 525         |
+|    iterations           | 60          |
+|    time_elapsed         | 14969       |
+|    total_timesteps      | 7864320     |
+| train/                  |             |
+|    approx_kl            | 0.030848866 |
+|    clip_fraction        | 0.221       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 1.59        |
+|    explained_variance   | 0.905       |
+|    learning_rate        | 0.000876    |
+|    loss                 | 0.0111      |
+|    n_updates            | 295         |
+|    policy_gradient_loss | 0.00625     |
+|    std                  | 0.0489      |
+|    value_loss           | 0.000164    |
+-----------------------------------------
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 135         |
+| time/                   |             |
+|    fps                  | 526         |
+|    iterations           | 61          |
+|    time_elapsed         | 15176       |
+|    total_timesteps      | 7995392     |
+| train/                  |             |
+|    approx_kl            | 0.028320253 |
+|    clip_fraction        | 0.229       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 1.64        |
+|    explained_variance   | 0.921       |
+|    learning_rate        | 0.000874    |
+|    loss                 | 0.0134      |
+|    n_updates            | 300         |
+|    policy_gradient_loss | 0.00867     |
+|    std                  | 0.0467      |
+|    value_loss           | 0.000129    |
+-----------------------------------------
+[ADR #031] steps=8126464 episodes=512 set=0.002s upd=110.69s dt=107.77s | ret=-6291.090 bonus=-17678.748 obj=-24814.395 | entropy=-20.512 ess=768.0 temp=11.2 wmax=0.034 flow_std=6.3%
+----------------------------------------
+| adr/                    |            |
+|    B                    | 1.02e+03   |
+|    bcs_mean             | -1.77e+04  |
+|    bcs_mean_pre         | -1.87e+04  |
+|    beta_kl              | 15.6       |
+|    bonus_mean           | -1.77e+04  |
+|    bonus_mean_pre       | -1.87e+04  |
+|    dt                   | 108        |
+|    entropy              | -20.5      |
+|    ess                  | 768        |
+|    ess_high             | 1.23e+03   |
+|    ess_low              | 307        |
+|    loss_fit             | 943        |
+|    obj_mean             | -2.48e+04  |
+|    params_std_pct_mean  | 6.28       |
+|    ret_mean             | -6.29e+03  |
+|    ret_mean_pre         | -2.44e+03  |
+|    ret_std              | 2.12e+04   |
+|    set_policy_s         | 0.00151    |
+|    surprise_mean        | 5.45e+03   |
+|    surprise_mean_pre    | 378        |
+|    surprise_std         | 754        |
+|    temp                 | 11.2       |
+|    update_s             | 111        |
+|    weight_max           | 0.0339     |
+| rollout/                |            |
+|    ep_len_mean          | 512        |
+|    ep_rew_mean          | 142        |
+| time/                   |            |
+|    fps                  | 524        |
+|    iterations           | 62         |
+|    time_elapsed         | 15496      |
+|    total_timesteps      | 8126464    |
+| train/                  |            |
+|    approx_kl            | 0.03235217 |
+|    clip_fraction        | 0.227      |
+|    clip_range           | 0.2        |
+|    entropy_loss         | 1.69       |
+|    explained_variance   | 0.924      |
+|    learning_rate        | 0.000872   |
+|    loss                 | 0.0175     |
+|    n_updates            | 305        |
+|    policy_gradient_loss | 0.00751    |
+|    std                  | 0.0445     |
+|    value_loss           | 0.000112   |
+----------------------------------------
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 141         |
+| time/                   |             |
+|    fps                  | 525         |
+|    iterations           | 63          |
+|    time_elapsed         | 15703       |
+|    total_timesteps      | 8257536     |
+| train/                  |             |
+|    approx_kl            | 0.030254334 |
+|    clip_fraction        | 0.24        |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 1.73        |
+|    explained_variance   | 0.915       |
+|    learning_rate        | 0.00087     |
+|    loss                 | 0.0117      |
+|    n_updates            | 310         |
+|    policy_gradient_loss | 0.00933     |
+|    std                  | 0.0426      |
+|    value_loss           | 0.000103    |
+-----------------------------------------
+[ADR #032] steps=8388608 episodes=512 set=0.002s upd=110.38s dt=107.67s | ret=-7926.608 bonus=-14028.381 obj=-24359.721 | entropy=-20.750 ess=768.0 temp=11.2 wmax=0.034 flow_std=6.2%
+-----------------------------------------
+| adr/                    |             |
+|    B                    | 1.02e+03    |
+|    bcs_mean             | -1.4e+04    |
+|    bcs_mean_pre         | -1.85e+04   |
+|    beta_kl              | 10.9        |
+|    bonus_mean           | -1.4e+04    |
+|    bonus_mean_pre       | -1.85e+04   |
+|    dt                   | 108         |
+|    entropy              | -20.7       |
+|    ess                  | 768         |
+|    ess_high             | 1.23e+03    |
+|    ess_low              | 307         |
+|    loss_fit             | 956         |
+|    obj_mean             | -2.44e+04   |
+|    params_std_pct_mean  | 6.18        |
+|    ret_mean             | -7.93e+03   |
+|    ret_mean_pre         | -3e+03      |
+|    ret_std              | 2.45e+04    |
+|    set_policy_s         | 0.00153     |
+|    surprise_mean        | 5.52e+03    |
+|    surprise_mean_pre    | 382         |
+|    surprise_std         | 759         |
+|    temp                 | 11.2        |
+|    update_s             | 110         |
+|    weight_max           | 0.0339      |
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 146         |
+| time/                   |             |
+|    fps                  | 523         |
+|    iterations           | 64          |
+|    time_elapsed         | 16022       |
+|    total_timesteps      | 8388608     |
+| train/                  |             |
+|    approx_kl            | 0.034526393 |
+|    clip_fraction        | 0.243       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 1.77        |
+|    explained_variance   | 0.917       |
+|    learning_rate        | 0.000868    |
+|    loss                 | -0.000422   |
+|    n_updates            | 315         |
+|    policy_gradient_loss | 0.00936     |
+|    std                  | 0.0407      |
+|    value_loss           | 0.000104    |
+-----------------------------------------
+Early stopping at step 0 due to reaching max kl: 0.08
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 145         |
+| time/                   |             |
+|    fps                  | 530         |
+|    iterations           | 65          |
+|    time_elapsed         | 16059       |
+|    total_timesteps      | 8519680     |
+| train/                  |             |
+|    approx_kl            | 0.026397595 |
+|    clip_fraction        | 0.208       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 1.8         |
+|    explained_variance   | 0.933       |
+|    learning_rate        | 0.000866    |
+|    loss                 | 0.0156      |
+|    n_updates            | 320         |
+|    policy_gradient_loss | 0.0136      |
+|    std                  | 0.0395      |
+|    value_loss           | 0.000113    |
+-----------------------------------------
+[ADR #033] steps=8650752 episodes=512 set=0.002s upd=110.21s dt=107.38s | ret=-8424.841 bonus=-11485.342 obj=-22860.914 | entropy=-20.978 ess=745.7 temp=11.2 wmax=0.034 flow_std=6.3%
+-----------------------------------------
+| adr/                    |             |
+|    B                    | 1.02e+03    |
+|    bcs_mean             | -1.15e+04   |
+|    bcs_mean_pre         | -2.3e+04    |
+|    beta_kl              | 14.6        |
+|    bonus_mean           | -1.15e+04   |
+|    bonus_mean_pre       | -2.3e+04    |
+|    dt                   | 107         |
+|    entropy              | -21         |
+|    ess                  | 746         |
+|    ess_high             | 1.23e+03    |
+|    ess_low              | 307         |
+|    loss_fit             | 952         |
+|    obj_mean             | -2.29e+04   |
+|    params_std_pct_mean  | 6.32        |
+|    ret_mean             | -8.42e+03   |
+|    ret_mean_pre         | -1.78e+03   |
+|    ret_std              | 2.49e+04    |
+|    set_policy_s         | 0.00161     |
+|    surprise_mean        | 5.47e+03    |
+|    surprise_mean_pre    | 381         |
+|    surprise_std         | 784         |
+|    temp                 | 11.2        |
+|    update_s             | 110         |
+|    weight_max           | 0.0337      |
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 150         |
+| time/                   |             |
+|    fps                  | 528         |
+|    iterations           | 66          |
+|    time_elapsed         | 16378       |
+|    total_timesteps      | 8650752     |
+| train/                  |             |
+|    approx_kl            | 0.040140785 |
+|    clip_fraction        | 0.255       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 1.85        |
+|    explained_variance   | 0.94        |
+|    learning_rate        | 0.000864    |
+|    loss                 | 0.0101      |
+|    n_updates            | 325         |
+|    policy_gradient_loss | 0.0103      |
+|    std                  | 0.0379      |
+|    value_loss           | 8.17e-05    |
+-----------------------------------------
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 152         |
+| time/                   |             |
+|    fps                  | 529         |
+|    iterations           | 67          |
+|    time_elapsed         | 16585       |
+|    total_timesteps      | 8781824     |
+| train/                  |             |
+|    approx_kl            | 0.037697747 |
+|    clip_fraction        | 0.254       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 1.88        |
+|    explained_variance   | 0.949       |
+|    learning_rate        | 0.000862    |
+|    loss                 | 0.0195      |
+|    n_updates            | 330         |
+|    policy_gradient_loss | 0.0124      |
+|    std                  | 0.0366      |
+|    value_loss           | 7.05e-05    |
+-----------------------------------------
+Early stopping at step 0 due to reaching max kl: 0.08
+[ADR #034] steps=8912896 episodes=512 set=0.002s upd=110.04s dt=107.42s | ret=-6859.799 bonus=-16610.805 obj=-24826.592 | entropy=-17.426 ess=768.6 temp=11.2 wmax=0.034 flow_std=6.9%
+-----------------------------------------
+| adr/                    |             |
+|    B                    | 1.02e+03    |
+|    bcs_mean             | -1.66e+04   |
+|    bcs_mean_pre         | -2.1e+04    |
+|    beta_kl              | 32.6        |
+|    bonus_mean           | -1.66e+04   |
+|    bonus_mean_pre       | -2.1e+04    |
+|    dt                   | 107         |
+|    entropy              | -17.4       |
+|    ess                  | 769         |
+|    ess_high             | 1.23e+03    |
+|    ess_low              | 307         |
+|    loss_fit             | 945         |
+|    obj_mean             | -2.48e+04   |
+|    params_std_pct_mean  | 6.93        |
+|    ret_mean             | -6.86e+03   |
+|    ret_mean_pre         | -2.25e+03   |
+|    ret_std              | 2.31e+04    |
+|    set_policy_s         | 0.00165     |
+|    surprise_mean        | 5.5e+03     |
+|    surprise_mean_pre    | 385         |
+|    surprise_std         | 775         |
+|    temp                 | 11.2        |
+|    update_s             | 110         |
+|    weight_max           | 0.0339      |
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 153         |
+| time/                   |             |
+|    fps                  | 532         |
+|    iterations           | 68          |
+|    time_elapsed         | 16740       |
+|    total_timesteps      | 8912896     |
+| train/                  |             |
+|    approx_kl            | 0.032851513 |
+|    clip_fraction        | 0.239       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 1.9         |
+|    explained_variance   | 0.93        |
+|    learning_rate        | 0.000859    |
+|    loss                 | 0.0374      |
+|    n_updates            | 335         |
+|    policy_gradient_loss | 0.0162      |
+|    std                  | 0.0358      |
+|    value_loss           | 8.74e-05    |
+-----------------------------------------
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 155         |
+| time/                   |             |
+|    fps                  | 533         |
+|    iterations           | 69          |
+|    time_elapsed         | 16947       |
+|    total_timesteps      | 9043968     |
+| train/                  |             |
+|    approx_kl            | 0.029871905 |
+|    clip_fraction        | 0.25        |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 1.95        |
+|    explained_variance   | 0.952       |
+|    learning_rate        | 0.000857    |
+|    loss                 | 0.00465     |
+|    n_updates            | 340         |
+|    policy_gradient_loss | 0.00971     |
+|    std                  | 0.0343      |
+|    value_loss           | 8.11e-05    |
+-----------------------------------------
+Early stopping at step 0 due to reaching max kl: 0.08
+[ADR #035] steps=9175040 episodes=512 set=0.001s upd=110.56s dt=107.54s | ret=-8505.324 bonus=-18381.057 obj=-29883.883 | entropy=-16.566 ess=768.0 temp=11.2 wmax=0.034 flow_std=7.0%
+-----------------------------------------
+| adr/                    |             |
+|    B                    | 1.02e+03    |
+|    bcs_mean             | -1.84e+04   |
+|    bcs_mean_pre         | -1.66e+04   |
+|    beta_kl              | 28.6        |
+|    bonus_mean           | -1.84e+04   |
+|    bonus_mean_pre       | -1.66e+04   |
+|    dt                   | 108         |
+|    entropy              | -16.6       |
+|    ess                  | 768         |
+|    ess_high             | 1.23e+03    |
+|    ess_low              | 307         |
+|    loss_fit             | 948         |
+|    obj_mean             | -2.99e+04   |
+|    params_std_pct_mean  | 6.97        |
+|    ret_mean             | -8.51e+03   |
+|    ret_mean_pre         | -2.15e+03   |
+|    ret_std              | 2.59e+04    |
+|    set_policy_s         | 0.00142     |
+|    surprise_mean        | 5.51e+03    |
+|    surprise_mean_pre    | 383         |
+|    surprise_std         | 755         |
+|    temp                 | 11.2        |
+|    update_s             | 111         |
+|    weight_max           | 0.0339      |
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 149         |
+| time/                   |             |
+|    fps                  | 536         |
+|    iterations           | 70          |
+|    time_elapsed         | 17094       |
+|    total_timesteps      | 9175040     |
+| train/                  |             |
+|    approx_kl            | 0.028066952 |
+|    clip_fraction        | 0.192       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 1.96        |
+|    explained_variance   | 0.947       |
+|    learning_rate        | 0.000855    |
+|    loss                 | 0.0746      |
+|    n_updates            | 345         |
+|    policy_gradient_loss | 0.0154      |
+|    std                  | 0.0338      |
+|    value_loss           | 6.43e-05    |
+-----------------------------------------
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 149         |
+| time/                   |             |
+|    fps                  | 537         |
+|    iterations           | 71          |
+|    time_elapsed         | 17304       |
+|    total_timesteps      | 9306112     |
+| train/                  |             |
+|    approx_kl            | 0.042862065 |
+|    clip_fraction        | 0.258       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 2           |
+|    explained_variance   | 0.941       |
+|    learning_rate        | 0.000853    |
+|    loss                 | 0.0153      |
+|    n_updates            | 350         |
+|    policy_gradient_loss | 0.0113      |
+|    std                  | 0.0324      |
+|    value_loss           | 7.38e-05    |
+-----------------------------------------
+Early stopping at step 0 due to reaching max kl: 0.08
+[ADR #036] steps=9437184 episodes=512 set=0.001s upd=113.17s dt=109.87s | ret=-8162.011 bonus=-13108.986 obj=-23961.148 | entropy=-17.380 ess=768.0 temp=11.2 wmax=0.034 flow_std=6.5%
+----------------------------------------
+| adr/                    |            |
+|    B                    | 1.02e+03   |
+|    bcs_mean             | -1.31e+04  |
+|    bcs_mean_pre         | -2.13e+04  |
+|    beta_kl              | 11.9       |
+|    bonus_mean           | -1.31e+04  |
+|    bonus_mean_pre       | -2.13e+04  |
+|    dt                   | 110        |
+|    entropy              | -17.4      |
+|    ess                  | 768        |
+|    ess_high             | 1.23e+03   |
+|    ess_low              | 307        |
+|    loss_fit             | 944        |
+|    obj_mean             | -2.4e+04   |
+|    params_std_pct_mean  | 6.51       |
+|    ret_mean             | -8.16e+03  |
+|    ret_mean_pre         | -2.81e+03  |
+|    ret_std              | 2.53e+04   |
+|    set_policy_s         | 0.00147    |
+|    surprise_mean        | 5.47e+03   |
+|    surprise_mean_pre    | 381        |
+|    surprise_std         | 747        |
+|    temp                 | 11.2       |
+|    update_s             | 113        |
+|    weight_max           | 0.0339     |
+| rollout/                |            |
+|    ep_len_mean          | 512        |
+|    ep_rew_mean          | 155        |
+| time/                   |            |
+|    fps                  | 540        |
+|    iterations           | 72         |
+|    time_elapsed         | 17464      |
+|    total_timesteps      | 9437184    |
+| train/                  |            |
+|    approx_kl            | 0.02920208 |
+|    clip_fraction        | 0.199      |
+|    clip_range           | 0.2        |
+|    entropy_loss         | 2.02       |
+|    explained_variance   | 0.954      |
+|    learning_rate        | 0.000851   |
+|    loss                 | 0.0212     |
+|    n_updates            | 355        |
+|    policy_gradient_loss | 0.012      |
+|    std                  | 0.0318     |
+|    value_loss           | 5.64e-05   |
+----------------------------------------
+Early stopping at step 0 due to reaching max kl: 0.08
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 149         |
+| time/                   |             |
+|    fps                  | 546         |
+|    iterations           | 73          |
+|    time_elapsed         | 17511       |
+|    total_timesteps      | 9568256     |
+| train/                  |             |
+|    approx_kl            | 0.029838454 |
+|    clip_fraction        | 0.229       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 2.04        |
+|    explained_variance   | 0.931       |
+|    learning_rate        | 0.000849    |
+|    loss                 | 0.0307      |
+|    n_updates            | 360         |
+|    policy_gradient_loss | 0.0148      |
+|    std                  | 0.0313      |
+|    value_loss           | 7.74e-05    |
+-----------------------------------------
+Early stopping at step 1 due to reaching max kl: 0.09
+[ADR #037] steps=9699328 episodes=512 set=0.001s upd=113.25s dt=110.67s | ret=-8453.950 bonus=-15319.272 obj=-26681.939 | entropy=-15.497 ess=768.0 temp=11.2 wmax=0.034 flow_std=6.7%
+----------------------------------------
+| adr/                    |            |
+|    B                    | 1.02e+03   |
+|    bcs_mean             | -1.53e+04  |
+|    bcs_mean_pre         | -2.33e+04  |
+|    beta_kl              | 17.5       |
+|    bonus_mean           | -1.53e+04  |
+|    bonus_mean_pre       | -2.33e+04  |
+|    dt                   | 111        |
+|    entropy              | -15.5      |
+|    ess                  | 768        |
+|    ess_high             | 1.23e+03   |
+|    ess_low              | 307        |
+|    loss_fit             | 954        |
+|    obj_mean             | -2.67e+04  |
+|    params_std_pct_mean  | 6.68       |
+|    ret_mean             | -8.45e+03  |
+|    ret_mean_pre         | -1.96e+03  |
+|    ret_std              | 2.56e+04   |
+|    set_policy_s         | 0.00148    |
+|    surprise_mean        | 5.55e+03   |
+|    surprise_mean_pre    | 391        |
+|    surprise_std         | 810        |
+|    temp                 | 11.2       |
+|    update_s             | 113        |
+|    weight_max           | 0.0339     |
+| rollout/                |            |
+|    ep_len_mean          | 512        |
+|    ep_rew_mean          | 151        |
+| time/                   |            |
+|    fps                  | 548        |
+|    iterations           | 74         |
+|    time_elapsed         | 17683      |
+|    total_timesteps      | 9699328    |
+| train/                  |            |
+|    approx_kl            | 0.05477472 |
+|    clip_fraction        | 0.236      |
+|    clip_range           | 0.2        |
+|    entropy_loss         | 2.06       |
+|    explained_variance   | 0.914      |
+|    learning_rate        | 0.000847   |
+|    loss                 | 0.0255     |
+|    n_updates            | 365        |
+|    policy_gradient_loss | 0.016      |
+|    std                  | 0.0306     |
+|    value_loss           | 0.000118   |
+----------------------------------------
+Early stopping at step 0 due to reaching max kl: 0.08
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 161         |
+| time/                   |             |
+|    fps                  | 554         |
+|    iterations           | 75          |
+|    time_elapsed         | 17721       |
+|    total_timesteps      | 9830400     |
+| train/                  |             |
+|    approx_kl            | 0.037588436 |
+|    clip_fraction        | 0.247       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 2.07        |
+|    explained_variance   | 0.893       |
+|    learning_rate        | 0.000845    |
+|    loss                 | 0.0338      |
+|    n_updates            | 370         |
+|    policy_gradient_loss | 0.0187      |
+|    std                  | 0.0302      |
+|    value_loss           | 0.000183    |
+-----------------------------------------
+Early stopping at step 1 due to reaching max kl: 0.10
+[ADR #038] steps=9961472 episodes=512 set=0.002s upd=112.51s dt=109.63s | ret=-7625.026 bonus=-13414.196 obj=-23170.801 | entropy=-16.666 ess=768.0 temp=11.2 wmax=0.034 flow_std=6.7%
+----------------------------------------
+| adr/                    |            |
+|    B                    | 1.02e+03   |
+|    bcs_mean             | -1.34e+04  |
+|    bcs_mean_pre         | -2.19e+04  |
+|    beta_kl              | 9.96       |
+|    bonus_mean           | -1.34e+04  |
+|    bonus_mean_pre       | -2.19e+04  |
+|    dt                   | 110        |
+|    entropy              | -16.7      |
+|    ess                  | 768        |
+|    ess_high             | 1.23e+03   |
+|    ess_low              | 307        |
+|    loss_fit             | 947        |
+|    obj_mean             | -2.32e+04  |
+|    params_std_pct_mean  | 6.69       |
+|    ret_mean             | -7.63e+03  |
+|    ret_mean_pre         | -1.93e+03  |
+|    ret_std              | 2.39e+04   |
+|    set_policy_s         | 0.00157    |
+|    surprise_mean        | 5.49e+03   |
+|    surprise_mean_pre    | 396        |
+|    surprise_std         | 767        |
+|    temp                 | 11.2       |
+|    update_s             | 113        |
+|    weight_max           | 0.0339     |
+| rollout/                |            |
+|    ep_len_mean          | 512        |
+|    ep_rew_mean          | 157        |
+| time/                   |            |
+|    fps                  | 556        |
+|    iterations           | 76         |
+|    time_elapsed         | 17887      |
+|    total_timesteps      | 9961472    |
+| train/                  |            |
+|    approx_kl            | 0.10079939 |
+|    clip_fraction        | 0.22       |
+|    clip_range           | 0.2        |
+|    entropy_loss         | 2.09       |
+|    explained_variance   | 0.961      |
+|    learning_rate        | 0.000843   |
+|    loss                 | 0.0295     |
+|    n_updates            | 375        |
+|    policy_gradient_loss | 0.0148     |
+|    std                  | 0.0296     |
+|    value_loss           | 5.41e-05   |
+----------------------------------------
+Early stopping at step 0 due to reaching max kl: 0.08
+----------------------------------------
+| rollout/                |            |
+|    ep_len_mean          | 512        |
+|    ep_rew_mean          | 156        |
+| time/                   |            |
+|    fps                  | 563        |
+|    iterations           | 77         |
+|    time_elapsed         | 17917      |
+|    total_timesteps      | 10092544   |
+| train/                  |            |
+|    approx_kl            | 0.03214638 |
+|    clip_fraction        | 0.233      |
+|    clip_range           | 0.2        |
+|    entropy_loss         | 2.11       |
+|    explained_variance   | 0.945      |
+|    learning_rate        | 0.000841   |
+|    loss                 | 0.031      |
+|    n_updates            | 380        |
+|    policy_gradient_loss | 0.0159     |
+|    std                  | 0.0293     |
+|    value_loss           | 6.49e-05   |
+----------------------------------------
+Early stopping at step 0 due to reaching max kl: 0.08
+[ADR #039] steps=10223616 episodes=512 set=0.002s upd=111.29s dt=108.60s | ret=-6608.691 bonus=-11402.007 obj=-19078.215 | entropy=-16.417 ess=768.0 temp=11.2 wmax=0.034 flow_std=6.6%
+-----------------------------------------
+| adr/                    |             |
+|    B                    | 1.02e+03    |
+|    bcs_mean             | -1.14e+04   |
+|    bcs_mean_pre         | -2.47e+04   |
+|    beta_kl              | 9.14        |
+|    bonus_mean           | -1.14e+04   |
+|    bonus_mean_pre       | -2.47e+04   |
+|    dt                   | 109         |
+|    entropy              | -16.4       |
+|    ess                  | 768         |
+|    ess_high             | 1.23e+03    |
+|    ess_low              | 307         |
+|    loss_fit             | 952         |
+|    obj_mean             | -1.91e+04   |
+|    params_std_pct_mean  | 6.62        |
+|    ret_mean             | -6.61e+03   |
+|    ret_mean_pre         | -2.87e+03   |
+|    ret_std              | 2.32e+04    |
+|    set_policy_s         | 0.00164     |
+|    surprise_mean        | 5.54e+03    |
+|    surprise_mean_pre    | 389         |
+|    surprise_std         | 771         |
+|    temp                 | 11.2        |
+|    update_s             | 111         |
+|    weight_max           | 0.0339      |
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 160         |
+| time/                   |             |
+|    fps                  | 565         |
+|    iterations           | 78          |
+|    time_elapsed         | 18080       |
+|    total_timesteps      | 10223616    |
+| train/                  |             |
+|    approx_kl            | 0.034328174 |
+|    clip_fraction        | 0.25        |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 2.12        |
+|    explained_variance   | 0.945       |
+|    learning_rate        | 0.000839    |
+|    loss                 | 0.0157      |
+|    n_updates            | 385         |
+|    policy_gradient_loss | 0.0165      |
+|    std                  | 0.0286      |
+|    value_loss           | 8.13e-05    |
+-----------------------------------------
+Early stopping at step 0 due to reaching max kl: 0.08
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 159         |
+| time/                   |             |
+|    fps                  | 571         |
+|    iterations           | 79          |
+|    time_elapsed         | 18103       |
+|    total_timesteps      | 10354688    |
+| train/                  |             |
+|    approx_kl            | 0.037150443 |
+|    clip_fraction        | 0.231       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 2.14        |
+|    explained_variance   | 0.948       |
+|    learning_rate        | 0.000836    |
+|    loss                 | 0.0616      |
+|    n_updates            | 390         |
+|    policy_gradient_loss | 0.0251      |
+|    std                  | 0.0284      |
+|    value_loss           | 7.87e-05    |
+-----------------------------------------
+Early stopping at step 2 due to reaching max kl: 0.09
+[ADR #040] steps=10485760 episodes=512 set=0.001s upd=111.80s dt=108.57s | ret=-8627.977 bonus=-14734.710 obj=-26497.836 | entropy=-16.569 ess=565.6 temp=11.2 wmax=0.033 flow_std=6.9%
+-----------------------------------------
+| adr/                    |             |
+|    B                    | 1.02e+03    |
+|    bcs_mean             | -1.47e+04   |
+|    bcs_mean_pre         | -1.8e+04    |
+|    beta_kl              | 16.7        |
+|    bonus_mean           | -1.47e+04   |
+|    bonus_mean_pre       | -1.8e+04    |
+|    dt                   | 109         |
+|    entropy              | -16.6       |
+|    ess                  | 566         |
+|    ess_high             | 1.23e+03    |
+|    ess_low              | 307         |
+|    loss_fit             | 954         |
+|    obj_mean             | -2.65e+04   |
+|    params_std_pct_mean  | 6.86        |
+|    ret_mean             | -8.63e+03   |
+|    ret_mean_pre         | -2.15e+03   |
+|    ret_std              | 2.58e+04    |
+|    set_policy_s         | 0.00138     |
+|    surprise_mean        | 5.49e+03    |
+|    surprise_mean_pre    | 386         |
+|    surprise_std         | 731         |
+|    temp                 | 11.2        |
+|    update_s             | 112         |
+|    weight_max           | 0.0331      |
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 162         |
+| time/                   |             |
+|    fps                  | 572         |
+|    iterations           | 80          |
+|    time_elapsed         | 18319       |
+|    total_timesteps      | 10485760    |
+| train/                  |             |
+|    approx_kl            | 0.051951878 |
+|    clip_fraction        | 0.248       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 2.16        |
+|    explained_variance   | 0.961       |
+|    learning_rate        | 0.000834    |
+|    loss                 | 0.0165      |
+|    n_updates            | 395         |
+|    policy_gradient_loss | 0.0146      |
+|    std                  | 0.0278      |
+|    value_loss           | 6.23e-05    |
+-----------------------------------------
+Early stopping at step 1 due to reaching max kl: 0.09
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 161         |
+| time/                   |             |
+|    fps                  | 577         |
+|    iterations           | 81          |
+|    time_elapsed         | 18379       |
+|    total_timesteps      | 10616832    |
+| train/                  |             |
+|    approx_kl            | 0.042195853 |
+|    clip_fraction        | 0.233       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 2.17        |
+|    explained_variance   | 0.963       |
+|    learning_rate        | 0.000832    |
+|    loss                 | 0.0209      |
+|    n_updates            | 400         |
+|    policy_gradient_loss | 0.0137      |
+|    std                  | 0.0272      |
+|    value_loss           | 5.66e-05    |
+-----------------------------------------
+Early stopping at step 0 due to reaching max kl: 0.08
+[ADR #041] steps=10747904 episodes=512 set=0.002s upd=110.96s dt=108.18s | ret=-6736.113 bonus=-11897.989 obj=-19847.945 | entropy=-16.405 ess=768.0 temp=11.2 wmax=0.034 flow_std=6.8%
+----------------------------------------
+| adr/                    |            |
+|    B                    | 1.02e+03   |
+|    bcs_mean             | -1.19e+04  |
+|    bcs_mean_pre         | -2.28e+04  |
+|    beta_kl              | 14.9       |
+|    bonus_mean           | -1.19e+04  |
+|    bonus_mean_pre       | -2.28e+04  |
+|    dt                   | 108        |
+|    entropy              | -16.4      |
+|    ess                  | 768        |
+|    ess_high             | 1.23e+03   |
+|    ess_low              | 307        |
+|    loss_fit             | 946        |
+|    obj_mean             | -1.98e+04  |
+|    params_std_pct_mean  | 6.79       |
+|    ret_mean             | -6.74e+03  |
+|    ret_mean_pre         | -2.82e+03  |
+|    ret_std              | 2.17e+04   |
+|    set_policy_s         | 0.00159    |
+|    surprise_mean        | 5.52e+03   |
+|    surprise_mean_pre    | 382        |
+|    surprise_std         | 804        |
+|    temp                 | 11.2       |
+|    update_s             | 111        |
+|    weight_max           | 0.0339     |
+| rollout/                |            |
+|    ep_len_mean          | 512        |
+|    ep_rew_mean          | 167        |
+| time/                   |            |
+|    fps                  | 579        |
+|    iterations           | 82         |
+|    time_elapsed         | 18532      |
+|    total_timesteps      | 10747904   |
+| train/                  |            |
+|    approx_kl            | 0.03692721 |
+|    clip_fraction        | 0.233      |
+|    clip_range           | 0.2        |
+|    entropy_loss         | 2.19       |
+|    explained_variance   | 0.955      |
+|    learning_rate        | 0.00083    |
+|    loss                 | 0.0444     |
+|    n_updates            | 405        |
+|    policy_gradient_loss | 0.0168     |
+|    std                  | 0.0268     |
+|    value_loss           | 7e-05      |
+----------------------------------------
+Early stopping at step 1 due to reaching max kl: 0.08
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 167         |
+| time/                   |             |
+|    fps                  | 585         |
+|    iterations           | 83          |
+|    time_elapsed         | 18584       |
+|    total_timesteps      | 10878976    |
+| train/                  |             |
+|    approx_kl            | 0.080814175 |
+|    clip_fraction        | 0.229       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 2.21        |
+|    explained_variance   | 0.932       |
+|    learning_rate        | 0.000828    |
+|    loss                 | 0.0212      |
+|    n_updates            | 410         |
+|    policy_gradient_loss | 0.0152      |
+|    std                  | 0.0261      |
+|    value_loss           | 9.67e-05    |
+-----------------------------------------
+Early stopping at step 0 due to reaching max kl: 0.09
+[ADR #042] steps=11010048 episodes=512 set=0.002s upd=112.47s dt=109.67s | ret=-7706.524 bonus=-15102.160 obj=-24958.533 | entropy=-17.139 ess=768.0 temp=11.2 wmax=0.034 flow_std=6.9%
+-----------------------------------------
+| adr/                    |             |
+|    B                    | 1.02e+03    |
+|    bcs_mean             | -1.51e+04   |
+|    bcs_mean_pre         | -1.94e+04   |
+|    beta_kl              | 13          |
+|    bonus_mean           | -1.51e+04   |
+|    bonus_mean_pre       | -1.94e+04   |
+|    dt                   | 110         |
+|    entropy              | -17.1       |
+|    ess                  | 768         |
+|    ess_high             | 1.23e+03    |
+|    ess_low              | 307         |
+|    loss_fit             | 949         |
+|    obj_mean             | -2.5e+04    |
+|    params_std_pct_mean  | 6.86        |
+|    ret_mean             | -7.71e+03   |
+|    ret_mean_pre         | -1.93e+03   |
+|    ret_std              | 2.38e+04    |
+|    set_policy_s         | 0.00171     |
+|    surprise_mean        | 5.56e+03    |
+|    surprise_mean_pre    | 380         |
+|    surprise_std         | 786         |
+|    temp                 | 11.2        |
+|    update_s             | 112         |
+|    weight_max           | 0.0339      |
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 165         |
+| time/                   |             |
+|    fps                  | 587         |
+|    iterations           | 84          |
+|    time_elapsed         | 18732       |
+|    total_timesteps      | 11010048    |
+| train/                  |             |
+|    approx_kl            | 0.037914593 |
+|    clip_fraction        | 0.241       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 2.24        |
+|    explained_variance   | 0.956       |
+|    learning_rate        | 0.000826    |
+|    loss                 | 0.0441      |
+|    n_updates            | 415         |
+|    policy_gradient_loss | 0.0164      |
+|    std                  | 0.0256      |
+|    value_loss           | 6.35e-05    |
+-----------------------------------------
+Early stopping at step 1 due to reaching max kl: 0.08
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 165         |
+| time/                   |             |
+|    fps                  | 593         |
+|    iterations           | 85          |
+|    time_elapsed         | 18786       |
+|    total_timesteps      | 11141120    |
+| train/                  |             |
+|    approx_kl            | 0.057393663 |
+|    clip_fraction        | 0.258       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 2.26        |
+|    explained_variance   | 0.953       |
+|    learning_rate        | 0.000824    |
+|    loss                 | 0.0358      |
+|    n_updates            | 420         |
+|    policy_gradient_loss | 0.0202      |
+|    std                  | 0.0251      |
+|    value_loss           | 7.09e-05    |
+-----------------------------------------
+Early stopping at step 0 due to reaching max kl: 0.08
+[ADR #043] steps=11272192 episodes=512 set=0.002s upd=111.85s dt=109.19s | ret=-8559.232 bonus=-16240.831 obj=-27838.791 | entropy=-8.265 ess=768.0 temp=11.2 wmax=0.034 flow_std=8.4%
+-----------------------------------------
+| adr/                    |             |
+|    B                    | 1.02e+03    |
+|    bcs_mean             | -1.62e+04   |
+|    bcs_mean_pre         | -1.94e+04   |
+|    beta_kl              | 53.4        |
+|    bonus_mean           | -1.62e+04   |
+|    bonus_mean_pre       | -1.94e+04   |
+|    dt                   | 109         |
+|    entropy              | -8.26       |
+|    ess                  | 768         |
+|    ess_high             | 1.23e+03    |
+|    ess_low              | 307         |
+|    loss_fit             | 953         |
+|    obj_mean             | -2.78e+04   |
+|    params_std_pct_mean  | 8.44        |
+|    ret_mean             | -8.56e+03   |
+|    ret_mean_pre         | -1.84e+03   |
+|    ret_std              | 2.56e+04    |
+|    set_policy_s         | 0.00161     |
+|    surprise_mean        | 5.52e+03    |
+|    surprise_mean_pre    | 378         |
+|    surprise_std         | 787         |
+|    temp                 | 11.2        |
+|    update_s             | 112         |
+|    weight_max           | 0.0339      |
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 170         |
+| time/                   |             |
+|    fps                  | 595         |
+|    iterations           | 86          |
+|    time_elapsed         | 18933       |
+|    total_timesteps      | 11272192    |
+| train/                  |             |
+|    approx_kl            | 0.040990785 |
+|    clip_fraction        | 0.271       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 2.27        |
+|    explained_variance   | 0.953       |
+|    learning_rate        | 0.000822    |
+|    loss                 | 0.0405      |
+|    n_updates            | 425         |
+|    policy_gradient_loss | 0.0216      |
+|    std                  | 0.0247      |
+|    value_loss           | 7.32e-05    |
+-----------------------------------------
+Early stopping at step 0 due to reaching max kl: 0.08
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 171         |
+| time/                   |             |
+|    fps                  | 601         |
+|    iterations           | 87          |
+|    time_elapsed         | 18961       |
+|    total_timesteps      | 11403264    |
+| train/                  |             |
+|    approx_kl            | 0.036581527 |
+|    clip_fraction        | 0.245       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 2.28        |
+|    explained_variance   | 0.938       |
+|    learning_rate        | 0.00082     |
+|    loss                 | 0.0334      |
+|    n_updates            | 430         |
+|    policy_gradient_loss | 0.0187      |
+|    std                  | 0.0246      |
+|    value_loss           | 8.22e-05    |
+-----------------------------------------
+Early stopping at step 0 due to reaching max kl: 0.08
+[ADR #044] steps=11534336 episodes=512 set=0.002s upd=111.80s dt=109.01s | ret=-7993.416 bonus=-15247.958 obj=-25781.969 | entropy=-14.808 ess=768.0 temp=11.2 wmax=0.034 flow_std=7.0%
+----------------------------------------
+| adr/                    |            |
+|    B                    | 1.02e+03   |
+|    bcs_mean             | -1.52e+04  |
+|    bcs_mean_pre         | -2.57e+04  |
+|    beta_kl              | 20.8       |
+|    bonus_mean           | -1.52e+04  |
+|    bonus_mean_pre       | -2.57e+04  |
+|    dt                   | 109        |
+|    entropy              | -14.8      |
+|    ess                  | 768        |
+|    ess_high             | 1.23e+03   |
+|    ess_low              | 307        |
+|    loss_fit             | 944        |
+|    obj_mean             | -2.58e+04  |
+|    params_std_pct_mean  | 6.98       |
+|    ret_mean             | -7.99e+03  |
+|    ret_mean_pre         | -1.88e+03  |
+|    ret_std              | 2.34e+04   |
+|    set_policy_s         | 0.00153    |
+|    surprise_mean        | 5.45e+03   |
+|    surprise_mean_pre    | 370        |
+|    surprise_std         | 777        |
+|    temp                 | 11.2       |
+|    update_s             | 112        |
+|    weight_max           | 0.0339     |
+| rollout/                |            |
+|    ep_len_mean          | 512        |
+|    ep_rew_mean          | 162        |
+| time/                   |            |
+|    fps                  | 603        |
+|    iterations           | 88         |
+|    time_elapsed         | 19104      |
+|    total_timesteps      | 11534336   |
+| train/                  |            |
+|    approx_kl            | 0.03600315 |
+|    clip_fraction        | 0.231      |
+|    clip_range           | 0.2        |
+|    entropy_loss         | 2.29       |
+|    explained_variance   | 0.935      |
+|    learning_rate        | 0.000818   |
+|    loss                 | 0.0241     |
+|    n_updates            | 435        |
+|    policy_gradient_loss | 0.0183     |
+|    std                  | 0.0243     |
+|    value_loss           | 0.00011    |
+----------------------------------------
+Early stopping at step 1 due to reaching max kl: 2.39
+---------------------------------------
+| rollout/                |           |
+|    ep_len_mean          | 512       |
+|    ep_rew_mean          | 166       |
+| time/                   |           |
+|    fps                  | 608       |
+|    iterations           | 89        |
+|    time_elapsed         | 19163     |
+|    total_timesteps      | 11665408  |
+| train/                  |           |
+|    approx_kl            | 0.2076809 |
+|    clip_fraction        | 0.261     |
+|    clip_range           | 0.2       |
+|    entropy_loss         | 2.31      |
+|    explained_variance   | 0.915     |
+|    learning_rate        | 0.000815  |
+|    loss                 | 0.0161    |
+|    n_updates            | 440       |
+|    policy_gradient_loss | 0.0176    |
+|    std                  | 0.0239    |
+|    value_loss           | 0.000146  |
+---------------------------------------
+Early stopping at step 2 due to reaching max kl: 0.09
+[ADR #045] steps=11796480 episodes=512 set=0.001s upd=111.71s dt=108.74s | ret=-7436.299 bonus=-16197.392 obj=-25558.660 | entropy=-13.250 ess=768.0 temp=11.2 wmax=0.034 flow_std=7.1%
+-----------------------------------------
+| adr/                    |             |
+|    B                    | 1.02e+03    |
+|    bcs_mean             | -1.62e+04   |
+|    bcs_mean_pre         | -1.97e+04   |
+|    beta_kl              | 15.8        |
+|    bonus_mean           | -1.62e+04   |
+|    bonus_mean_pre       | -1.97e+04   |
+|    dt                   | 109         |
+|    entropy              | -13.2       |
+|    ess                  | 768         |
+|    ess_high             | 1.23e+03    |
+|    ess_low              | 307         |
+|    loss_fit             | 946         |
+|    obj_mean             | -2.56e+04   |
+|    params_std_pct_mean  | 7.15        |
+|    ret_mean             | -7.44e+03   |
+|    ret_mean_pre         | -2.37e+03   |
+|    ret_std              | 2.22e+04    |
+|    set_policy_s         | 0.00147     |
+|    surprise_mean        | 5.51e+03    |
+|    surprise_mean_pre    | 384         |
+|    surprise_std         | 774         |
+|    temp                 | 11.2        |
+|    update_s             | 112         |
+|    weight_max           | 0.0339      |
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 175         |
+| time/                   |             |
+|    fps                  | 608         |
+|    iterations           | 90          |
+|    time_elapsed         | 19383       |
+|    total_timesteps      | 11796480    |
+| train/                  |             |
+|    approx_kl            | 0.055446766 |
+|    clip_fraction        | 0.274       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 2.33        |
+|    explained_variance   | 0.943       |
+|    learning_rate        | 0.000813    |
+|    loss                 | 0.0398      |
+|    n_updates            | 445         |
+|    policy_gradient_loss | 0.0177      |
+|    std                  | 0.0234      |
+|    value_loss           | 0.0001      |
+-----------------------------------------
+Early stopping at step 0 due to reaching max kl: 0.08
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 169         |
+| time/                   |             |
+|    fps                  | 614         |
+|    iterations           | 91          |
+|    time_elapsed         | 19407       |
+|    total_timesteps      | 11927552    |
+| train/                  |             |
+|    approx_kl            | 0.040307876 |
+|    clip_fraction        | 0.256       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 2.34        |
+|    explained_variance   | 0.915       |
+|    learning_rate        | 0.000811    |
+|    loss                 | 0.0275      |
+|    n_updates            | 450         |
+|    policy_gradient_loss | 0.0193      |
+|    std                  | 0.0232      |
+|    value_loss           | 6.92e-05    |
+-----------------------------------------
+Early stopping at step 1 due to reaching max kl: 0.08
+[ADR #046] steps=12058624 episodes=512 set=0.002s upd=113.44s dt=110.25s | ret=-7567.706 bonus=-11261.467 obj=-20880.637 | entropy=-12.238 ess=768.0 temp=11.2 wmax=0.034 flow_std=7.5%
+----------------------------------------
+| adr/                    |            |
+|    B                    | 1.02e+03   |
+|    bcs_mean             | -1.13e+04  |
+|    bcs_mean_pre         | -1.54e+04  |
+|    beta_kl              | 11.8       |
+|    bonus_mean           | -1.13e+04  |
+|    bonus_mean_pre       | -1.54e+04  |
+|    dt                   | 110        |
+|    entropy              | -12.2      |
+|    ess                  | 768        |
+|    ess_high             | 1.23e+03   |
+|    ess_low              | 307        |
+|    loss_fit             | 948        |
+|    obj_mean             | -2.09e+04  |
+|    params_std_pct_mean  | 7.45       |
+|    ret_mean             | -7.57e+03  |
+|    ret_mean_pre         | -1.45e+03  |
+|    ret_std              | 2.25e+04   |
+|    set_policy_s         | 0.0015     |
+|    surprise_mean        | 5.52e+03   |
+|    surprise_mean_pre    | 385        |
+|    surprise_std         | 799        |
+|    temp                 | 11.2       |
+|    update_s             | 113        |
+|    weight_max           | 0.0339     |
+| rollout/                |            |
+|    ep_len_mean          | 512        |
+|    ep_rew_mean          | 170        |
+| time/                   |            |
+|    fps                  | 615        |
+|    iterations           | 92         |
+|    time_elapsed         | 19585      |
+|    total_timesteps      | 12058624   |
+| train/                  |            |
+|    approx_kl            | 0.05461845 |
+|    clip_fraction        | 0.254      |
+|    clip_range           | 0.2        |
+|    entropy_loss         | 2.36       |
+|    explained_variance   | 0.941      |
+|    learning_rate        | 0.000809   |
+|    loss                 | 0.0251     |
+|    n_updates            | 455        |
+|    policy_gradient_loss | 0.0174     |
+|    std                  | 0.0227     |
+|    value_loss           | 8.89e-05   |
+----------------------------------------
+Early stopping at step 0 due to reaching max kl: 0.08
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 171         |
+| time/                   |             |
+|    fps                  | 621         |
+|    iterations           | 93          |
+|    time_elapsed         | 19618       |
+|    total_timesteps      | 12189696    |
+| train/                  |             |
+|    approx_kl            | 0.041378457 |
+|    clip_fraction        | 0.247       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 2.37        |
+|    explained_variance   | 0.928       |
+|    learning_rate        | 0.000807    |
+|    loss                 | 0.0316      |
+|    n_updates            | 460         |
+|    policy_gradient_loss | 0.0188      |
+|    std                  | 0.0224      |
+|    value_loss           | 0.000109    |
+-----------------------------------------
+Early stopping at step 1 due to reaching max kl: 0.08
+[ADR #047] steps=12320768 episodes=512 set=0.002s upd=112.07s dt=109.22s | ret=-7470.583 bonus=-14376.486 obj=-23813.371 | entropy=-10.011 ess=768.0 temp=11.2 wmax=0.034 flow_std=7.6%
+-----------------------------------------
+| adr/                    |             |
+|    B                    | 1.02e+03    |
+|    bcs_mean             | -1.44e+04   |
+|    bcs_mean_pre         | -2.37e+04   |
+|    beta_kl              | 9.74        |
+|    bonus_mean           | -1.44e+04   |
+|    bonus_mean_pre       | -2.37e+04   |
+|    dt                   | 109         |
+|    entropy              | -10         |
+|    ess                  | 768         |
+|    ess_high             | 1.23e+03    |
+|    ess_low              | 307         |
+|    loss_fit             | 948         |
+|    obj_mean             | -2.38e+04   |
+|    params_std_pct_mean  | 7.65        |
+|    ret_mean             | -7.47e+03   |
+|    ret_mean_pre         | -2.36e+03   |
+|    ret_std              | 2.28e+04    |
+|    set_policy_s         | 0.00151     |
+|    surprise_mean        | 5.5e+03     |
+|    surprise_mean_pre    | 382         |
+|    surprise_std         | 754         |
+|    temp                 | 11.2        |
+|    update_s             | 112         |
+|    weight_max           | 0.0339      |
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 171         |
+| time/                   |             |
+|    fps                  | 621         |
+|    iterations           | 94          |
+|    time_elapsed         | 19808       |
+|    total_timesteps      | 12320768    |
+| train/                  |             |
+|    approx_kl            | 0.040539265 |
+|    clip_fraction        | 0.253       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 2.39        |
+|    explained_variance   | 0.956       |
+|    learning_rate        | 0.000805    |
+|    loss                 | 0.0189      |
+|    n_updates            | 465         |
+|    policy_gradient_loss | 0.0166      |
+|    std                  | 0.022       |
+|    value_loss           | 7.25e-05    |
+-----------------------------------------
+Early stopping at step 3 due to reaching max kl: 0.08
+----------------------------------------
+| rollout/                |            |
+|    ep_len_mean          | 512        |
+|    ep_rew_mean          | 173        |
+| time/                   |            |
+|    fps                  | 624        |
+|    iterations           | 95         |
+|    time_elapsed         | 19954      |
+|    total_timesteps      | 12451840   |
+| train/                  |            |
+|    approx_kl            | 0.04708107 |
+|    clip_fraction        | 0.28       |
+|    clip_range           | 0.2        |
+|    entropy_loss         | 2.41       |
+|    explained_variance   | 0.932      |
+|    learning_rate        | 0.000803   |
+|    loss                 | 0.03       |
+|    n_updates            | 470        |
+|    policy_gradient_loss | 0.0169     |
+|    std                  | 0.0216     |
+|    value_loss           | 8.14e-05   |
+----------------------------------------
+Early stopping at step 0 due to reaching max kl: 0.16
+[ADR #048] steps=12582912 episodes=512 set=0.001s upd=113.24s dt=110.02s | ret=-8094.319 bonus=-16834.953 obj=-27528.707 | entropy=-12.981 ess=768.0 temp=11.2 wmax=0.034 flow_std=7.1%
+-----------------------------------------
+| adr/                    |             |
+|    B                    | 1.02e+03    |
+|    bcs_mean             | -1.68e+04   |
+|    bcs_mean_pre         | -1.69e+04   |
+|    beta_kl              | 19.5        |
+|    bonus_mean           | -1.68e+04   |
+|    bonus_mean_pre       | -1.69e+04   |
+|    dt                   | 110         |
+|    entropy              | -13         |
+|    ess                  | 768         |
+|    ess_high             | 1.23e+03    |
+|    ess_low              | 307         |
+|    loss_fit             | 950         |
+|    obj_mean             | -2.75e+04   |
+|    params_std_pct_mean  | 7.14        |
+|    ret_mean             | -8.09e+03   |
+|    ret_mean_pre         | -1.69e+03   |
+|    ret_std              | 2.42e+04    |
+|    set_policy_s         | 0.00148     |
+|    surprise_mean        | 5.49e+03    |
+|    surprise_mean_pre    | 379         |
+|    surprise_std         | 738         |
+|    temp                 | 11.2        |
+|    update_s             | 113         |
+|    weight_max           | 0.0339      |
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 170         |
+| time/                   |             |
+|    fps                  | 626         |
+|    iterations           | 96          |
+|    time_elapsed         | 20097       |
+|    total_timesteps      | 12582912    |
+| train/                  |             |
+|    approx_kl            | 0.041939836 |
+|    clip_fraction        | 0.241       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 2.42        |
+|    explained_variance   | 0.928       |
+|    learning_rate        | 0.000801    |
+|    loss                 | 0.0441      |
+|    n_updates            | 475         |
+|    policy_gradient_loss | 0.0201      |
+|    std                  | 0.0213      |
+|    value_loss           | 0.000114    |
+-----------------------------------------
+Early stopping at step 0 due to reaching max kl: 0.08
+----------------------------------------
+| rollout/                |            |
+|    ep_len_mean          | 512        |
+|    ep_rew_mean          | 176        |
+| time/                   |            |
+|    fps                  | 631        |
+|    iterations           | 97         |
+|    time_elapsed         | 20119      |
+|    total_timesteps      | 12713984   |
+| train/                  |            |
+|    approx_kl            | 0.04447288 |
+|    clip_fraction        | 0.267      |
+|    clip_range           | 0.2        |
+|    entropy_loss         | 2.43       |
+|    explained_variance   | 0.92       |
+|    learning_rate        | 0.000799   |
+|    loss                 | 0.0409     |
+|    n_updates            | 480        |
+|    policy_gradient_loss | 0.0229     |
+|    std                  | 0.0211     |
+|    value_loss           | 0.000114   |
+----------------------------------------
+Early stopping at step 0 due to reaching max kl: 0.09
+[ADR #049] steps=12845056 episodes=512 set=0.001s upd=112.75s dt=109.94s | ret=-8168.864 bonus=-13334.309 obj=-24180.605 | entropy=-14.370 ess=768.0 temp=11.2 wmax=0.034 flow_std=6.9%
+-----------------------------------------
+| adr/                    |             |
+|    B                    | 1.02e+03    |
+|    bcs_mean             | -1.33e+04   |
+|    bcs_mean_pre         | -1.78e+04   |
+|    beta_kl              | 18.2        |
+|    bonus_mean           | -1.33e+04   |
+|    bonus_mean_pre       | -1.78e+04   |
+|    dt                   | 110         |
+|    entropy              | -14.4       |
+|    ess                  | 768         |
+|    ess_high             | 1.23e+03    |
+|    ess_low              | 307         |
+|    loss_fit             | 947         |
+|    obj_mean             | -2.42e+04   |
+|    params_std_pct_mean  | 6.85        |
+|    ret_mean             | -8.17e+03   |
+|    ret_mean_pre         | -2.13e+03   |
+|    ret_std              | 2.39e+04    |
+|    set_policy_s         | 0.00143     |
+|    surprise_mean        | 5.49e+03    |
+|    surprise_mean_pre    | 392         |
+|    surprise_std         | 768         |
+|    temp                 | 11.2        |
+|    update_s             | 113         |
+|    weight_max           | 0.0339      |
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 177         |
+| time/                   |             |
+|    fps                  | 633         |
+|    iterations           | 98          |
+|    time_elapsed         | 20261       |
+|    total_timesteps      | 12845056    |
+| train/                  |             |
+|    approx_kl            | 0.034424204 |
+|    clip_fraction        | 0.237       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 2.44        |
+|    explained_variance   | 0.931       |
+|    learning_rate        | 0.000797    |
+|    loss                 | 0.042       |
+|    n_updates            | 485         |
+|    policy_gradient_loss | 0.0188      |
+|    std                  | 0.0209      |
+|    value_loss           | 8.41e-05    |
+-----------------------------------------
+Early stopping at step 0 due to reaching max kl: 0.08
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 175         |
+| time/                   |             |
+|    fps                  | 639         |
+|    iterations           | 99          |
+|    time_elapsed         | 20296       |
+|    total_timesteps      | 12976128    |
+| train/                  |             |
+|    approx_kl            | 0.030731164 |
+|    clip_fraction        | 0.218       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 2.45        |
+|    explained_variance   | 0.943       |
+|    learning_rate        | 0.000794    |
+|    loss                 | 0.0429      |
+|    n_updates            | 490         |
+|    policy_gradient_loss | 0.0163      |
+|    std                  | 0.0207      |
+|    value_loss           | 7.39e-05    |
+-----------------------------------------
+Early stopping at step 0 due to reaching max kl: 0.09
+[ADR #050] steps=13107200 episodes=512 set=0.002s upd=113.09s dt=110.13s | ret=-8924.866 bonus=-16718.223 obj=-29062.750 | entropy=-13.522 ess=768.3 temp=11.2 wmax=0.034 flow_std=7.1%
+----------------------------------------
+| adr/                    |            |
+|    B                    | 1.02e+03   |
+|    bcs_mean             | -1.67e+04  |
+|    bcs_mean_pre         | -2.02e+04  |
+|    beta_kl              | 12.3       |
+|    bonus_mean           | -1.67e+04  |
+|    bonus_mean_pre       | -2.02e+04  |
+|    dt                   | 110        |
+|    entropy              | -13.5      |
+|    ess                  | 768        |
+|    ess_high             | 1.23e+03   |
+|    ess_low              | 307        |
+|    loss_fit             | 947        |
+|    obj_mean             | -2.91e+04  |
+|    params_std_pct_mean  | 7.1        |
+|    ret_mean             | -8.92e+03  |
+|    ret_mean_pre         | -2.06e+03  |
+|    ret_std              | 2.62e+04   |
+|    set_policy_s         | 0.00226    |
+|    surprise_mean        | 5.51e+03   |
+|    surprise_mean_pre    | 392        |
+|    surprise_std         | 766        |
+|    temp                 | 11.2       |
+|    update_s             | 113        |
+|    weight_max           | 0.0339     |
+| rollout/                |            |
+|    ep_len_mean          | 512        |
+|    ep_rew_mean          | 175        |
+| time/                   |            |
+|    fps                  | 641        |
+|    iterations           | 100        |
+|    time_elapsed         | 20445      |
+|    total_timesteps      | 13107200   |
+| train/                  |            |
+|    approx_kl            | 0.03434796 |
+|    clip_fraction        | 0.233      |
+|    clip_range           | 0.2        |
+|    entropy_loss         | 2.47       |
+|    explained_variance   | 0.918      |
+|    learning_rate        | 0.000792   |
+|    loss                 | 0.037      |
+|    n_updates            | 495        |
+|    policy_gradient_loss | 0.0176     |
+|    std                  | 0.0204     |
+|    value_loss           | 0.000114   |
+----------------------------------------
+Early stopping at step 1 due to reaching max kl: 0.08
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 176         |
+| time/                   |             |
+|    fps                  | 645         |
+|    iterations           | 101         |
+|    time_elapsed         | 20498       |
+|    total_timesteps      | 13238272    |
+| train/                  |             |
+|    approx_kl            | 0.063581385 |
+|    clip_fraction        | 0.273       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 2.48        |
+|    explained_variance   | 0.943       |
+|    learning_rate        | 0.00079     |
+|    loss                 | 0.0348      |
+|    n_updates            | 500         |
+|    policy_gradient_loss | 0.0216      |
+|    std                  | 0.02        |
+|    value_loss           | 6.58e-05    |
+-----------------------------------------
+Early stopping at step 0 due to reaching max kl: 0.10
+[ADR #051] steps=13369344 episodes=512 set=0.002s upd=112.27s dt=109.56s | ret=-6996.200 bonus=-15794.209 obj=-24299.875 | entropy=-13.316 ess=768.0 temp=11.2 wmax=0.034 flow_std=7.0%
+-----------------------------------------
+| adr/                    |             |
+|    B                    | 1.02e+03    |
+|    bcs_mean             | -1.58e+04   |
+|    bcs_mean_pre         | -1.66e+04   |
+|    beta_kl              | 12.2        |
+|    bonus_mean           | -1.58e+04   |
+|    bonus_mean_pre       | -1.66e+04   |
+|    dt                   | 110         |
+|    entropy              | -13.3       |
+|    ess                  | 768         |
+|    ess_high             | 1.23e+03    |
+|    ess_low              | 307         |
+|    loss_fit             | 945         |
+|    obj_mean             | -2.43e+04   |
+|    params_std_pct_mean  | 7           |
+|    ret_mean             | -7e+03      |
+|    ret_mean_pre         | -1.55e+03   |
+|    ret_std              | 2.27e+04    |
+|    set_policy_s         | 0.00156     |
+|    surprise_mean        | 5.49e+03    |
+|    surprise_mean_pre    | 379         |
+|    surprise_std         | 753         |
+|    temp                 | 11.2        |
+|    update_s             | 112         |
+|    weight_max           | 0.0339      |
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 179         |
+| time/                   |             |
+|    fps                  | 647         |
+|    iterations           | 102         |
+|    time_elapsed         | 20646       |
+|    total_timesteps      | 13369344    |
+| train/                  |             |
+|    approx_kl            | 0.041754354 |
+|    clip_fraction        | 0.251       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 2.5         |
+|    explained_variance   | 0.943       |
+|    learning_rate        | 0.000788    |
+|    loss                 | 0.0435      |
+|    n_updates            | 505         |
+|    policy_gradient_loss | 0.0206      |
+|    std                  | 0.0198      |
+|    value_loss           | 7.34e-05    |
+-----------------------------------------
+Early stopping at step 0 due to reaching max kl: 0.08
+----------------------------------------
+| rollout/                |            |
+|    ep_len_mean          | 512        |
+|    ep_rew_mean          | 181        |
+| time/                   |            |
+|    fps                  | 652        |
+|    iterations           | 103        |
+|    time_elapsed         | 20680      |
+|    total_timesteps      | 13500416   |
+| train/                  |            |
+|    approx_kl            | 0.04055127 |
+|    clip_fraction        | 0.272      |
+|    clip_range           | 0.2        |
+|    entropy_loss         | 2.51       |
+|    explained_variance   | 0.935      |
+|    learning_rate        | 0.000786   |
+|    loss                 | 0.0381     |
+|    n_updates            | 510        |
+|    policy_gradient_loss | 0.0195     |
+|    std                  | 0.0196     |
+|    value_loss           | 7.55e-05   |
+----------------------------------------
+Early stopping at step 0 due to reaching max kl: 0.08
+[ADR #052] steps=13631488 episodes=512 set=0.001s upd=112.18s dt=109.22s | ret=-7596.320 bonus=-14764.666 obj=-24424.053 | entropy=-13.639 ess=768.0 temp=11.2 wmax=0.034 flow_std=6.9%
+-----------------------------------------
+| adr/                    |             |
+|    B                    | 1.02e+03    |
+|    bcs_mean             | -1.48e+04   |
+|    bcs_mean_pre         | -1.99e+04   |
+|    beta_kl              | 10.3        |
+|    bonus_mean           | -1.48e+04   |
+|    bonus_mean_pre       | -1.99e+04   |
+|    dt                   | 109         |
+|    entropy              | -13.6       |
+|    ess                  | 768         |
+|    ess_high             | 1.23e+03    |
+|    ess_low              | 307         |
+|    loss_fit             | 953         |
+|    obj_mean             | -2.44e+04   |
+|    params_std_pct_mean  | 6.89        |
+|    ret_mean             | -7.6e+03    |
+|    ret_mean_pre         | -2.1e+03    |
+|    ret_std              | 2.36e+04    |
+|    set_policy_s         | 0.00146     |
+|    surprise_mean        | 5.53e+03    |
+|    surprise_mean_pre    | 384         |
+|    surprise_std         | 777         |
+|    temp                 | 11.2        |
+|    update_s             | 112         |
+|    weight_max           | 0.0339      |
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | -1.57e+03   |
+| time/                   |             |
+|    fps                  | 654         |
+|    iterations           | 104         |
+|    time_elapsed         | 20828       |
+|    total_timesteps      | 13631488    |
+| train/                  |             |
+|    approx_kl            | 0.043282136 |
+|    clip_fraction        | 0.276       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 2.52        |
+|    explained_variance   | 0.923       |
+|    learning_rate        | 0.000784    |
+|    loss                 | 0.033       |
+|    n_updates            | 515         |
+|    policy_gradient_loss | 0.0219      |
+|    std                  | 0.0193      |
+|    value_loss           | 0.000107    |
+-----------------------------------------
+Early stopping at step 1 due to reaching max kl: 0.15
+----------------------------------------
+| rollout/                |            |
+|    ep_len_mean          | 512        |
+|    ep_rew_mean          | 165        |
+| time/                   |            |
+|    fps                  | 659        |
+|    iterations           | 105        |
+|    time_elapsed         | 20880      |
+|    total_timesteps      | 13762560   |
+| train/                  |            |
+|    approx_kl            | 0.10736959 |
+|    clip_fraction        | 0.254      |
+|    clip_range           | 0.2        |
+|    entropy_loss         | 2.54       |
+|    explained_variance   | 0.00626    |
+|    learning_rate        | 0.000782   |
+|    loss                 | 33.2       |
+|    n_updates            | 520        |
+|    policy_gradient_loss | 0.0198     |
+|    std                  | 0.0191     |
+|    value_loss           | 3.33       |
+----------------------------------------
+Early stopping at step 1 due to reaching max kl: 0.08
+[ADR #053] steps=13893632 episodes=512 set=0.002s upd=112.71s dt=109.85s | ret=-7978.604 bonus=-12457.375 obj=-22924.607 | entropy=-15.408 ess=768.0 temp=11.2 wmax=0.034 flow_std=6.8%
+-----------------------------------------
+| adr/                    |             |
+|    B                    | 1.02e+03    |
+|    bcs_mean             | -1.25e+04   |
+|    bcs_mean_pre         | -1.94e+04   |
+|    beta_kl              | 17.6        |
+|    bonus_mean           | -1.25e+04   |
+|    bonus_mean_pre       | -1.94e+04   |
+|    dt                   | 110         |
+|    entropy              | -15.4       |
+|    ess                  | 768         |
+|    ess_high             | 1.23e+03    |
+|    ess_low              | 307         |
+|    loss_fit             | 943         |
+|    obj_mean             | -2.29e+04   |
+|    params_std_pct_mean  | 6.75        |
+|    ret_mean             | -7.98e+03   |
+|    ret_mean_pre         | -1.63e+03   |
+|    ret_std              | 2.45e+04    |
+|    set_policy_s         | 0.0015      |
+|    surprise_mean        | 5.49e+03    |
+|    surprise_mean_pre    | 383         |
+|    surprise_std         | 789         |
+|    temp                 | 11.2        |
+|    update_s             | 113         |
+|    weight_max           | 0.0339      |
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 168         |
+| time/                   |             |
+|    fps                  | 659         |
+|    iterations           | 106         |
+|    time_elapsed         | 21056       |
+|    total_timesteps      | 13893632    |
+| train/                  |             |
+|    approx_kl            | 0.046548437 |
+|    clip_fraction        | 0.231       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 2.54        |
+|    explained_variance   | 0.895       |
+|    learning_rate        | 0.00078     |
+|    loss                 | 0.0115      |
+|    n_updates            | 525         |
+|    policy_gradient_loss | 0.0194      |
+|    std                  | 0.019       |
+|    value_loss           | 0.00233     |
+-----------------------------------------
+Early stopping at step 0 due to reaching max kl: 0.08
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 175         |
+| time/                   |             |
+|    fps                  | 665         |
+|    iterations           | 107         |
+|    time_elapsed         | 21081       |
+|    total_timesteps      | 14024704    |
+| train/                  |             |
+|    approx_kl            | 0.038369257 |
+|    clip_fraction        | 0.222       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 2.55        |
+|    explained_variance   | 0.724       |
+|    learning_rate        | 0.000778    |
+|    loss                 | 0.0348      |
+|    n_updates            | 530         |
+|    policy_gradient_loss | 0.0174      |
+|    std                  | 0.0189      |
+|    value_loss           | 0.000595    |
+-----------------------------------------
+Early stopping at step 0 due to reaching max kl: 0.08
+[ADR #054] steps=14155776 episodes=512 set=0.002s upd=114.04s dt=110.71s | ret=-7484.394 bonus=-16790.051 obj=-26249.057 | entropy=-14.649 ess=768.0 temp=11.2 wmax=0.034 flow_std=6.6%
+-----------------------------------------
+| adr/                    |             |
+|    B                    | 1.02e+03    |
+|    bcs_mean             | -1.68e+04   |
+|    bcs_mean_pre         | -2.07e+04   |
+|    beta_kl              | 9.4         |
+|    bonus_mean           | -1.68e+04   |
+|    bonus_mean_pre       | -2.07e+04   |
+|    dt                   | 111         |
+|    entropy              | -14.6       |
+|    ess                  | 768         |
+|    ess_high             | 1.23e+03    |
+|    ess_low              | 307         |
+|    loss_fit             | 947         |
+|    obj_mean             | -2.62e+04   |
+|    params_std_pct_mean  | 6.64        |
+|    ret_mean             | -7.48e+03   |
+|    ret_mean_pre         | -2.51e+03   |
+|    ret_std              | 2.3e+04     |
+|    set_policy_s         | 0.00157     |
+|    surprise_mean        | 5.51e+03    |
+|    surprise_mean_pre    | 384         |
+|    surprise_std         | 766         |
+|    temp                 | 11.2        |
+|    update_s             | 114         |
+|    weight_max           | 0.0339      |
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 176         |
+| time/                   |             |
+|    fps                  | 667         |
+|    iterations           | 108         |
+|    time_elapsed         | 21215       |
+|    total_timesteps      | 14155776    |
+| train/                  |             |
+|    approx_kl            | 0.040586066 |
+|    clip_fraction        | 0.263       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 2.55        |
+|    explained_variance   | 0.926       |
+|    learning_rate        | 0.000776    |
+|    loss                 | 0.0318      |
+|    n_updates            | 535         |
+|    policy_gradient_loss | 0.026       |
+|    std                  | 0.0189      |
+|    value_loss           | 0.000245    |
+-----------------------------------------
+Early stopping at step 2 due to reaching max kl: 0.08
+----------------------------------------
+| rollout/                |            |
+|    ep_len_mean          | 512        |
+|    ep_rew_mean          | 179        |
+| time/                   |            |
+|    fps                  | 670        |
+|    iterations           | 109        |
+|    time_elapsed         | 21314      |
+|    total_timesteps      | 14286848   |
+| train/                  |            |
+|    approx_kl            | 0.04129324 |
+|    clip_fraction        | 0.258      |
+|    clip_range           | 0.2        |
+|    entropy_loss         | 2.56       |
+|    explained_variance   | 0.934      |
+|    learning_rate        | 0.000774   |
+|    loss                 | 0.0222     |
+|    n_updates            | 540        |
+|    policy_gradient_loss | 0.0197     |
+|    std                  | 0.0186     |
+|    value_loss           | 9.39e-05   |
+----------------------------------------
+Early stopping at step 0 due to reaching max kl: 0.09
+[ADR #055] steps=14417920 episodes=512 set=0.002s upd=113.86s dt=110.73s | ret=-7862.305 bonus=-10221.710 obj=-20412.098 | entropy=-14.103 ess=768.0 temp=11.2 wmax=0.034 flow_std=6.9%
+-----------------------------------------
+| adr/                    |             |
+|    B                    | 1.02e+03    |
+|    bcs_mean             | -1.02e+04   |
+|    bcs_mean_pre         | -1.91e+04   |
+|    beta_kl              | 10          |
+|    bonus_mean           | -1.02e+04   |
+|    bonus_mean_pre       | -1.91e+04   |
+|    dt                   | 111         |
+|    entropy              | -14.1       |
+|    ess                  | 768         |
+|    ess_high             | 1.23e+03    |
+|    ess_low              | 307         |
+|    loss_fit             | 948         |
+|    obj_mean             | -2.04e+04   |
+|    params_std_pct_mean  | 6.92        |
+|    ret_mean             | -7.86e+03   |
+|    ret_mean_pre         | -2.62e+03   |
+|    ret_std              | 2.48e+04    |
+|    set_policy_s         | 0.00155     |
+|    surprise_mean        | 5.53e+03    |
+|    surprise_mean_pre    | 381         |
+|    surprise_std         | 817         |
+|    temp                 | 11.2        |
+|    update_s             | 114         |
+|    weight_max           | 0.0339      |
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 183         |
+| time/                   |             |
+|    fps                  | 672         |
+|    iterations           | 110         |
+|    time_elapsed         | 21450       |
+|    total_timesteps      | 14417920    |
+| train/                  |             |
+|    approx_kl            | 0.026420416 |
+|    clip_fraction        | 0.176       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 2.56        |
+|    explained_variance   | 0.948       |
+|    learning_rate        | 0.000771    |
+|    loss                 | 0.0462      |
+|    n_updates            | 545         |
+|    policy_gradient_loss | 0.0137      |
+|    std                  | 0.0186      |
+|    value_loss           | 9.26e-05    |
+-----------------------------------------
+Early stopping at step 0 due to reaching max kl: 0.08
+----------------------------------------
+| rollout/                |            |
+|    ep_len_mean          | 512        |
+|    ep_rew_mean          | 182        |
+| time/                   |            |
+|    fps                  | 677        |
+|    iterations           | 111        |
+|    time_elapsed         | 21490      |
+|    total_timesteps      | 14548992   |
+| train/                  |            |
+|    approx_kl            | 0.03810344 |
+|    clip_fraction        | 0.257      |
+|    clip_range           | 0.2        |
+|    entropy_loss         | 2.57       |
+|    explained_variance   | 0.956      |
+|    learning_rate        | 0.000769   |
+|    loss                 | 0.0359     |
+|    n_updates            | 550        |
+|    policy_gradient_loss | 0.0242     |
+|    std                  | 0.0185     |
+|    value_loss           | 6.93e-05   |
+----------------------------------------
+Early stopping at step 0 due to reaching max kl: 0.08
+[ADR #056] steps=14680064 episodes=512 set=0.002s upd=112.17s dt=109.62s | ret=-7523.244 bonus=-18246.475 obj=-27781.932 | entropy=-13.499 ess=768.0 temp=11.2 wmax=0.034 flow_std=6.9%
+-----------------------------------------
+| adr/                    |             |
+|    B                    | 1.02e+03    |
+|    bcs_mean             | -1.82e+04   |
+|    bcs_mean_pre         | -1.46e+04   |
+|    beta_kl              | 12.1        |
+|    bonus_mean           | -1.82e+04   |
+|    bonus_mean_pre       | -1.46e+04   |
+|    dt                   | 110         |
+|    entropy              | -13.5       |
+|    ess                  | 768         |
+|    ess_high             | 1.23e+03    |
+|    ess_low              | 307         |
+|    loss_fit             | 945         |
+|    obj_mean             | -2.78e+04   |
+|    params_std_pct_mean  | 6.87        |
+|    ret_mean             | -7.52e+03   |
+|    ret_mean_pre         | -1.5e+03    |
+|    ret_std              | 2.35e+04    |
+|    set_policy_s         | 0.00168     |
+|    surprise_mean        | 5.51e+03    |
+|    surprise_mean_pre    | 384         |
+|    surprise_std         | 794         |
+|    temp                 | 11.2        |
+|    update_s             | 112         |
+|    weight_max           | 0.0339      |
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 178         |
+| time/                   |             |
+|    fps                  | 678         |
+|    iterations           | 112         |
+|    time_elapsed         | 21639       |
+|    total_timesteps      | 14680064    |
+| train/                  |             |
+|    approx_kl            | 0.033485092 |
+|    clip_fraction        | 0.243       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 2.58        |
+|    explained_variance   | 0.951       |
+|    learning_rate        | 0.000767    |
+|    loss                 | 0.0466      |
+|    n_updates            | 555         |
+|    policy_gradient_loss | 0.0222      |
+|    std                  | 0.0184      |
+|    value_loss           | 5.81e-05    |
+-----------------------------------------
+Early stopping at step 0 due to reaching max kl: 0.09
+----------------------------------------
+| rollout/                |            |
+|    ep_len_mean          | 512        |
+|    ep_rew_mean          | 179        |
+| time/                   |            |
+|    fps                  | 683        |
+|    iterations           | 113        |
+|    time_elapsed         | 21655      |
+|    total_timesteps      | 14811136   |
+| train/                  |            |
+|    approx_kl            | 0.03879494 |
+|    clip_fraction        | 0.253      |
+|    clip_range           | 0.2        |
+|    entropy_loss         | 2.58       |
+|    explained_variance   | 0.952      |
+|    learning_rate        | 0.000765   |
+|    loss                 | 0.0342     |
+|    n_updates            | 560        |
+|    policy_gradient_loss | 0.0242     |
+|    std                  | 0.0183     |
+|    value_loss           | 6.15e-05   |
+----------------------------------------
+Early stopping at step 0 due to reaching max kl: 0.08
+[ADR #057] steps=14942208 episodes=512 set=0.002s upd=112.38s dt=109.62s | ret=-7722.335 bonus=-16699.611 obj=-26649.770 | entropy=-12.743 ess=768.0 temp=11.2 wmax=0.034 flow_std=7.3%
+----------------------------------------
+| adr/                    |            |
+|    B                    | 1.02e+03   |
+|    bcs_mean             | -1.67e+04  |
+|    bcs_mean_pre         | -2.23e+04  |
+|    beta_kl              | 8.2        |
+|    bonus_mean           | -1.67e+04  |
+|    bonus_mean_pre       | -2.23e+04  |
+|    dt                   | 110        |
+|    entropy              | -12.7      |
+|    ess                  | 768        |
+|    ess_high             | 1.23e+03   |
+|    ess_low              | 307        |
+|    loss_fit             | 948        |
+|    obj_mean             | -2.66e+04  |
+|    params_std_pct_mean  | 7.32       |
+|    ret_mean             | -7.72e+03  |
+|    ret_mean_pre         | -2.86e+03  |
+|    ret_std              | 2.37e+04   |
+|    set_policy_s         | 0.0016     |
+|    surprise_mean        | 5.49e+03   |
+|    surprise_mean_pre    | 380        |
+|    surprise_std         | 796        |
+|    temp                 | 11.2       |
+|    update_s             | 112        |
+|    weight_max           | 0.0339     |
+| rollout/                |            |
+|    ep_len_mean          | 512        |
+|    ep_rew_mean          | 176        |
+| time/                   |            |
+|    fps                  | 685        |
+|    iterations           | 114        |
+|    time_elapsed         | 21798      |
+|    total_timesteps      | 14942208   |
+| train/                  |            |
+|    approx_kl            | 0.03784101 |
+|    clip_fraction        | 0.236      |
+|    clip_range           | 0.2        |
+|    entropy_loss         | 2.58       |
+|    explained_variance   | 0.945      |
+|    learning_rate        | 0.000763   |
+|    loss                 | 0.0285     |
+|    n_updates            | 565        |
+|    policy_gradient_loss | 0.0181     |
+|    std                  | 0.0182     |
+|    value_loss           | 6.77e-05   |
+----------------------------------------
+Early stopping at step 0 due to reaching max kl: 0.08
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | 182         |
+| time/                   |             |
+|    fps                  | 690         |
+|    iterations           | 115         |
+|    time_elapsed         | 21826       |
+|    total_timesteps      | 15073280    |
+| train/                  |             |
+|    approx_kl            | 0.049732946 |
+|    clip_fraction        | 0.298       |
+|    clip_range           | 0.2         |
+|    entropy_loss         | 2.59        |
+|    explained_variance   | 0.0154      |
+|    learning_rate        | 0.000761    |
+|    loss                 | 0.0421      |
+|    n_updates            | 570         |
+|    policy_gradient_loss | 0.0284      |
+|    std                  | 0.0181      |
+|    value_loss           | 8.55        |
+-----------------------------------------

@@ -8,6 +8,7 @@ import torch
 import zuko
 
 from .backend import NomadBackend
+from .memory import trim_memory
 
 
 def finite_clip(x, clip=60.0):
@@ -282,8 +283,8 @@ class ADRFlows:
         ret_pre = bonus_pre = None
         surprise_pre = None
 
-        def rollout_objective():
-            env.set_ctx(x)
+        def rollout_objective(ctx):
+            env.set_ctx(ctx)
             self.ev.reset(self.n_sample)
             obs = env.reset()
             ret = torch.zeros((self.n_sample,), device=self.device)
@@ -295,7 +296,7 @@ class ADRFlows:
             return self.ret_coef * ret + self.bonus_coef * bonus, ret, bonus
 
         for _ in range(self.refine_steps):
-            obj, ret, bonus = rollout_objective()
+            obj, ret, bonus = rollout_objective(x)
             if ret_pre is None:
                 ret_pre, bonus_pre = ret.detach(), bonus.detach()
             surprise = self.surprise_coef * (-finite(self.current.log_prob(x))) if self.surprise_coef else torch.zeros_like(obj)
@@ -306,12 +307,17 @@ class ADRFlows:
             grad = torch.nan_to_num(torch.autograd.grad(total.sum(), x)[0])
             with torch.no_grad():
                 x.add_(self.refine_lr * grad).clamp_(low, high)
+            if hasattr(env, "_cop_history"):
+                env._cop_history.clear()
+            del obj, ret, bonus, surprise, total, grad
             x = x.detach().requires_grad_(True)
 
-        obj, ret, bonus = rollout_objective()
+        x = x.detach()
+        with torch.no_grad():
+            obj, ret, bonus = rollout_objective(x)
+            surprise = self.surprise_coef * (-finite(self.current.log_prob(x))) if self.surprise_coef else torch.zeros_like(obj)
         if ret_pre is None:
             ret_pre, bonus_pre = ret.detach(), bonus.detach()
-        surprise = self.surprise_coef * (-finite(self.current.log_prob(x))) if self.surprise_coef else torch.zeros_like(obj)
         surprise_pre = surprise.detach() if surprise_pre is None else surprise_pre
         xs.append(x.detach())
         objs.append((obj + surprise).detach())
@@ -353,15 +359,16 @@ class ADRFlows:
             x_mc = self.current.sample((self.kl_M,))
             entropy = (-finite(self.current.log_prob(x_mc))).mean().item()
             params_std_pct = (100.0 * x_mc.std(dim=0, unbiased=False) / x_mc.mean(dim=0).abs().clamp_min(1e-12)).mean().item()
-        ret_np = ret.detach().cpu().numpy()
+        ret_mean = float(ret.mean().item())
+        ret_std = float(ret.std(unbiased=False).item())
         bonus_mean = float(bonus.mean().item())
         bonus_mean_pre = float(bonus_pre.mean().item())
-        return {
+        stats = {
             "dt": float(time.perf_counter() - t0),
             "B": int(self.n_sample),
             "obj_mean": float((obj + surprise).mean().item()),
-            "ret_mean": float(ret_np.mean()),
-            "ret_std": float(ret_np.std()),
+            "ret_mean": ret_mean,
+            "ret_std": ret_std,
             "bonus_mean": bonus_mean,
             "bonus_mean_pre": bonus_mean_pre,
             "bcs_mean": bonus_mean,
@@ -380,3 +387,7 @@ class ADRFlows:
             "loss_fit": float(loss_fit_val.item()),
             "beta_kl": float((self.kl_beta * kl_val).item()),
         }
+        self.opt.zero_grad(set_to_none=True)
+        del env, x, xs, objs, x_data, obj_all, ref, params, weights, ret, bonus, obj, surprise, x_mc
+        trim_memory()
+        return stats
