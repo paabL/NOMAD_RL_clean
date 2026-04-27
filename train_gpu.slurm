@@ -1,8 +1,8 @@
 #!/bin/bash
 #SBATCH --account=def-kuzhang_gpu
-#SBATCH --time=12:00:00
-#SBATCH --cpus-per-task=3
-#SBATCH --mem=16000M
+#SBATCH --time=24:00:00
+#SBATCH --cpus-per-task=2
+#SBATCH --mem=32000M
 #SBATCH --gpus=h100_1g.10gb:1
 #SBATCH --job-name=nomad_rc5_gpu
 #SBATCH --output=logs/%x-%j.out

@@ -1,0 +1,334 @@
+hostname: rg12701
+SLURM_SUBMIT_DIR=/lustre09/project/6110728/paablo/NOMAD_RL_clean
+PWD=/lustre09/project/6110728/paablo/NOMAD_RL_clean
+CUDA_VISIBLE_DEVICES=MIG-aa68858a-2ae2-55e7-8e1a-155038f3784a
+SLURM_CPUS_PER_TASK=2
+config: configs/rc5_rorqual.json
+Mon Apr 27 00:55:17 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 570.211.01             Driver Version: 570.211.01     CUDA Version: 12.8     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA H100 80GB HBM3          Off |   00000000:4E:00.0 Off |                   On |
+| N/A   53C    P0            271W /  700W |   13500MiB /  81559MiB |     N/A      Default |
+|                                         |                        |              Enabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| MIG devices:                                                                            |
++------------------+----------------------------------+-----------+-----------------------+
+| GPU  GI  CI  MIG |                     Memory-Usage |        Vol|        Shared         |
+|      ID  ID  Dev |                       BAR1-Usage | SM     Unc| CE ENC  DEC  OFA  JPG |
+|                  |                                  |        ECC|                       |
+|==================+==================================+===========+=======================|
+|  0   14   0   0  |               9MiB /  9984MiB    | 16      0 |  1   0    1    0    1 |
+|                  |                 0MiB / 16383MiB  |           |                       |
++------------------+----------------------------------+-----------+-----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+torch: 2.11.0
+cuda: True
+device_count: 1
+device_name: NVIDIA H100 80GB HBM3 MIG 1g.10gb
+Loading flow from flows/collapsed_flow.pt
+Using cuda device
+Logging to NOMAD_RC5/tensorboard_logs/tb/RecurrentPPO_2
+----------------------------------
+| rollout/           |           |
+|    ep_len_mean     | 512       |
+|    ep_rew_mean     | -3.99e+04 |
+| time/              |           |
+|    fps             | 6164      |
+|    iterations      | 1         |
+|    time_elapsed    | 21        |
+|    total_timesteps | 131072    |
+----------------------------------
+[ADR #001] steps=262144 episodes=512 set=0.021s upd=150.54s dt=147.65s | ret=-895.933 bonus=-39383.195 obj=-35176.488 | entropy=-37.680 ess=768.0 temp=11.2 wmax=0.034 flow_std=7.4%
+-----------------------------------------
+| adr/                    |             |
+|    B                    | 1.02e+03    |
+|    bcs_mean             | -3.94e+04   |
+|    bcs_mean_pre         | -4.07e+04   |
+|    beta_kl              | 338         |
+|    bonus_mean           | -3.94e+04   |
+|    bonus_mean_pre       | -4.07e+04   |
+|    dt                   | 148         |
+|    entropy              | -37.7       |
+|    ess                  | 768         |
+|    ess_high             | 1.23e+03    |
+|    ess_low              | 307         |
+|    loss_fit             | 1.02e+03    |
+|    obj_mean             | -3.52e+04   |
+|    params_std_pct_mean  | 7.4         |
+|    ret_mean             | -896        |
+|    ret_mean_pre         | -585        |
+|    ret_std              | 2.81e+03    |
+|    set_policy_s         | 0.0208      |
+|    surprise_mean        | 6e+03       |
+|    surprise_mean_pre    | 1.14e+03    |
+|    surprise_std         | 638         |
+|    temp                 | 11.2        |
+|    update_s             | 151         |
+|    weight_max           | 0.0339      |
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | -3.93e+04   |
+| time/                   |             |
+|    fps                  | 702         |
+|    iterations           | 2           |
+|    time_elapsed         | 372         |
+|    total_timesteps      | 262144      |
+| train/                  |             |
+|    approx_kl            | 0.003908309 |
+|    clip_fraction        | 0.0351      |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -1.41       |
+|    explained_variance   | 0.0875      |
+|    learning_rate        | 0.000998    |
+|    loss                 | 0.0593      |
+|    n_updates            | 5           |
+|    policy_gradient_loss | -0.00262    |
+|    std                  | 0.989       |
+|    value_loss           | 0.195       |
+-----------------------------------------
+------------------------------------------
+| rollout/                |              |
+|    ep_len_mean          | 512          |
+|    ep_rew_mean          | -3.57e+04    |
+| time/                   |              |
+|    fps                  | 678          |
+|    iterations           | 3            |
+|    time_elapsed         | 579          |
+|    total_timesteps      | 393216       |
+| train/                  |              |
+|    approx_kl            | 0.0074462118 |
+|    clip_fraction        | 0.0682       |
+|    clip_range           | 0.2          |
+|    entropy_loss         | -1.37        |
+|    explained_variance   | 0.692        |
+|    learning_rate        | 0.000996     |
+|    loss                 | 0.00771      |
+|    n_updates            | 10           |
+|    policy_gradient_loss | -0.00604     |
+|    std                  | 0.948        |
+|    value_loss           | 0.0331       |
+------------------------------------------
+[ADR #002] steps=524288 episodes=512 set=0.001s upd=153.20s dt=150.36s | ret=-48289.562 bonus=-50033.305 obj=-140563.000 | entropy=-33.315 ess=768.0 temp=11.2 wmax=0.034 flow_std=8.4%
+-----------------------------------------
+| adr/                    |             |
+|    B                    | 1.02e+03    |
+|    bcs_mean             | -5e+04      |
+|    bcs_mean_pre         | -4.04e+04   |
+|    beta_kl              | 208         |
+|    bonus_mean           | -5e+04      |
+|    bonus_mean_pre       | -4.04e+04   |
+|    dt                   | 150         |
+|    entropy              | -33.3       |
+|    ess                  | 768         |
+|    ess_high             | 1.23e+03    |
+|    ess_low              | 307         |
+|    loss_fit             | 1.03e+03    |
+|    obj_mean             | -1.41e+05   |
+|    params_std_pct_mean  | 8.38        |
+|    ret_mean             | -4.83e+04   |
+|    ret_mean_pre         | -1.01e+05   |
+|    ret_std              | 1.15e+05    |
+|    set_policy_s         | 0.00148     |
+|    surprise_mean        | 6.05e+03    |
+|    surprise_mean_pre    | 1.03e+03    |
+|    surprise_std         | 633         |
+|    temp                 | 11.2        |
+|    update_s             | 153         |
+|    weight_max           | 0.0339      |
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | -2.87e+04   |
+| time/                   |             |
+|    fps                  | 557         |
+|    iterations           | 4           |
+|    time_elapsed         | 940         |
+|    total_timesteps      | 524288      |
+| train/                  |             |
+|    approx_kl            | 0.008818216 |
+|    clip_fraction        | 0.0871      |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -1.32       |
+|    explained_variance   | 0.846       |
+|    learning_rate        | 0.000994    |
+|    loss                 | 0.00625     |
+|    n_updates            | 15          |
+|    policy_gradient_loss | -0.00882    |
+|    std                  | 0.909       |
+|    value_loss           | 0.0262      |
+-----------------------------------------
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | -2.16e+04   |
+| time/                   |             |
+|    fps                  | 570         |
+|    iterations           | 5           |
+|    time_elapsed         | 1149        |
+|    total_timesteps      | 655360      |
+| train/                  |             |
+|    approx_kl            | 0.010393307 |
+|    clip_fraction        | 0.0984      |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -1.27       |
+|    explained_variance   | 0.873       |
+|    learning_rate        | 0.000992    |
+|    loss                 | 0.000965    |
+|    n_updates            | 20          |
+|    policy_gradient_loss | -0.011      |
+|    std                  | 0.857       |
+|    value_loss           | 0.0267      |
+-----------------------------------------
+[ADR #003] steps=786432 episodes=512 set=0.002s upd=154.09s dt=150.82s | ret=-92231.234 bonus=-39099.168 obj=-217544.812 | entropy=-29.180 ess=768.0 temp=11.2 wmax=0.034 flow_std=9.3%
+-----------------------------------------
+| adr/                    |             |
+|    B                    | 1.02e+03    |
+|    bcs_mean             | -3.91e+04   |
+|    bcs_mean_pre         | -5.32e+04   |
+|    beta_kl              | 153         |
+|    bonus_mean           | -3.91e+04   |
+|    bonus_mean_pre       | -5.32e+04   |
+|    dt                   | 151         |
+|    entropy              | -29.2       |
+|    ess                  | 768         |
+|    ess_high             | 1.23e+03    |
+|    ess_low              | 307         |
+|    loss_fit             | 1.03e+03    |
+|    obj_mean             | -2.18e+05   |
+|    params_std_pct_mean  | 9.28        |
+|    ret_mean             | -9.22e+04   |
+|    ret_mean_pre         | -1.39e+05   |
+|    ret_std              | 2.08e+05    |
+|    set_policy_s         | 0.00155     |
+|    surprise_mean        | 6.02e+03    |
+|    surprise_mean_pre    | 949         |
+|    surprise_std         | 659         |
+|    temp                 | 11.2        |
+|    update_s             | 154         |
+|    weight_max           | 0.0339      |
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | -1.42e+04   |
+| time/                   |             |
+|    fps                  | 520         |
+|    iterations           | 6           |
+|    time_elapsed         | 1511        |
+|    total_timesteps      | 786432      |
+| train/                  |             |
+|    approx_kl            | 0.011359461 |
+|    clip_fraction        | 0.0987      |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -1.21       |
+|    explained_variance   | 0.895       |
+|    learning_rate        | 0.00099     |
+|    loss                 | -0.000648   |
+|    n_updates            | 25          |
+|    policy_gradient_loss | -0.0124     |
+|    std                  | 0.802       |
+|    value_loss           | 0.0213      |
+-----------------------------------------
+-----------------------------------------
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | -9.25e+03   |
+| time/                   |             |
+|    fps                  | 533         |
+|    iterations           | 7           |
+|    time_elapsed         | 1721        |
+|    total_timesteps      | 917504      |
+| train/                  |             |
+|    approx_kl            | 0.010315972 |
+|    clip_fraction        | 0.0923      |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -1.14       |
+|    explained_variance   | 0.876       |
+|    learning_rate        | 0.000987    |
+|    loss                 | -0.00133    |
+|    n_updates            | 30          |
+|    policy_gradient_loss | -0.011      |
+|    std                  | 0.751       |
+|    value_loss           | 0.0185      |
+-----------------------------------------
+[ADR #004] steps=1048576 episodes=512 set=0.001s upd=155.68s dt=152.36s | ret=-83418.180 bonus=-40566.109 obj=-201435.500 | entropy=-24.245 ess=754.2 temp=11.2 wmax=0.034 flow_std=10.6%
+-----------------------------------------
+| adr/                    |             |
+|    B                    | 1.02e+03    |
+|    bcs_mean             | -4.06e+04   |
+|    bcs_mean_pre         | -4e+04      |
+|    beta_kl              | 65.5        |
+|    bonus_mean           | -4.06e+04   |
+|    bonus_mean_pre       | -4e+04      |
+|    dt                   | 152         |
+|    entropy              | -24.2       |
+|    ess                  | 754         |
+|    ess_high             | 1.23e+03    |
+|    ess_low              | 307         |
+|    loss_fit             | 1.01e+03    |
+|    obj_mean             | -2.01e+05   |
+|    params_std_pct_mean  | 10.6        |
+|    ret_mean             | -8.34e+04   |
+|    ret_mean_pre         | -1.77e+05   |
+|    ret_std              | 2.1e+05     |
+|    set_policy_s         | 0.00142     |
+|    surprise_mean        | 5.97e+03    |
+|    surprise_mean_pre    | 856         |
+|    surprise_std         | 651         |
+|    temp                 | 11.2        |
+|    update_s             | 156         |
+|    weight_max           | 0.0337      |
+| rollout/                |             |
+|    ep_len_mean          | 512         |
+|    ep_rew_mean          | -6.97e+03   |
+| time/                   |             |
+|    fps                  | 502         |
+|    iterations           | 8           |
+|    time_elapsed         | 2086        |
+|    total_timesteps      | 1048576     |
+| train/                  |             |
+|    approx_kl            | 0.008993823 |
+|    clip_fraction        | 0.0828      |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -1.07       |
+|    explained_variance   | 0.853       |
+|    learning_rate        | 0.000985    |
+|    loss                 | -0.0076     |
+|    n_updates            | 35          |
+|    policy_gradient_loss | -0.00901    |
+|    std                  | 0.701       |
+|    value_loss           | 0.0133      |
+-----------------------------------------
+----------------------------------------
+| rollout/                |            |
+|    ep_len_mean          | 512        |
+|    ep_rew_mean          | -5.87e+03  |
+| time/                   |            |
+|    fps                  | 513        |
+|    iterations           | 9          |
+|    time_elapsed         | 2296       |
+|    total_timesteps      | 1179648    |
+| train/                  |            |
+|    approx_kl            | 0.00737077 |
+|    clip_fraction        | 0.0676     |
+|    clip_range           | 0.2        |
+|    entropy_loss         | -1.02      |
+|    explained_variance   | 0.842      |
+|    learning_rate        | 0.000983   |
+|    loss                 | -0.00404   |
+|    n_updates            | 40         |
+|    policy_gradient_loss | -0.00637   |
+|    std                  | 0.665      |
+|    value_loss           | 0.00885    |
+----------------------------------------

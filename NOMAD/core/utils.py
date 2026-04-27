@@ -103,9 +103,10 @@ def build_initial_dist(cfg, device, backend):
         path = Path(init_flow_path)
         if path.exists():
             state = torch.load(path, map_location=device, weights_only=False)
+            low, high = (state["low"], state["high"]) if resume and path == resume["flow"] else backend.flow_bounds(device=device)
             dist = NormFlowDist(
-                state["low"],
-                state["high"],
+                low,
+                high,
                 transforms=int(state.get("transforms", cfg["adr"]["transforms"])),
                 bins=int(state.get("bins", cfg["adr"]["bins"])),
                 hidden=tuple(state.get("hidden", cfg["adr"]["hidden"])),

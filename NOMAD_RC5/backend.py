@@ -9,7 +9,7 @@ from stable_baselines3.common.torch_layers import BaseFeaturesExtractor
 from NOMAD.core.backend import PolicySpec
 from NOMAD.core.utils import merge_dict
 from .env import RC5TorchBatch
-from .sim import BASE_SETPOINT, DT, FUTURE_STEPS, TZ_MAX_K, TZ_MIN_K, context_low_high, load_rc5_data
+from .sim import BASE_SETPOINT, DEFAULT_PARAM_BOUNDS, DT, FUTURE_STEPS, TZ_MAX_K, TZ_MIN_K, context_low_high, load_rc5_data
 
 DEFAULT_ENV_CFG = {
     "dt": DT,
@@ -33,6 +33,7 @@ DEFAULT_POLICY_CFG = {
 }
 
 DEFAULT_ADR_CFG = {
+    "param_bounds": DEFAULT_PARAM_BOUNDS,
     "baseline_cs_coef": 50.0,
     "baseline_cop_coef": 5.0,
     "max_episode_length": 24*5, #5 jours, pour accélérer les itérations d'ADR, les episodes de training sont longs mais pas besoin d'autant pour avoir une idée des perfs de la policy
@@ -102,7 +103,7 @@ class RC5Backend:
         self.data = load_rc5_data(dt=self.env_cfg["dt"]) if data is None else data
 
     def flow_bounds(self, device):
-        return context_low_high(device=device)
+        return context_low_high(device=device, param_bounds=self.adr_cfg["param_bounds"])
 
     def make_adr_env(self, *, device, n_envs):
         max_episode_length = self.env_cfg["max_episode_length"] if self.adr_cfg["max_episode_length"] is None else self.adr_cfg["max_episode_length"]

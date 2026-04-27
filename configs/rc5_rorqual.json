@@ -12,7 +12,7 @@
   "save_every_steps": 200000,
   "resume_dir": null,
   "init_flow_path": "flows/collapsed_flow.pt",
-  "save_dir": "NOMAD_RC5/runs/rc5_reasonable_seed0",
+  "save_dir": "NOMAD_RC5/runs/zab2",
   "ppo": {
     "learning_rate_start": 0.001,
     "learning_rate_end": 0.0002,
@@ -29,7 +29,7 @@
     "clip_obs": 10.0
   },
   "env": {
-    "dt": 120.0,
+    "dt": 60.0,
     "step_period": 3600.0,
     "future_steps": 24,
     "base_setpoint": 294.15,
@@ -64,6 +64,7 @@
     "kl_beta": 50.0,
     "kl_M": 1000,
     "update_every_episodes": 512,
+    "param_bounds": [0.5, 2.0],
     "baseline_cs_coef": 50.0,
     "baseline_cop_coef": 5.0,
     "max_episode_length": 120,

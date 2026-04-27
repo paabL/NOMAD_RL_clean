@@ -64,6 +64,7 @@
     "kl_beta": 100.0,
     "kl_M": 1000,
     "update_every_episodes": 100,
+    "param_bounds": [0.8, 1.2],
     "baseline_cs_coef": 50.0,
     "baseline_cop_coef": 5.0,
     "max_episode_length": 12,

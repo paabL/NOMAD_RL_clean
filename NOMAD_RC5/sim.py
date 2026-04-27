@@ -54,28 +54,21 @@ PAC = dict(
 PID = dict(kp=0.6, ki=0.6 / 800.0, kd=0.0)
 
 
-def _bounds_from_nominal(values, b1=0.5, b2=2.0, rel=None):
-    out = {}
-    for key, value in values.items():
-        if rel is not None:
-            lo = float(value) * (1.0 - float(rel))
-            hi = float(value) * (1.0 + float(rel))
-        else:
-            lo = float(value) * float(b1)
-            hi = float(value) * float(b2)
-        out[key] = (min(lo, hi), max(lo, hi))
-    return out
+DEFAULT_PARAM_BOUNDS = (0.8, 1.2)
 
 
-TH_BOUNDS = _bounds_from_nominal(TH, rel=0.2)
-PAC_BOUNDS = _bounds_from_nominal({k: v for k, v in PAC.items() if k not in ("Tcn", "Tan")}, rel=0.2)
+def _bounds_from_nominal(values, factors=DEFAULT_PARAM_BOUNDS):
+    lo, hi = map(float, factors)
+    assert 0.0 <= lo <= 1.0 <= hi
+    return {k: tuple(sorted((float(v) * lo, float(v) * hi))) for k, v in values.items()}
+
+
+TH_BOUNDS = _bounds_from_nominal(TH)
+PAC_BOUNDS = _bounds_from_nominal({k: v for k, v in PAC.items() if k not in ("Tcn", "Tan")})
 PAC_BOUNDS["Tcn"] = (PAC["Tcn"] - 5.0, PAC["Tcn"] + 5.0)
 PAC_BOUNDS["Tan"] = (PAC["Tan"] - 5.0, PAC["Tan"] + 5.0)
-PID_BOUNDS = dict(
-    kp=(PID["kp"] * 0.8, PID["kp"] * 1.2),
-    ki=(PID["ki"] * 0.8, PID["ki"] * 1.2),
-    kd=(0.0, 0.1),
-)
+PID_BOUNDS = _bounds_from_nominal({k: v for k, v in PID.items() if k != "kd"})
+PID_BOUNDS["kd"] = (0.0, 0.1)
 
 TH_KEYS = list(TH_BOUNDS.keys())
 PAC_KEYS = list(PAC_BOUNDS.keys())
@@ -124,10 +117,16 @@ def nominal_pid():
     return tuple(float(PID[k]) for k in PID_KEYS)
 
 
-def context_low_high(device="cpu"):
+def context_low_high(device="cpu", param_bounds=DEFAULT_PARAM_BOUNDS):
     dev = torch.device(device)
-    low = [TH_BOUNDS[k][0] for k in TH_KEYS] + [PAC_BOUNDS[k][0] for k in PAC_KEYS] + [PID_BOUNDS[k][0] for k in PID_KEYS]
-    high = [TH_BOUNDS[k][1] for k in TH_KEYS] + [PAC_BOUNDS[k][1] for k in PAC_KEYS] + [PID_BOUNDS[k][1] for k in PID_KEYS]
+    th_bounds = _bounds_from_nominal(TH, param_bounds)
+    pac_bounds = _bounds_from_nominal({k: v for k, v in PAC.items() if k not in ("Tcn", "Tan")}, param_bounds)
+    pac_bounds["Tcn"] = PAC_BOUNDS["Tcn"]
+    pac_bounds["Tan"] = PAC_BOUNDS["Tan"]
+    pid_bounds = _bounds_from_nominal({k: v for k, v in PID.items() if k != "kd"}, param_bounds)
+    pid_bounds["kd"] = PID_BOUNDS["kd"]
+    low = [th_bounds[k][0] for k in TH_KEYS] + [pac_bounds[k][0] for k in PAC_KEYS] + [pid_bounds[k][0] for k in PID_KEYS]
+    high = [th_bounds[k][1] for k in TH_KEYS] + [pac_bounds[k][1] for k in PAC_KEYS] + [pid_bounds[k][1] for k in PID_KEYS]
     return torch.tensor(low, dtype=torch.float32, device=dev), torch.tensor(high, dtype=torch.float32, device=dev)
 
 
