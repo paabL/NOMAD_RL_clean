@@ -2,11 +2,13 @@
   "__notes": [
     "JSON strict: comments are kept here because python -m NOMAD_RC5.training reads this file with json.loads.",
     "Cluster baseline for one CUDA GPU. Code defaults are documented in README.md.",
-    "Use resume_dir to continue a run; keep save_dir unchanged when resuming in place."
+    "Use resume_dir to continue a run; keep save_dir unchanged when resuming in place.",
+    "cudnn_enabled=false avoids intermittent H100 MIG hangs in recurrent PPO LSTM backward; set true to restore cuDNN."
   ],
   "seed": 0,
   "device": "cuda",
   "adr_device": "cuda",
+  "cudnn_enabled": false,
   "n_envs": 256,
   "total_timesteps": 50000000,
   "save_every_steps": 200000,

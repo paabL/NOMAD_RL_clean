@@ -33,6 +33,7 @@ DEFAULT_CFG = {
     "seed": 0,
     "device": DEFAULT_DEVICE,
     "adr_device": DEFAULT_DEVICE,
+    "cudnn_enabled": True,
     "n_envs": 64,
     "total_timesteps": 20_000_000,
     "save_every_steps": 100_000,
@@ -82,6 +83,10 @@ def run_training(cfg=None):
     save_dir = Path(cfg["save_dir"])
     resume = get_resume_paths(cfg)
     save_dir.mkdir(parents=True, exist_ok=True)
+
+    torch.backends.cudnn.enabled = bool(cfg["cudnn_enabled"])
+    if not torch.backends.cudnn.enabled:
+        print("cuDNN disabled for recurrent PPO LSTM stability.", flush=True)
 
     set_global_seed(int(cfg["seed"]))
     device = cfg["device"]

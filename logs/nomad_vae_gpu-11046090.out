@@ -1,0 +1,62 @@
+hostname: rg12802
+SLURM_SUBMIT_DIR=/lustre09/project/6110728/paablo/NOMAD_RL_clean
+PWD=/lustre09/project/6110728/paablo/NOMAD_RL_clean
+CUDA_VISIBLE_DEVICES=MIG-9240f57d-c107-53e9-9177-ec5cd7923d23
+SLURM_CPUS_PER_TASK=2
+config: configs/vae_poc.json
+Mon Apr 27 16:55:53 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 570.211.01             Driver Version: 570.211.01     CUDA Version: 12.8     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA H100 80GB HBM3          Off |   00000000:DB:00.0 Off |                   On |
+| N/A   54C    P0            201W /  700W |    4210MiB /  81559MiB |     N/A      Default |
+|                                         |                        |              Enabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| MIG devices:                                                                            |
++------------------+----------------------------------+-----------+-----------------------+
+| GPU  GI  CI  MIG |                     Memory-Usage |        Vol|        Shared         |
+|      ID  ID  Dev |                       BAR1-Usage | SM     Unc| CE ENC  DEC  OFA  JPG |
+|                  |                                  |        ECC|                       |
+|==================+==================================+===========+=======================|
+|  0    9   0   0  |               9MiB /  9984MiB    | 16      0 |  1   0    1    0    1 |
+|                  |                 0MiB / 16383MiB  |           |                       |
++------------------+----------------------------------+-----------+-----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+torch: 2.11.0
+cuda: True
+device_count: 1
+device_name: NVIDIA H100 80GB HBM3 MIG 1g.10gb
+dataset train=1638 val=410 minibatch=256 horizon=48 device=cuda
+step 1 train 0.5581 val 0.6178 traj 0.558 val_traj 0.6177
+step 25 train 0.2518 val 0.29 traj 0.251 val_traj 0.2893
+step 50 train 0.149 val 0.1299 traj 0.1469 val_traj 0.128
+step 75 train 0.1348 val 0.1167 traj 0.1318 val_traj 0.114
+step 100 train 0.148 val 0.1093 traj 0.1445 val_traj 0.106
+step 125 train 0.1042 val 0.1055 traj 0.1004 val_traj 0.1019
+step 150 train 0.1019 val 0.1044 traj 0.09829 val_traj 0.1007
+step 175 train 0.09961 val 0.1016 traj 0.09561 val_traj 0.09794
+step 200 train 0.1295 val 0.101 traj 0.1256 val_traj 0.09748
+step 225 train 0.1313 val 0.1003 traj 0.1273 val_traj 0.0967
+step 250 train 0.1603 val 0.1015 traj 0.1568 val_traj 0.09814
+step 275 train 0.1013 val 0.09955 traj 0.09739 val_traj 0.09609
+step 300 train 0.09106 val 0.09931 traj 0.08769 val_traj 0.09598
+step 325 train 0.1236 val 0.09878 traj 0.1204 val_traj 0.09557
+step 350 train 0.1018 val 0.09813 traj 0.09818 val_traj 0.09504
+step 375 train 0.09471 val 0.09795 traj 0.0914 val_traj 0.09488
+step 400 train 0.08754 val 0.09896 traj 0.08441 val_traj 0.0959
+step 425 train 0.1253 val 0.09867 traj 0.1221 val_traj 0.09568
+step 450 train 0.09001 val 0.09877 traj 0.08678 val_traj 0.09582
+step 475 train 0.08199 val 0.09858 traj 0.07912 val_traj 0.09555

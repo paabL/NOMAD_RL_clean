@@ -1,2 +1,5 @@
 <frozen runpy>:128: RuntimeWarning: 'NOMAD_RC5.training' found in sys.modules after import of package 'NOMAD_RC5', but prior to execution of 'NOMAD_RC5.training'; this may result in unpredictable behaviour
 An NVIDIA GPU may be present on this machine, but a CUDA-enabled jaxlib is not installed. Falling back to cpu.
+srun: Job step aborted: Waiting up to 62 seconds for job step to finish.
+slurmstepd: error: *** JOB 11033702 ON rg12801 CANCELLED AT 2026-04-27T21:21:54 ***
+slurmstepd: error: *** STEP 11033702.0 ON rg12801 CANCELLED AT 2026-04-27T21:21:54 ***

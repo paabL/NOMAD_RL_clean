@@ -277,6 +277,7 @@ Use `configs/rc5_local_smoke_cpu.json` instead if MPS is unavailable or unstable
 | `seed` | `0` | Global random seed. | Keep fixed for reproducibility; change it only to measure sensitivity to randomness. |
 | `device` | auto: `cuda`, else `mps`, else `cpu` | Torch device used by PPO and the RC5 Torch batch env. | Prefer `cuda` when available. Use `mps` only after checking stability. |
 | `adr_device` | same as `device` | Torch device used for ADR context rollouts. | Keep it equal to `device` unless PPO and ADR need different hardware. |
+| `cudnn_enabled` | `True` | Whether PyTorch may use cuDNN kernels. | Set `False` on H100 MIG if recurrent PPO LSTM backward hangs; set `True` to restore default cuDNN behavior. |
 | `n_envs` | `64` | Number of parallel RC5 environments inside `RC5TorchBatch`. | Increase until steps/sec stops improving or memory becomes tight. |
 | `total_timesteps` | `20_000_000` | Total PPO environment steps. | Set this from your time budget and convergence target; use shorter runs for quick sweeps, longer runs for final training. |
 | `save_every_steps` | `100_000` | Period for checkpointing `model.zip`, `vecnormalize.pkl`, and `adr_flow.pt`. | Save often enough to recover useful milestones without spending too much on I/O. |
