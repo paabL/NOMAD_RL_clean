@@ -87,7 +87,7 @@ python NOMAD_RC5/pretrain_latent_vae.py
 
 In normal use, edit `configs/vae_poc.json`. The script exits with an error if that file is missing or if required keys are missing.
 
-The script pre-generates `n_traj` valid RC5 contexts inside `context_low_high`, generates setpoint probes as sums of 2h, 6h, and 12h sinusoids, rolls them out with `RC5TorchBatch.probe_rollout`, then trains a small VAE by random minibatches of size `batch_size`:
+The script pre-generates `n_traj` valid RC5 contexts inside `context_low_high`, generates setpoint probes as sums of 2h, 6h, and 12h sinusoids, rolls them out with `RC5TorchBatch.probe_rollout`, filters invalid rollouts, then trains a small VAE by random minibatches of size `batch_size`:
 
 `tau -> encoder -> z -> decoder -> ctx_hat -> RC5TorchBatch`
 

@@ -161,17 +161,16 @@ def vae_loss(encoder, decoder, env, batch, low, high, tau_mean, tau_std, channel
 
 def make_probe_batch(env, low, high, cfg, device):
     b, h = int(cfg["batch_size"]), int(cfg["horizon"])
-    for _ in range(50):
+    for _ in range(100):
         ctx = low + (high - low) * torch.rand(b, low.numel(), device=device)
         setpoints = sample_setpoints(b, h, cfg["env"]["step_period"], device)
         starts = torch.randint(0, env.max_start_h + 1, (b,), device=device)
-        if not context_valid(ctx, low, high).all():
-            continue
         with torch.no_grad():
             tau = env.probe_rollout(ctx, setpoints, starts)
-        if rollout_valid(tau).all():
-            return ctx, setpoints, starts, tau
-    return ctx, setpoints, starts, tau
+        valid = context_valid(ctx, low, high) & rollout_valid(tau)
+        if valid.any():
+            return ctx[valid], setpoints[valid], starts[valid], {k: v[valid] for k, v in tau.items()}
+    raise RuntimeError("No valid VAE probe rollout found. Reduce param_bounds or horizon.")
 
 
 def make_dataset(env, low, high, cfg, device):
@@ -184,11 +183,17 @@ def make_dataset(env, low, high, cfg, device):
         starts.append(h0.detach())
         for k in taus:
             taus[k].append(tau[k].detach())
+    ctx = torch.cat(ctxs, dim=0)[:n]
+    setpoints = torch.cat(setpoints, dim=0)[:n]
+    starts = torch.cat(starts, dim=0)[:n]
+    tau = {k: torch.cat(v, dim=0)[:n] for k, v in taus.items()}
+    if not torch.isfinite(ctx).all() or not torch.isfinite(torch.stack(list(tau.values()), dim=-1)).all():
+        raise RuntimeError("Generated VAE dataset contains NaN/inf.")
     return (
-        torch.cat(ctxs, dim=0)[:n],
-        torch.cat(setpoints, dim=0)[:n],
-        torch.cat(starts, dim=0)[:n],
-        {k: torch.cat(v, dim=0)[:n] for k, v in taus.items()},
+        ctx,
+        setpoints,
+        starts,
+        tau,
     )
 
 
