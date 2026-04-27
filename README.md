@@ -73,6 +73,12 @@ Run it with the default `configs/vae_poc.json` config:
 python -m NOMAD_RC5.pretrain_latent_vae
 ```
 
+On the cluster GPU queue:
+
+```bash
+sbatch vae_gpu.slurm
+```
+
 Direct script execution is also supported:
 
 ```bash
